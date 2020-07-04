@@ -1,0 +1,57 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="fullscreen" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="Spinner_Style" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">@color/rinho</item>
+        <item name="android:dividerHeight">.5dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="Spinner_Theme" parent="AppTheme">
+        <item name="android:padding">0dp</item>
+        <item name="android:dropDownListViewStyle">@style/Spinner_Style</item>
+    </style>
+    <style name="overflow" parent="android:Widget.ActionButton.Overflow">
+        <item name="android:height">10dp</item>
+        <item name="android:width">10dp</item>
+    </style>
+    <style name="PopupMenuListView" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@color/dark_white</item>
+        <item name="android:dividerHeight">.4dp</item>
+    </style>
+    <style name="menu_style" parent="android:Widget.Holo.PopupMenu">
+        <item name="android:popupBackground">@color/rinho</item>
+        <item name="android:dropDownVerticalOffset">-34dp</item>
+        <item name="android:dividerHeight">.5dp</item>
+        <item name="android:divider">@color/white</item>
+    </style>
+    <style name="menu_text_style" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="home" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimaryDark">@color/black1</item>
+        <item name="colorPrimary">@color/gray2</item>
+        <item name="colorAccent">@color/dark_white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="popupMenuStyle">@style/menu_style</item>
+        <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
+        <item name="android:actionOverflowButtonStyle">@style/overflow</item>
+    </style>
+
+</resources>

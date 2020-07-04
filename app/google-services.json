@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "178439571625",
+    "firebase_url": "https://onlinehut-5a5a8.firebaseio.com",
+    "project_id": "onlinehut-5a5a8",
+    "storage_bucket": "onlinehut-5a5a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178439571625:android:6d607f6207abb4001bc1b8",
+        "android_client_info": {
+          "package_name": "com.ecommerce.onlinehut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178439571625-hlqdt0hmgggsbp3kd6vgap8fq8am4nru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALTBH3yKi13KDSe1jRjJQsvLw1Scd6VtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178439571625-hlqdt0hmgggsbp3kd6vgap8fq8am4nru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.ecommerce.onlinehut.Admin.AdminPanel;
+import com.ecommerce.onlinehut.DisabledActivity;
 import com.ecommerce.onlinehut.CustomAlertDialog;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
@@ -33,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
@@ -72,6 +75,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_dashboard);
+        checkDisabled();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
@@ -120,6 +124,26 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             }
         });
         frameLayout=findViewById(R.id.frame_layout);
+
+        RelativeLayout admin=findViewById(R.id.admin);
+        if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin())
+            admin.setVisibility(View.VISIBLE);
+        if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isDisabled()){
+            Log.d("=============", "000000");
+            startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
+            finish();
+        }
+
+        admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                title_tv.setText(R.string.admin);
+                active_indicator(0);
+                startActivity(new Intent(getApplicationContext(), AdminPanel.class));
+            }
+        });
+
         RelativeLayout profile=findViewById(R.id.profile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +219,18 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         changeFragmentView(new All_Animals_For_Seller());
 
     }
-
+    private void checkDisabled() {
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String,Object> map=documentSnapshot.getData();
+                if(map.containsKey("disabled"))
+                    if((Boolean) map.get("disabled")){
+                        startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
+                        finish();
+                    }
+            }
+        });
     @Override
     protected void onDestroy() {
         super.onDestroy();

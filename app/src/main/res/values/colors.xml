@@ -22,6 +22,7 @@
     <color name="divider_color2">#6F979090</color>
     <color name="item_info_text_color">#000000</color>
     <color name="magenta_transparent">#80AAD887</color>
+    <color name="blue_transparent">#B7AEE6FF</color>
     <color name="magenta_transparent2">#AE86BC5C</color>
     <color name="blue_black">#D0000000</color>
 </resources>

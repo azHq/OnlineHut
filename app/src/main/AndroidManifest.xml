@@ -16,6 +16,17 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Admin.settings.SettingsActivity"></activity>
+        <activity android:name=".DisabledActivity" />
+        <activity android:name=".Admin.deposite.DepositeActivity" />
+        <activity android:name=".Admin.all_users.AllUsers" />
+        <activity
+            android:name=".Admin.AdminPanel"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".Seller.Add_New_Animal"
+            android:label="@string/add_new_animal"
         <activity android:name=".Seller.Details_For_Seller"></activity>
         <activity android:name=".Buyer.PriceHistoryForBuyer" />
         <activity android:name=".Seller.SoldAnimalListForSeller" />

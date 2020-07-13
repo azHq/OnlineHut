@@ -21,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.ecommerce.onlinehut.DisabledActivity;
 import com.ecommerce.onlinehut.CustomAlertDialog;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
@@ -74,6 +75,7 @@ public class BuyerDashboard extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_dashboard);
+        checkDisabled();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         notification_btn=findViewById(R.id.notification_btn);
         message_unseen=findViewById(R.id.message_unseen);
@@ -295,4 +297,19 @@ public class BuyerDashboard extends AppCompatActivity implements NavigationView.
             super.onBackPressed();
         }
     }
+
+    private void checkDisabled() {
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String,Object> map=documentSnapshot.getData();
+                if(map.containsKey("disabled"))
+                    if((Boolean) map.get("disabled")){
+                        startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
+                        finish();
+                    }
+            }
+        });
+    }
+
 }

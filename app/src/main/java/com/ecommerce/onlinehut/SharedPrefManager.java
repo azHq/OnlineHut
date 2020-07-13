@@ -13,6 +13,9 @@ public class SharedPrefManager {
     private static final String PHONE_NUMBER= "PHONE_NUMBER";
     private static final String IMAGE_PATH= "IMAGE_PATH";
     private static final String DEVICE_ID="DEVICE_ID";
+    private static final String IS_ADMIN="IS_ADMIN";
+    private static final String GEOPOINT="GEOPOINT";
+    private static final String IS_DISABLED = "DISABLED";
     private static final String LOCATION="LOCATION";
     private static final String GEOPOINT="GEOPOINT";
     private static final String NUMBER_OF_UNSEEN_NOTIFICATION="NUMBER_OF_UNSEEN_NOTIFICATION";
@@ -41,6 +44,8 @@ public class SharedPrefManager {
         editor.putString(PHONE_NUMBER, user.getPhone_number());
         editor.putString(IMAGE_PATH, user.getImage_path());
         editor.putString(DEVICE_ID, user.getDevice_id());
+        editor.putBoolean(IS_ADMIN, user.isAdmin());
+        editor.putBoolean(IS_DISABLED, user.isDisabled());
         editor.putString(LOCATION, user.getLocation());
         editor.apply();
     }
@@ -71,6 +76,8 @@ public class SharedPrefManager {
                 sharedPreferences.getString(PHONE_NUMBER, null),
                 sharedPreferences.getString(IMAGE_PATH,null),
                 sharedPreferences.getString(DEVICE_ID,null),
+                sharedPreferences.getBoolean(IS_ADMIN, false),
+                sharedPreferences.getBoolean(IS_DISABLED, false)
                 sharedPreferences.getString(LOCATION,null)
         );
     }

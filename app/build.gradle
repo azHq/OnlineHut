@@ -44,16 +44,6 @@ android {
 }
 
 
-
-repositories {
-    maven {
-        url 'F:/Android/Flutter/ek_hut_admin/build/host/outputs/repo'
-    }
-    maven {
-        url 'http://download.flutter.io'
-    }
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'

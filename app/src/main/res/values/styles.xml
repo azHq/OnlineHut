@@ -6,6 +6,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="AppThemeChild1" parent="AppTheme">
+        <item name="android:dropDownListViewStyle">@style/PopupMenuListView2</item>
+    </style>
+    <style name="PopupMenuListView2" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@color/rinho</item>
+        <item name="android:dividerHeight">.5dp</item>
+        <item name="android:padding">3dp</item>
+    </style>
     <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -53,5 +61,16 @@
         <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
         <item name="android:actionOverflowButtonStyle">@style/overflow</item>
     </style>
+    <style name="TechniqueToolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -2,7 +2,11 @@ package com.ecommerce.onlinehut.Seller;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -10,39 +14,64 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
+import com.darsh.multipleimageselect.helpers.Constants;
+import com.ecommerce.onlinehut.Animal;
 import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
+import com.ecommerce.onlinehut.CustomAlertDialog;
+import com.ecommerce.onlinehut.CustomPhotoGalleryActivity;
 import com.ecommerce.onlinehut.EngToBanConverter;
 import com.ecommerce.onlinehut.R;
+import com.ecommerce.onlinehut.SelectUserType;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +91,8 @@ public class Add_New_Animal extends AppCompatActivity {
     ArrayList<String> teeth=new ArrayList<>();
     ArrayList<String> years=new ArrayList<>();
     ArrayList<String> months=new ArrayList<>();
-    private int PICK_IMAGE_REQUEST = 1;
+    ArrayList<String> imagesPathList=new ArrayList<>();
+    private int PICK_IMAGE_REQUEST = 1,PICK_IMAGE_MULTIPLE=2,VIDEO_REQUEST_CODE=3;
     public final int WRITE_PERMISSION=101;
     CircleImageView circleImageView;
     ProgressDialog progressDialog;
@@ -70,7 +100,25 @@ public class Add_New_Animal extends AppCompatActivity {
     StorageReference storageReference;
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
-    String user_id;
+    String user_id,animal_id="";
+    RecycleAdapter recycleAdapter;
+    RecyclerView recyclerView;
+    private static String POPUP_CONSTANT = "mPopup";
+    private static String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
+    public int crop_or_change_id=-1;
+    private byte[][] bytes_array;
+    DocumentReference documentReference;
+    VideoView videoView;
+    MediaController mediaController;
+    Button play_btn;
+    public final long VIDEO_MAX_SIZE=50*1024*1024;
+    Uri video_uri;
+    View submit_btn;
+    TextView percentage,num_of_file;
+    ProgressBar progressBar;
+    LinearLayout progressBar_layout;
+    boolean[] completed=new boolean[3];
+    int count=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +130,23 @@ public class Add_New_Animal extends AppCompatActivity {
         storageReference=firebaseStorage.getReference();
         animal_name_et=findViewById(R.id.name);
         animal_price_et=findViewById(R.id.price);
-        age_et=findViewById(R.id.age);
+        videoView=findViewById(R.id.video_view);
+        play_btn=findViewById(R.id.play_btn);
+        percentage=findViewById(R.id.percentage);
+        num_of_file=findViewById(R.id.number_of_file);
+        progressBar=findViewById(R.id.progress);
+        progressBar_layout=findViewById(R.id.progress_layout);
+        mediaController  = new MediaController(this);
+        play_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if(video_path.length()>0){
+                   videoView.start();
+                   play_btn.setVisibility(View.GONE);
+               }
+               else  show_error_dialog(R.string.input_error,getString(R.string.first)+" "+getString(R.string.video_upload));
+            }
+        });
         born_et=findViewById(R.id.born);
         animal_type_sp=findViewById(R.id.animal_type);
         year_sp=findViewById(R.id.year);
@@ -94,7 +158,13 @@ public class Add_New_Animal extends AppCompatActivity {
         height_et=findViewById(R.id.height);
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Please Wait..");
-
+        imagesPathList.add("");
+        imagesPathList.add("");
+        imagesPathList.add("");
+        imagesPathList.add("");
+        recyclerView=findViewById(R.id.recycle);
+        recycleAdapter=new RecycleAdapter(imagesPathList);
+        recyclerView.setAdapter(recycleAdapter);
         years.add(getString(R.string.year));
         years.add(EngToBanConverter.getInstance().convert("1 ")+getString(R.string.year));
         years.add(EngToBanConverter.getInstance().convert("2 ")+getString(R.string.year));
@@ -146,7 +216,7 @@ public class Add_New_Animal extends AppCompatActivity {
 
                 if(position>0){
 
-                    month=position;
+                    month=position-1;
                 }
                 else{
 
@@ -187,8 +257,9 @@ public class Add_New_Animal extends AppCompatActivity {
             }
         });
         colors.add(getString(R.string.color));
-        colors.add(getString(R.string.red));
+        colors.add(getString(R.string.white));
         colors.add(getString(R.string.black));
+        colors.add(getString(R.string.red));
         colors.add(getString(R.string.brown));
         colors.add(getString(R.string.gray));
         colors.add(getString(R.string.mixed));
@@ -238,6 +309,13 @@ public class Add_New_Animal extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+
+        CustomAlertDialog.getInstance().show_exit_dialog(Add_New_Animal.this);
+    }
+
     private void requestPermission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -259,56 +337,205 @@ public class Add_New_Animal extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Please Give Permission To Upload Image",Toast.LENGTH_LONG).show();
         }
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK) {
+            if(requestCode == PICK_IMAGE_MULTIPLE){
+                imagesPathList.clear();
+                String[] imagesPath = data.getStringExtra("data").split("\\|");
 
-            Uri imageUri=data.getData();
-            CropImage.activity(imageUri)
-                    .start(this);
+                try{
+                    //lnrImages.removeAllViews();
+                }catch (Throwable e){
+                    e.printStackTrace();
+                }
+                for (int i=0;i<imagesPath.length;i++){
+                    imagesPathList.add(imagesPath[i]);
+                }
+                recycleAdapter.notifyDataSetChanged();
+            }
+            if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                Uri resultUri = result.getUri();
+                imagesPathList.remove(crop_or_change_id);
+                imagesPathList.add(crop_or_change_id,resultUri.getPath());
+                recycleAdapter.notifyDataSetChanged();
+
+            }
+            if(requestCode==PICK_IMAGE_REQUEST){
+
+               if(data.getData()!=null){
+                   imagesPathList.remove(crop_or_change_id);
+                   imagesPathList.add(crop_or_change_id, getRealPathFromURI(data.getData()));
+                   recycleAdapter.notifyDataSetChanged();
+               }
+
+            }
+            if(requestCode==VIDEO_REQUEST_CODE) {
+
+                if (data.getData() != null) {
+                    video_uri=data.getData();
+                    video_path=data.getData().getPath();
+                    videoView.setVideoURI(data.getData());
+                    mediaController.setAnchorView(videoView);
+                    videoView.setMediaController(mediaController);
+                }
+            }
+
+        }
+
+    }
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
+        cursor.close();
+
+        cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,null
+                , MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
+    public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewAdapter>{
+
+        ArrayList<String> animals;
+        public RecycleAdapter(ArrayList<String> animals){
+            this.animals=animals;
+        }
+        public  class ViewAdapter extends RecyclerView.ViewHolder{
+
+            View mView;
+            Button option_menu;
+            TextView image_name;
+            RelativeLayout item;
+            ImageView animal_image;
+            public ViewAdapter(View itemView) {
+                super(itemView);
+                mView=itemView;
+                animal_image=mView.findViewById(R.id.animal_image);
+                image_name=mView.findViewById(R.id.image_name);
+                item=mView.findViewById(R.id.item_layout);
+                option_menu=mView.findViewById(R.id.option_btn);
+            }
 
 
         }
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE&&resultCode == RESULT_OK){
+        @NonNull
+        @Override
+        public ViewAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.animal_images,parent,false);
+            return new ViewAdapter(view);
+        }
 
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            Uri resultUri = result.getUri();
-            byte[] bytes=compressImage1(resultUri);
+        @Override
+        public void onBindViewHolder(@NonNull ViewAdapter holder, final int position) {
 
-            if(bytes!=null){
-                String image = getStringImage(bytes);
-                //progressDialog.show();
 
+            String image_path=animals.get(position);
+            if(image_path.length()>0){
+                holder.item.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_scale));
+                holder.animal_image.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_transition_animation));
+                holder.animal_image.setImageBitmap(BitmapFactory.decodeFile(image_path));
+                holder.image_name.setVisibility(View.GONE);
+            }else{
+                holder.image_name.setVisibility(View.VISIBLE);
+                holder.image_name.setText("Image-"+(position+1));
             }
-            else {
-                Toast.makeText(getApplicationContext(),"Fail to Upload Image",Toast.LENGTH_LONG).show();
-            }
+
+            holder.option_menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                  if(image_path.length()>0)  showPopup(v,position);
+                  else{
+                      Toast.makeText(getApplicationContext(),getString(R.string.image_upload),Toast.LENGTH_LONG).show();
+                  }
+                }
+            });
 
 
 
         }
+
+        @Override
+        public int getItemCount() {
+            return animals.size();
+        }
+
 
 
     }
+    public void showPopup(View view,int id) {
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.getMenuInflater().inflate(R.menu.edit_option_menu, popup.getMenu());
+        MenuCompat.setGroupDividerEnabled(popup.getMenu(), true);
+        try {
+            // Reflection apis to enforce show icon
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getName().equals(POPUP_CONSTANT)) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod(POPUP_FORCE_SHOW_ICON, boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                crop_or_change_id=id;
+                if(item.getItemId()==R.id.change){
+
+                    Intent galleryIntent=new Intent();
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    galleryIntent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), PICK_IMAGE_REQUEST);
+                }
+                else if(item.getItemId()==R.id.crop){
+
+                    Uri uri=Uri.fromFile(new File(imagesPathList.get(id)));
+                    CropImage.activity(uri)
+                            .start(Add_New_Animal.this);
+                }
+
+                return true;
+            }
+        });
+        popup.show();
+    }
+
     private void openGallery() {
 
+        Intent intent = new Intent(Add_New_Animal.this, CustomPhotoGalleryActivity.class);
+        startActivityForResult(intent,PICK_IMAGE_MULTIPLE);
+    }
+    public void upload_video(View view) {
         Intent galleryIntent=new Intent();
+        play_btn.setVisibility(View.VISIBLE);
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent,1);
-
-
-
+        galleryIntent.setType("video/*");
+        startActivityForResult(galleryIntent, VIDEO_REQUEST_CODE);
     }
 
-    public byte[] compressImage1(Uri resultUri){
+    public byte[] compressImage1(Uri resultUri,int quality){
 
         Bitmap bitmap = null;
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
             byte[] imageBytes = baos.toByteArray();
             return  imageBytes;
 
@@ -318,27 +545,21 @@ public class Add_New_Animal extends AppCompatActivity {
 
         return null;
     }
-    public byte[] compressImage2(Uri resultUri){
+    public byte[] compressImage2(Uri resultUri,int quality){
 
-        File filePathForCompress=new File(resultUri.getPath());
-        Bitmap compressBitmap=null;
-        try{
-            compressBitmap=new Compressor(getApplicationContext())
-                    .setMaxHeight(200)
-                    .setMaxWidth(200)
-                    .setQuality(50)
-                    .compressToBitmap(filePathForCompress);
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            byte[] imageBytes = baos.toByteArray();
+            return  imageBytes;
 
-        }catch(IOException e){
-
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        ByteArrayOutputStream byteArray=new ByteArrayOutputStream();
-        compressBitmap.compress(Bitmap.CompressFormat.JPEG,50,byteArray);
-
-        final byte[] thumByte=byteArray.toByteArray();
-        return  thumByte;
+        return null;
     }
     public String getStringImage(byte[] imageBytes) {
 
@@ -354,34 +575,47 @@ public class Add_New_Animal extends AppCompatActivity {
     }
     public void submit(View view){
 
+        submit_btn=view;
+        submit_btn.setClickable(false);
         name=animal_name_et.getText().toString();
         if(name.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.animal_name)+" "+getString(R.string.write));
+
             return;
         }
         if(animal_type.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.animal_type)+" "+getString(R.string.select));
+
             return;
         }
-        price=animal_price_et.getText().toString();
+        price=EngToBanConverter.getInstance().convert_bangla_to_english(animal_price_et.getText().toString());
         if(price.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.animal_price)+" "+getString(R.string.write));
+
             return;
         }
         if(year<=0){
             show_error_dialog(R.string.input_error,getString(R.string.year)+" "+getString(R.string.select));
+
             return;
         }
         if(color.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.animal_name)+" "+getString(R.string.select));
+
             return;
         }
-        weight=weight_et.getText().toString();
+        if(tooth.length()<=0){
+
+            show_error_dialog(R.string.input_error,getString(R.string.teeth)+" "+getString(R.string.select));
+            return;
+        }
+        tooth=EngToBanConverter.getInstance().convert_bangla_to_english(tooth);
+        weight=EngToBanConverter.getInstance().convert_bangla_to_english(weight_et.getText().toString());
         if(weight.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.weight)+" "+getString(R.string.write));
             return;
         }
-        height=height_et.getText().toString();
+        height=EngToBanConverter.getInstance().convert_bangla_to_english(height_et.getText().toString());
         if(height.length()<=0){
             show_error_dialog(R.string.input_error,getString(R.string.height)+" "+getString(R.string.write));
             return;
@@ -392,15 +626,67 @@ public class Add_New_Animal extends AppCompatActivity {
             show_error_dialog(R.string.input_error,getString(R.string.born)+" "+getString(R.string.write));
             return;
         }
+        int count=0;
+        bytes_array=new byte[imagesPathList.size()][];
+        for(int i=0;i<imagesPathList.size();i++){
+            if(imagesPathList.get(i).length()>0){
+                    count++;
+            }
+        }
+        if(count<4||count>6){
+            show_error_dialog(R.string.input_error,getString(R.string.minimum_image));
+            return;
+        }
+
+        if(video_uri==null){
+            show_error_dialog(R.string.input_error,getString(R.string.video_upload));
+            return;
+        }
+
+
+        Cursor returnCursor =
+                getContentResolver().query(video_uri, null, null, null, null);
+
+        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+        returnCursor.moveToFirst();
+        long video_size=returnCursor.getLong(sizeIndex);
+        if(video_size>VIDEO_MAX_SIZE){
+            show_error_dialog(R.string.input_error,getString(R.string.video_size));
+            return;
+        }
+        documentReference= db.collection("AllAnimals").document();
+        animal_id=documentReference.getId();
         age=year*12+month+"";
+        age=EngToBanConverter.getInstance().convert_bangla_to_english(age);
         upload_animal_info(user_id);
+
+        upload_video_to_firebase("video_path",video_uri,0);
+
+    }
+    public void show_error_dialog(int title,String body){
+        AlertDialog.Builder alert=new AlertDialog.Builder(this);
+        View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.connection_error_layout,null);
+        alert.setView(view);
+        submit_btn.setClickable(true);
+        progressDialog.dismiss();
+        alertDialog=alert.show();;
+        Button btn=view.findViewById(R.id.ok);
+        TextView title_tv=view.findViewById(R.id.title);
+        title_tv.setText(title);
+        TextView body_tv=view.findViewById(R.id.body);
+        body_tv.setText(body);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
 
     }
 
+
     public void upload_animal_info(String user_id){
         progressDialog.show();
-        DocumentReference documentReference= db.collection("AllAnimals").document();
-        String animal_id=documentReference.getId();
         Map<String, Object> user = new HashMap<>();
         user.put("user_id", user_id);
         user.put("animal_id",animal_id);
@@ -413,29 +699,40 @@ public class Add_New_Animal extends AppCompatActivity {
         user.put("weight", weight);
         user.put("height", height);
         user.put("born", born);
-        user.put("compress_image_path",compress_image_path);
-        user.put("original_image_path",original_image_path);
-        user.put("video_path",video_path);
+        user.put("original_image_path", "");
+        user.put("compress_image_path", "");
+        user.put("highest_bid", 0);
+        user.put("total_bid", 0);
         user.put("create_at", FieldValue.serverTimestamp());
         documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                progressDialog.dismiss();
                 animal_name_et.setText("");
                 animal_price_et.setText("");
-                age_et.setText("");
                 weight_et.setText("");
                 height_et.setText("");
                 born_et.setText("");
+                submit_btn.setClickable(true);
                 animal_type_sp.setSelection(0);
                 animal_color_type.setSelection(0);
                 number_of_teeth_sp.setSelection(0);
+                upload_images();
             }
         });
     }
-    public void update_animal_info(String user_id,String document_id){
-        progressDialog.show();
-        DocumentReference documentReference= db.collection("AllAnimals").document(document_id);
+    public void upload_images(){
+        progressDialog.dismiss();
+        //upload images
+        for(int i=0;i<imagesPathList.size();i++){
+
+            upload_image_to_firebase("original_image_path",Uri.fromFile(new File(imagesPathList.get(i))),i);
+        }
+        byte[] compress_bytes=compressImage1(Uri.fromFile(new File(imagesPathList.get(0))),70);
+        upload_compress_image_to_firebase("compress_image_path",compress_bytes,imagesPathList.size());
+        upload_video_to_firebase("video_path",video_uri,0);
+    }
+    public void update_animal_info(String user_id){
+        DocumentReference documentReference= db.collection("AllAnimals").document(animal_id);
         Map<String, Object> user = new HashMap<>();
         user.put("user_id", user_id);
         user.put("type", animal_type);
@@ -455,24 +752,161 @@ public class Add_New_Animal extends AppCompatActivity {
             }
         });
     }
-    public void show_error_dialog(int title,String body){
-        AlertDialog.Builder alert=new AlertDialog.Builder(this);
-        View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.connection_error_layout,null);
-        alert.setView(view);
-        alertDialog=alert.show();;
-        Button btn=view.findViewById(R.id.ok);
-        TextView title_tv=view.findViewById(R.id.title);
-        title_tv.setText(title);
-        TextView body_tv=view.findViewById(R.id.body);
-        body_tv.setText(body);
-        btn.setOnClickListener(new View.OnClickListener() {
+    public void upload_compress_image_to_firebase(String key,byte[] bytes,int index){
+        StorageReference ref= storageReference.child( "Animal_Pictures/"+ animal_id+index);
+        ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                System.out.println("compress image uploaded");
+                ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+
+                        Uri uri=task.getResult();
+                        update(key,uri.toString());
+                        completed[1]=true;
+                        if(completed[0]&&completed[2]){
+
+                            finish();
+                        }
+
+                    }
+                });
+
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(),getString(R.string.connection_problem),Toast.LENGTH_LONG).show();
             }
         });
-
     }
+    public void get_image_path(String image_path){
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+
+
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    if(documentSnapshot.exists()){
+                        Map<String,Object> map=documentSnapshot.getData();
+                        if(map.containsKey("original_image_path")) update("original_image_path",map.get("original_image_path").toString()+","+image_path);
+                        else update("original_image_path",image_path);
+                    }
+                    else{
+                        update("original_image_path",image_path);
+                    }
+                    count++;
+                    if(count>=imagesPathList.size()){
+
+                        completed[0]=true;
+                        if(completed[1]&&completed[2]){
+                            finish();
+                        }
+                    }
+                }
+                else{
+
+                }
+            }
+        });
+    }
+    public void upload_image_to_firebase(String key,Uri image_uri,int index){
+        StorageReference ref= storageReference.child( "Animal_Pictures/"+ animal_id+index);
+        ref.putFile(image_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+
+                        Uri uri=task.getResult();
+                        if(uri!=null) get_image_path(uri.toString());
+                    }
+                });
+
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(),getString(R.string.connection_problem),Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    public void upload_video_to_firebase(String key,Uri video_uri,int index){
+
+        progressBar_layout.setVisibility(View.VISIBLE);
+        StorageReference ref= storageReference.child( "Animal_Videos/"+ animal_id);
+        ref.putFile(video_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        submit_btn.setClickable(true);
+                        imagesPathList.add("");
+                        imagesPathList.add("");
+                        imagesPathList.add("");
+                        imagesPathList.add("");
+                        video_path="";
+                        videoView.setVideoURI(null);
+                        recycleAdapter.notifyDataSetChanged();
+                        progressBar_layout.setVisibility(View.GONE);
+                        Uri uri=task.getResult();
+                        update(key,uri.toString());
+                        completed[2]=true;
+                        if(completed[0]&&completed[1]){
+                            finish();
+                        }
+
+                    }
+                });
+
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(),getString(R.string.connection_problem),Toast.LENGTH_LONG).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+        @Override
+        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+            show_progress(taskSnapshot);
+
+        }
+        });
+    }
+    public void show_progress(UploadTask.TaskSnapshot taskSnapshot){
+        float uploaded_size= taskSnapshot.getBytesTransferred();
+        float file_size=taskSnapshot.getTotalByteCount();
+        int percent=(int)((uploaded_size/file_size)*100);
+        num_of_file.setText(percent+"/"+100);
+        progressBar.setProgress(percent);
+        percentage.setText(percent+"%");
+    }
+    public void update(String key,String value){
+
+        Map<String, Object> user = new HashMap<>();
+        user.put(key, value);
+        documentReference.update(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+
+            }
+        });
+    }
+
 
 
 

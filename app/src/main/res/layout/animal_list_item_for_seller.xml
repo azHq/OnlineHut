@@ -27,13 +27,19 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/animal_image1"
-                    android:src="@drawable/cow_image1"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_weight="1.25"
                     android:layout_height="0dp">
-                </ImageView>
+                    <ImageView
+                        android:id="@+id/animal_image1"
+                        android:src="@drawable/cow_image1"
+                        android:scaleType="fitXY"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+                    </ImageView>
+                </RelativeLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_weight="1.75"
@@ -107,7 +113,7 @@
                         android:layout_height="0dp">
                     </TextView>
                     <Button
-                        android:id="@+id/show_bid_history"
+                        android:id="@+id/show_bid_history1"
                         android:layout_weight="1.7"
                         android:background="@drawable/round_back_transparent"
                         android:layout_width="match_parent"
@@ -115,7 +121,7 @@
                         android:textColor="@color/item_info_text_color"
                         android:textSize="@dimen/sp_16"
                         android:textStyle="bold"
-                        android:text="বিডগুলো দেখুন"
+                        android:text="@string/view_price"
                         android:layout_marginBottom="3dp"
                         android:layout_height="0dp">
 
@@ -126,6 +132,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card2"
             android:layout_width="0dp"
+            android:visibility="invisible"
             android:layout_weight="1"
             app:cardElevation="6dp"
             android:layout_marginLeft="8dp"
@@ -138,13 +145,18 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/animal_image2"
-                    android:src="@drawable/cow_image2"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_weight="1.25"
                     android:layout_height="0dp">
-                </ImageView>
+                    <ImageView
+                        android:id="@+id/animal_image2"
+                        android:src="@drawable/cow_image2"
+                        android:scaleType="fitXY"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+                    </ImageView>
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_weight="1.75"
@@ -218,7 +230,7 @@
                         android:layout_height="0dp">
                     </TextView>
                     <Button
-                        android:id="@+id/show_bid_history_2"
+                        android:id="@+id/show_bid_history2"
                         android:layout_weight="1.7"
                         android:background="@drawable/round_back_transparent"
                         android:layout_width="match_parent"
@@ -226,7 +238,7 @@
                         android:textColor="@color/item_info_text_color"
                         android:textSize="@dimen/sp_16"
                         android:textStyle="bold"
-                        android:text="বিডগুলো দেখুন"
+                        android:text="দামগুলো দেখুন"
                         android:layout_marginBottom="3dp"
                         android:layout_height="0dp">
                     </Button>

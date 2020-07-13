@@ -239,6 +239,7 @@ public class PinViewLayout extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("user_name", user_name);
         user.put("user_type", user_type);
+        user.put("user_id", user_id);
         user.put("phone_number", phone_number);
         user.put("image_path", "");
         user.put("device_id", device_id);

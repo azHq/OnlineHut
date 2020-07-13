@@ -26,6 +26,7 @@
                 android:layout_height="25dp">
             </ImageView>
             <TextView
+                android:id="@+id/title"
                 android:text="Home"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
@@ -80,9 +81,6 @@
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <include
-                layout="@layout/fragment_seller_dashboard">
-            </include>
         </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
@@ -156,6 +154,7 @@
                                 android:id="@+id/profile_active"
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
+                                android:visibility="invisible"
                                 android:layout_height="12dp"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
@@ -178,6 +177,7 @@
                                 android:id="@+id/total_item_active"
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
+                                android:visibility="invisible"
                                 android:layout_height="12dp"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
@@ -200,6 +200,7 @@
                                 android:id="@+id/total_sold_item_active"
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
+                                android:visibility="invisible"
                                 android:layout_height="12dp"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
@@ -223,6 +224,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
                                 android:layout_height="12dp"
+                                android:visibility="invisible"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
                                 android:src="@drawable/indicator">
@@ -245,6 +247,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
                                 android:layout_height="12dp"
+                                android:visibility="invisible"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
                                 android:src="@drawable/indicator">
@@ -267,6 +270,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
                                 android:layout_height="12dp"
+                                android:visibility="invisible"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
                                 android:src="@drawable/indicator">
@@ -288,12 +292,14 @@
                                 android:id="@+id/about_active"
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="12dp"
+                                android:visibility="invisible"
                                 android:layout_height="12dp"
                                 android:layout_marginTop="9dp"
                                 android:layout_marginRight="3dp"
                                 android:src="@drawable/indicator">
                             </ImageView>
                         </RelativeLayout>
+
                     </LinearLayout>
                 </LinearLayout>
 

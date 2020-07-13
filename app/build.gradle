@@ -65,5 +65,8 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'id.zelory:compressor:2.1.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.github.darsh2:MultipleImageSelect:v0.0.4'
+    implementation 'com.github.lguipeng:BubbleView:1.0.1'
+    implementation 'com.android.volley:volley:1.1.1'
 
 }

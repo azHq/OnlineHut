@@ -29,4 +29,6 @@
     <dimen name="menu_item_margin">10dp</dimen>
     <dimen name="table_border_width">1dp</dimen>
     <dimen name="table_cell_height">40dp</dimen>
+    <dimen name="table_cell_height_35">35dp</dimen>
+    <dimen name="table_cell_height_30">30dp</dimen>
 </resources>

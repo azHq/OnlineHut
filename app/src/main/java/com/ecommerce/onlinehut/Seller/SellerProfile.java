@@ -221,6 +221,7 @@ public class SellerProfile extends Fragment {
                     .start(getActivity(), this);
 
 
+
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
@@ -235,7 +236,6 @@ public class SellerProfile extends Fragment {
             } else {
                 Toast.makeText(getContext(), "Fail to Upload Image", Toast.LENGTH_LONG).show();
             }
-
 
         }
 

@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".Buyer.Compare">
+
+
+    <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/magenta_transparent2">
+                </View>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="520dp"
+                        android:weightSum="3"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/white"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="420dp"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".7"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:ellipsize="marquee"
+                                    android:gravity="center"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:singleLine="true"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:background="@drawable/table_border3"
+                                        android:gravity="center"
+                                        android:text="@string/picture"
+                                        android:textColor="@color/light_megenda">
+                                    </TextView>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/animal_name"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/animal_price"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/highest_bid"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/age"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/color"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/weight"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/height"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/teeth"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/born"
+                                    android:textColor="@color/light_megenda"></TextView>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:ellipsize="marquee"
+                                    android:gravity="center"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:singleLine="true"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+
+                                    <ImageView
+                                        android:id="@+id/image1"
+                                        android:scaleType="fitXY"
+                                        android:layout_margin="5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                    </ImageView>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:ellipsize="marquee"
+                                    android:gravity="center"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:singleLine="true"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/price"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/highest_price"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/age"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/color"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/weight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/height"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/teeth"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/born"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:ellipsize="marquee"
+                                    android:gravity="center"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:singleLine="true"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+
+                                    <ImageView
+                                        android:scaleType="fitXY"
+                                        android:id="@+id/image2"
+                                        android:layout_margin="5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                    </ImageView>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/name2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:ellipsize="marquee"
+                                    android:gravity="center"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:singleLine="true"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/price2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/highest_price2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/age2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/color2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/weight2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/height2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda"></TextView>
+
+                                <TextView
+                                    android:id="@+id/teeth2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
+
+                                <TextView
+                                    android:id="@+id/born2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+            </LinearLayout>
+            </ScrollView>
+        </HorizontalScrollView>
+
+
+
+</LinearLayout>

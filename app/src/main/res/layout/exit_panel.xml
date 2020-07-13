@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:weightSum="3.8"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+        <TextView
+            android:id="@+id/title"
+            android:gravity="center"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@color/white"
+            android:text="@string/connection_problem"
+            android:background="@color/dark_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:padding="@dimen/dp_20">
+
+        <TextView
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textStyle="normal"
+            android:paddingBottom="@dimen/dp_16"
+            android:text="@string/connection_check"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_22">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:weightSum="2"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/no"
+            android:layout_weight=".8"
+            android:layout_width="20dp"
+            android:text="@string/no"
+            android:textSize="@dimen/dp_18"
+            android:textColor="@color/white"
+            android:background="@drawable/round_btn_with_border"
+            android:layout_marginRight="40dp"
+            android:layout_height="43dp">
+        </Button>
+        <Button
+            android:id="@+id/yes"
+            android:layout_weight=".8"
+            android:layout_width="20dp"
+            android:text="@string/yes"
+            android:textSize="@dimen/dp_18"
+            android:textColor="@color/white"
+            android:background="@drawable/round_btn_with_border"
+            android:layout_marginLeft="30dp"
+            android:layout_height="43dp">
+        </Button>
+    </LinearLayout>
+
+</LinearLayout>

@@ -7,14 +7,18 @@ public class User {
     public String phone_number;
     public String image_path;
     public String device_id;
-    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id) {
+    public String location;
+
+    public User(String user_id, String user_name, String user_type, String phone_number, String image_path, String device_id, String location) {
         this.user_id = user_id;
         this.user_name = user_name;
-        this.user_type=user_type;
+        this.user_type = user_type;
         this.phone_number = phone_number;
         this.image_path = image_path;
-        this.device_id=device_id;
+        this.device_id = device_id;
+        this.location = location;
     }
+
 
     public String getUser_id() {
         return user_id;
@@ -62,5 +66,13 @@ public class User {
 
     public void setDevice_id(String device_id) {
         this.device_id = device_id;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

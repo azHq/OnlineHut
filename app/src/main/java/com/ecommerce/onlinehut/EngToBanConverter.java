@@ -28,5 +28,15 @@ public class EngToBanConverter {
         return  eng_str;
 
     }
+    public String convert_bangla_to_english(String eng_str){
+
+
+        for(int i=0;i<bn.length;i++){
+            eng_str=eng_str.replaceAll(bn[i]+"",en[i]+"");
+        }
+
+        return  eng_str;
+
+    }
 
 }

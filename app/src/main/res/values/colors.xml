@@ -8,6 +8,7 @@
     <color name="black">#000000</color>
     <color name="gray">#4A4949</color>
     <color name="purplelight">#7528c6</color>
+    <color name="purpledark">#550189</color>
     <color name="purpledeep">#3f0dc5</color>
     <color name="darkgreen">#198506</color>
     <color name="blue">#0925d9</color>
@@ -21,4 +22,6 @@
     <color name="divider_color2">#6F979090</color>
     <color name="item_info_text_color">#000000</color>
     <color name="magenta_transparent">#80AAD887</color>
+    <color name="magenta_transparent2">#AE86BC5C</color>
+    <color name="blue_black">#D0000000</color>
 </resources>

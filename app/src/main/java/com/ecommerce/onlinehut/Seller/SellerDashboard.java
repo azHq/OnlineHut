@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.onlinehut.CustomAlertDialog;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
 import com.ecommerce.onlinehut.SharedPrefManager;
@@ -65,6 +66,8 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
     String image_path="";
     ImageView[] indicators=new ImageView[7];
     TextView title_tv;
+    public static TextView message_unseen;
+    ImageView notification_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,8 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         actionBar=getSupportActionBar();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         user_name_tv=findViewById(R.id.user_name);
+        notification_btn=findViewById(R.id.notification_btn);
+        message_unseen=findViewById(R.id.message_unseen);
         profile_picture=findViewById(R.id.profile_picture);
         title_tv=findViewById(R.id.title_bar);
         image_path=SharedPrefManager.getInstance(getApplicationContext()).getUser().image_path;
@@ -190,6 +195,14 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         changeFragmentView(new All_Animals_For_Seller());
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        message_unseen=null;
+    }
+
     public void active_indicator(int index){
 
 
@@ -285,4 +298,20 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        int count = fragmentManager.getBackStackEntryCount();
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else if(count==1){
+
+            CustomAlertDialog.getInstance().show_exit_dialog(SellerDashboard.this);
+        }
+        else {
+
+            super.onBackPressed();
+        }
+    }
 }

@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
+import com.ecommerce.onlinehut.Buyer.Compare;
+import com.ecommerce.onlinehut.Seller.Add_New_Animal;
 import com.ecommerce.onlinehut.Seller.SellerDashboard;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -64,14 +66,16 @@ public class MainActivity extends AppCompatActivity {
 
                if(firebaseUser==null){
 
-                   startActivity(new Intent(getApplicationContext(),SelectUserType.class));
+                   startActivity(new Intent(getApplicationContext(), Add_New_Animal.class));
                    finish();
                }
                else{
+
                    progressDialog.show();
                    user_id=firebaseUser.getUid();
                    get_user_data();
 
+                  // startActivity(new Intent(getApplicationContext(), Compare.class));
 
                }
             }
@@ -91,7 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
                        Map<String,Object> map=document.getData();
                        String user_type=map.get("user_type").toString();
-                       User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"");
+                       String location="";
+                       if(map.containsKey("location")){
+                           location=map.get("location").toString();
+                       }
+                       User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"",location);
                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
                        if(user_type.equalsIgnoreCase("seller")){
 

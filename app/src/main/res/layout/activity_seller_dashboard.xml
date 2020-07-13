@@ -50,13 +50,29 @@
                     android:layout_height="25dp">
 
                 </ImageView>
-                <ImageView
-                    android:src="@drawable/notifications"
-                    android:layout_width="30dp"
-                    android:layout_margin="5dp"
-                    android:layout_height="30dp">
-
-                </ImageView>
+                <RelativeLayout
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/notification_btn"
+                        android:src="@drawable/notifications"
+                        android:layout_width="30dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="30dp">
+                    </ImageView>
+                    <TextView
+                        android:id="@+id/message_unseen"
+                        android:text="99"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/red_circle"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp">
+                    </TextView>
+                </RelativeLayout>
                 <ImageView
                     android:id="@+id/menu_icon2"
                     android:src="@drawable/menu2"

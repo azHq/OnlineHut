@@ -13,8 +13,9 @@ public class SharedPrefManager {
     private static final String PHONE_NUMBER= "PHONE_NUMBER";
     private static final String IMAGE_PATH= "IMAGE_PATH";
     private static final String DEVICE_ID="DEVICE_ID";
+    private static final String LOCATION="LOCATION";
     private static final String GEOPOINT="GEOPOINT";
-
+    private static final String NUMBER_OF_UNSEEN_NOTIFICATION="NUMBER_OF_UNSEEN_NOTIFICATION";
 
     private static SharedPrefManager mInstance;
     private static Context mCtx;
@@ -40,11 +41,20 @@ public class SharedPrefManager {
         editor.putString(PHONE_NUMBER, user.getPhone_number());
         editor.putString(IMAGE_PATH, user.getImage_path());
         editor.putString(DEVICE_ID, user.getDevice_id());
+        editor.putString(LOCATION, user.getLocation());
         editor.apply();
     }
-
-
-
+    public void increase_unseen_notification() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(NUMBER_OF_UNSEEN_NOTIFICATION,get_unseen_notification()+1);
+        editor.apply();
+    }
+    public int get_unseen_notification() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        int count=sharedPreferences.getInt(NUMBER_OF_UNSEEN_NOTIFICATION,0);
+        return count;
+    }
 
     public boolean isLoggedIn() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -60,7 +70,8 @@ public class SharedPrefManager {
                 sharedPreferences.getString(USER_TYPE, null),
                 sharedPreferences.getString(PHONE_NUMBER, null),
                 sharedPreferences.getString(IMAGE_PATH,null),
-                sharedPreferences.getString(DEVICE_ID,null)
+                sharedPreferences.getString(DEVICE_ID,null),
+                sharedPreferences.getString(LOCATION,null)
         );
     }
 

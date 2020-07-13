@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+    <GridView
+        android:id="@+id/grdImages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:layout_margin="@dimen/dp_10"
+        android:columnWidth="100dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/btnSelect"
+            android:textColor="@color/light_megenda"
+            android:text="@string/select"
+            android:background="@drawable/round_back_white_with_border"
+            android:layout_width="150dp"
+            android:layout_height="40dp">
+        </Button>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+    </androidx.recyclerview.widget.RecyclerView>
+    <View
+        android:background="@color/magenta_transparent2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+    </View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="@dimen/dp_10"
+        android:gravity="bottom|center">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="230dp"
+            android:layout_height="45dp"
+            android:background="@drawable/round_back_white_with_border"
+            android:onClick="submit"
+            android:text="@string/cancel"
+            android:textColor="@color/light_megenda"
+            android:textSize="@dimen/sp_16">
+
+        </Button>
+
+    </LinearLayout>
+</LinearLayout>

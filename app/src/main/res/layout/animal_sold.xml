@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginRight="2dp"
+    android:id="@+id/item_layout"
+    android:layout_height="80dp">
+    <ImageView
+        android:background="@color/rinho"
+        android:id="@+id/animal_image"
+        android:scaleType="fitXY"
+        android:src="@drawable/cow_image1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ImageView>
+    <TextView
+        android:id="@+id/image_name"
+        android:text="Sold"
+        android:textSize="@dimen/sp_12"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:background="@drawable/gradient_back"
+        android:layout_centerInParent="true"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+    <LinearLayout
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:background="#56898888"
+        android:padding="2dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/option_btn"
+            android:background="@drawable/menu4"
+            android:layout_width="20dp"
+            android:layout_height="20dp">
+        </Button>
+    </LinearLayout>
+
+</RelativeLayout>

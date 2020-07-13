@@ -72,12 +72,12 @@ public class All_Animals_For_Seller extends Fragment {
 
     public void get_all_animals_data(){
         progressDialog.show();
-        Query documentReference=db.collection("Animal_List");
+        Query documentReference=db.collection("AllAnimals");
         documentReference.whereEqualTo("user_id",user_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-
+                animals.clear();
                 if(task.isComplete()){
 
                     QuerySnapshot querySnapshot=task.getResult();
@@ -96,18 +96,22 @@ public class All_Animals_For_Seller extends Fragment {
                             float height=Float.parseFloat(map.get("height").toString());
                             int teeth=Integer.parseInt(map.get("teeth").toString());
                             String born=map.get("born").toString();
-                            String image_path=map.get("image_path").toString();
+                            String image_path=map.get("compress_image_path").toString();
                             String video_path=map.get("video_path").toString();
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             Animal animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                             animals2.add(animal);
                             if(animals2.size()==2){
+                                animals.add(animals2);
                                 animals2=new ArrayList<>();
                             }
 
+
                         }
-                        progressDialog.dismiss();
+                        if(animals2.size()>0){
+                            animals.add(animals2);
+                        }
                         recyclerView.setVisibility(View.VISIBLE);
                         empty.setVisibility(View.INVISIBLE);
                         RecycleAdapter recycleAdapter=new RecycleAdapter(animals);
@@ -115,48 +119,18 @@ public class All_Animals_For_Seller extends Fragment {
                         recyclerView.setAdapter(recycleAdapter);
                     }
                     else{
-//                        recyclerView.setVisibility(View.GONE);
-//                        empty.setVisibility(View.VISIBLE);
-
-                        ArrayList<Animal> animals2=new ArrayList<>();
-                        for(int i=0;i<10;i++){
-
-                            String animal_id="animal id";
-                            String user_id="user id";
-                            String name=" Boss";
-                            int price=100000;
-                            float age=5;
-                            String color="Red";
-                            float weight=150;
-                            float height=4;
-                            int teeth=2;
-                            String born="Australian";
-                            String image_path="";
-                            String video_path="";
-                            int highest_bid=80000;
-                            int total_bid=5;
-                            Animal animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
-                            animals2.add(animal);
-                            if(animals2.size()==2){
-                                animals.add(animals2);
-                                animals2=new ArrayList<>();
-
-                            }
-
-                        }
-                        RecycleAdapter recycleAdapter=new RecycleAdapter(animals);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(recycleAdapter);
-                        empty.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
                     }
-                    progressDialog.dismiss();
+
                 }
                 else{
 
                     recyclerView.setVisibility(View.INVISIBLE);
                     empty.setVisibility(View.VISIBLE);
-                    progressDialog.dismiss();
+
                 }
+                progressDialog.dismiss();
 
             }
 
@@ -169,16 +143,18 @@ public class All_Animals_For_Seller extends Fragment {
         public RecycleAdapter(ArrayList<ArrayList<Animal>> animals){
             this.animals=animals;
         }
-        public  class ViewAdapter extends RecyclerView.ViewHolder{
+        public  class ViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             View mView;
-            Button rating,profile;
+            Button show_bid_history1,profile;
+            Button show_bid_history2;
             CardView card1,card2;
             ImageView animal_image1,animal_image2;
             TextView name_tv1,name_tv2,price_tv1,price_tv2,highest_bid_tv1,highest_bid_tv2,total_bid_tv1,total_bid_tv2;
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
+                mView.setOnClickListener(this);
                 animal_image1=mView.findViewById(R.id.animal_image1);
                 animal_image2=mView.findViewById(R.id.animal_image2);
                 name_tv1=mView.findViewById(R.id.name1);
@@ -189,11 +165,18 @@ public class All_Animals_For_Seller extends Fragment {
                 highest_bid_tv2=mView.findViewById(R.id.highest_bid2);
                 total_bid_tv1=mView.findViewById(R.id.total_bid1);
                 total_bid_tv2=mView.findViewById(R.id.total_bid2);
+                show_bid_history1=mView.findViewById(R.id.show_bid_history1);
+                show_bid_history2=mView.findViewById(R.id.show_bid_history2);
                 card1=mView.findViewById(R.id.card1);
                 card2=mView.findViewById(R.id.card2);
             }
 
 
+            @Override
+            public void onClick(View v) {
+
+
+            }
         }
         @NonNull
         @Override
@@ -207,13 +190,12 @@ public class All_Animals_For_Seller extends Fragment {
 
 
             ArrayList<Animal> animals2=animals.get(position);
-            holder.card1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
-            holder.card2.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
-            holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
-            holder.animal_image2.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
             if(animals2.size()==2){
 
-
+                holder.card1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
+                holder.card2.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
+                holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
+                holder.animal_image2.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
                 Animal animal=animals2.get(0);
                 holder.name_tv1.setText(getString(R.string.name2) +" : "+animal.name);
                 holder.price_tv1.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
@@ -227,12 +209,12 @@ public class All_Animals_For_Seller extends Fragment {
                 holder.price_tv1.setSelected(true);
                 holder.highest_bid_tv1.setSelected(true);
                 holder.total_bid_tv1.setSelected(true);
-
+                holder.card2.setVisibility(View.VISIBLE);
                 animal=animals2.get(1);
                 holder.name_tv2.setText(getString(R.string.name2) +" : "+animal.name);
                 holder.price_tv2.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
                 holder.highest_bid_tv2.setText(getString(R.string.highest_bid)+" : "+animal.highest_bid+" "+getString(R.string.taka));
-                holder.total_bid_tv2.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.ti));
+                holder.total_bid_tv2.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.jon));
                 if(animal.image_path!=null&&animal.image_path.length()>5){
                     Picasso.get().load(animal.image_path).into(holder.animal_image2);
                 }
@@ -241,12 +223,14 @@ public class All_Animals_For_Seller extends Fragment {
                 holder.highest_bid_tv2.setSelected(true);
                 holder.total_bid_tv2.setSelected(true);
             }
-            else{
+            else if(animals2.size()==1){
+                holder.card1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
+                holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
                 Animal animal=animals2.get(0);
                 holder.name_tv1.setText(getString(R.string.name2) +" : "+animal.name);
                 holder.price_tv1.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
                 holder.highest_bid_tv1.setText(getString(R.string.highest_bid)+" : "+animal.highest_bid+" "+getString(R.string.taka));
-                holder.total_bid_tv1.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.ti));
+                holder.total_bid_tv1.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.jon));
                 if(animal.image_path!=null&&animal.image_path.length()>5){
                     Picasso.get().load(animal.image_path).into(holder.animal_image1);
                 }
@@ -255,8 +239,43 @@ public class All_Animals_For_Seller extends Fragment {
                 holder.price_tv1.setSelected(true);
                 holder.highest_bid_tv1.setSelected(true);
                 holder.total_bid_tv1.setSelected(true);
-                holder.card2.setVisibility(View.GONE);
+                holder.card2.setVisibility(View.INVISIBLE);
             }
+
+            holder.card1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent tnt=new Intent(getContext(),Details_For_Seller.class);
+                    tnt.putExtra("animal_id",animals2.get(0).animal_id);
+                    startActivity(tnt);
+                }
+            });
+            holder.card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent tnt=new Intent(getContext(),Details_For_Seller.class);
+                    tnt.putExtra("animal_id",animals2.get(1).animal_id);
+                    startActivity(tnt);
+                }
+            });
+
+            holder.show_bid_history1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent tnt=new Intent(getContext(),PriceHistoryForSeller.class);
+                    tnt.putExtra("animal_id",animals2.get(0).animal_id);
+                    startActivity(tnt);
+                }
+            });
+            holder.show_bid_history2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent tnt=new Intent(getContext(),PriceHistoryForSeller.class);
+                    tnt.putExtra("animal_id",animals2.get(1).animal_id);
+                    startActivity(tnt);
+                }
+            });
+
 
 
 

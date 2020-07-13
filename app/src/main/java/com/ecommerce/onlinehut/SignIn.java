@@ -64,7 +64,7 @@ public class SignIn extends AppCompatActivity {
     FirebaseFirestore db;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     CallbackManager mCallbackManager;
-    String user_type="",device_id="",user_name="",image_path="",email="";
+    String user_type="",user_id="",device_id="",user_name="",image_path="",email="";
     TextView open_sign_up_panel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,10 +203,11 @@ public class SignIn extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         user_type=document.get("user_type").toString();
+                        SignIn.this.user_id=user_id;
                         getDeviceId(user_id);
 
                     } else {
-
+                        SignIn.this.user_id=user_id;
                         set_user_data(user_id);
                     }
                 } else {
@@ -266,6 +267,7 @@ public class SignIn extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("user_name", user_name);
         user.put("user_type", user_type);
+        user.put("user_id", user_id);
         user.put("phone_number", phone_number);
         user.put("email", email);
         user.put("image_path", image_path);

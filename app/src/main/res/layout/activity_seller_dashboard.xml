@@ -138,6 +138,30 @@
                         android:layout_height="match_parent">
 
                         <RelativeLayout
+                            android:id="@+id/admin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/menu_item_height"
+                                android:src="@drawable/admin" />
+
+                            <ImageView
+                                android:id="@+id/admin_active"
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginTop="9dp"
+                                android:layout_marginRight="3dp"
+                                android:src="@drawable/indicator"
+                                android:visibility="invisible" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
                             android:id="@+id/profile"
                             android:layout_marginTop="@dimen/dp_10"
                             android:orientation="horizontal"

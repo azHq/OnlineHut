@@ -33,6 +33,7 @@
     <string name="total_unsold_item">অবিক্রিত পশুর সংখ্যা</string>
     <string name="total_sell">মোট বিক্রি</string>
     <string name="name2">নাম</string>
+    <string name="userID">আইডি</string>
     <string name="email">ইমেইল</string>
     <string name="address">ঠিকানা</string>
     <string name="cancel">বাতিল করুন</string>
@@ -44,6 +45,7 @@
     <string name="empty">লিস্ট খালি</string>
     <string name="highest_bid">সর্বচ্চো বিড</string>
     <string name="total_bid">মোট বিড</string>
+    <string name="admin">অ্যাডমিন</string>
     <string name="profile">প্রোফাইল</string>
     <string name="taka">টাকা</string>
     <string name="ti">টি</string>

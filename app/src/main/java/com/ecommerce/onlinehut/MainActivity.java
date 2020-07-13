@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -92,7 +93,17 @@ public class MainActivity extends AppCompatActivity {
                        Map<String,Object> map=document.getData();
                        String user_type=map.get("user_type").toString();
                        User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"");
+                       user.setAdmin(map.containsKey("admin"));
+                       if(map.containsKey("disabled"))
+                           user.setDisabled((Boolean) map.get("disabled"));
+                       else user.setDisabled(false);
+                       Log.d("=============", String.valueOf(user.isDisabled()));
                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+                       /*if(*//*!user.isAdmin() &&*//*user.isDisabled()){
+                           Log.d("=============", String.valueOf(user.isDisabled()));
+                           startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
+                            finish();
+                       }*/
                        if(user_type.equalsIgnoreCase("seller")){
 
                            startActivity(new Intent(getApplicationContext(), SellerDashboard.class));

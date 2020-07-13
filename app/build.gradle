@@ -21,6 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    android {
+        buildTypes {
+            profile {
+                initWith debug
+            }
+        }
+    }
     sourceSets {
         main {
             res {
@@ -34,6 +41,17 @@ android {
     }
 
 
+}
+
+
+
+repositories {
+    maven {
+        url 'F:/Android/Flutter/ek_hut_admin/build/host/outputs/repo'
+    }
+    maven {
+        url 'http://download.flutter.io'
+    }
 }
 
 dependencies {
@@ -57,4 +75,5 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'id.zelory:compressor:2.1.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+
 }

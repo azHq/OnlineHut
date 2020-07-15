@@ -155,7 +155,7 @@ public class PinViewLayout extends AppCompatActivity {
                             if(user!=null){
                                 user_id=user.getUid();
                                if(activity_type.equalsIgnoreCase("sign_in")) get_user_data(user_id);
-                               else getDeviceId();
+                               else getDeviceId(null);
                             }
                             // ...
                         } else {
@@ -175,8 +175,9 @@ public class PinViewLayout extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     progressDialog.dismiss();
                     if (document.exists()) {
+                        Map<String,Object> map=document.getData();
                         user_type=document.get("user_type").toString();
-                        getDeviceId();
+                        getDeviceId(map);
 
                     } else {
                         FirebaseAuth.getInstance().signOut();
@@ -214,7 +215,7 @@ public class PinViewLayout extends AppCompatActivity {
             }
         });
     }
-    public void getDeviceId(){
+    public void getDeviceId(Map<String,Object> map){
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -227,7 +228,10 @@ public class PinViewLayout extends AppCompatActivity {
                         }
 
                         device_id = task.getResult().getToken();
-                        if(activity_type.equalsIgnoreCase("sign_in")) update_login_status(device_id);
+                        if(activity_type.equalsIgnoreCase("sign_in")){
+                            SharedPrefManager.getInstance(getApplicationContext()).set_shared_pref(map);
+                            update_login_status(device_id);
+                        }
                         else set_user_data();
 
 
@@ -243,10 +247,11 @@ public class PinViewLayout extends AppCompatActivity {
         user.put("phone_number", phone_number);
         user.put("image_path", "");
         user.put("device_id", device_id);
+        user.put("location", "");
         user.put("create_at", FieldValue.serverTimestamp());
         user.put("logged_in", true);
         user.put("online", true);
-
+        SharedPrefManager.getInstance(getApplicationContext()).set_shared_pref(user);
         documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -125,6 +125,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         });
         frameLayout=findViewById(R.id.frame_layout);
 
+
         RelativeLayout admin=findViewById(R.id.admin);
         if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin())
             admin.setVisibility(View.VISIBLE);
@@ -170,9 +171,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         all_subject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                actionBar.setTitle("All Subjects");
-                //changeFragmentView(new All_Subject_For_Student());
+                title_tv.setText(R.string.sold_animals);
+                active_indicator(1);
+                changeFragmentView(new SoldAnimalListForSeller());
             }
         });
         RelativeLayout my_classes=findViewById(R.id.unsold);
@@ -180,8 +181,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             @Override
             public void onClick(View view) {
 
-                actionBar.setTitle("My Classes");
-               // changeFragmentView(new My_Classes(actionBar));
+                title_tv.setText(R.string.unsold_animal);
+                active_indicator(3);
+                changeFragmentView(new UnSoldAnimalList());
             }
         });
 
@@ -223,14 +225,15 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Map<String,Object> map=documentSnapshot.getData();
-                if(map.containsKey("disabled"))
-                    if((Boolean) map.get("disabled")){
+                Map<String, Object> map = documentSnapshot.getData();
+                if (map.containsKey("disabled"))
+                    if ((Boolean) map.get("disabled")) {
                         startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
                         finish();
                     }
             }
         });
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

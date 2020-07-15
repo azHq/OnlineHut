@@ -69,6 +69,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         updateDeviceId(s);
+        SharedPrefManager.getInstance(getApplicationContext()).changeDeviceId(s);
     }
     public void updateDeviceId(final String device_id){
 

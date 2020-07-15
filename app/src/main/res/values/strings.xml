@@ -43,8 +43,6 @@
     <string name="address_change">আপনার ঠিকানা পরিবর্তন করুন</string>
     <string name="price">দাম</string>
     <string name="empty">লিস্ট খালি</string>
-    <string name="highest_bid">সর্বচ্চো বিড</string>
-    <string name="total_bid">মোট বিড</string>
     <string name="admin">অ্যাডমিন</string>
     <string name="highest_bid">সর্বচ্চো দাম</string>
     <string name="total_bid">মোট দাম করেছেন</string>
@@ -116,4 +114,13 @@
     <string name="view_price">দামগুলো দেখুন</string>
     <string name="edit">পরিবর্তন করুন</string>
     <string name="delete">বাতিল করুন</string>
+    <string name="delete_permission">আপনি কি ডিলিট করতে চান?</string>
+    <string name="payment_completed">দাম পরিশোধ</string>
+    <string name="confirm2">কনফার্ম</string>
+    <string name="time_remain">সময় বাকি</string>
+    <string name="charge">চার্জ</string>
+    <string name="buyer_name">ক্রেতার নাম</string>
+    <string name="seller_name">বিক্রেতার নাম</string>
+    <string name="sold_price">বিক্রিত দাম</string>
+    <string name="referral_code_length">রেফারাল কোড ৫ সংখ্যার হতে হবে।</string>
 </resources>

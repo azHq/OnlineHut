@@ -88,7 +88,7 @@ public class PriceHistoryForBuyer extends AppCompatActivity {
         startActivity(intent);
     }
     public void get_price_history(){
-        Query documentReference=db.collection("BidHistory");
+        Query documentReference=db.collection("BidHistory").whereEqualTo("animal_id",animal_id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -160,7 +160,8 @@ public class PriceHistoryForBuyer extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     if(image_paths[0].length()>0){
 
                         Picasso.get().load(image_paths[0]).into(imageView);

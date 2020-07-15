@@ -164,7 +164,7 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/menu_item_height"
-                                android:src="@drawable/admin" />
+                                android:src="@drawable/admin_icon" />
 
                             <ImageView
                                 android:id="@+id/admin_active"

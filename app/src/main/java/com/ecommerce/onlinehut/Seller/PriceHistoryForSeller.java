@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,6 +63,7 @@ public class PriceHistoryForSeller extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_history);
+        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         animal_id=getIntent().getStringExtra("animal_id");
         firebaseAuth=FirebaseAuth.getInstance();
         user_id=firebaseAuth.getCurrentUser().getUid();
@@ -79,8 +81,15 @@ public class PriceHistoryForSeller extends AppCompatActivity {
         get_animal_data();
         get_price_history();
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void get_price_history(){
-        Query documentReference=db.collection("BidHistory");
+        Query documentReference=db.collection("BidHistory").whereEqualTo("animal_id",animal_id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -152,7 +161,8 @@ public class PriceHistoryForSeller extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     if(image_paths[0].length()>0){
 
                         Picasso.get().load(image_paths[0]).into(imageView);

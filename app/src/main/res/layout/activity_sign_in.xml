@@ -92,17 +92,10 @@
                 android:onClick="faceboo_sign_in"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/fb_icon2"
+                android:background="@drawable/fb_icon"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
             </Button>
-            <!--<com.facebook.login.widget.LoginButton
-                android:id="@+id/login_button"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />!-->
         </LinearLayout>
 
 

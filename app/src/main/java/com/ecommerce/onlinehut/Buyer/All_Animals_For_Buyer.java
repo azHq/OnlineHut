@@ -503,7 +503,7 @@ public class All_Animals_For_Buyer extends Fragment {
     public void get_all_animals_data(){
         progressDialog.show();
         Query documentReference=db.collection("AllAnimals");
-        documentReference.whereEqualTo("user_id",user_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -536,7 +536,8 @@ public class All_Animals_For_Buyer extends Fragment {
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             borns.add(born);
-                            Animal animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            String animal_alt_id=map.get("alternative_id").toString();
+                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                             animals.add(animal);
                             imagesPathList.add(compress_image_path);
                         }

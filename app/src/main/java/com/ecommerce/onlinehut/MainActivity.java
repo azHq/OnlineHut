@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
 import com.ecommerce.onlinehut.Buyer.Compare;
+import com.ecommerce.onlinehut.Buyer.ConfirmationMessageAndPaymentInfo;
 import com.ecommerce.onlinehut.Seller.Add_New_Animal;
 import com.ecommerce.onlinehut.Seller.SellerDashboard;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
                if(firebaseUser==null){
 
-                   startActivity(new Intent(getApplicationContext(), Add_New_Animal.class));
+                   startActivity(new Intent(getApplicationContext(), SignIn.class));
                    finish();
                }
                else{
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                    user_id=firebaseUser.getUid();
                    get_user_data();
 
-                  // startActivity(new Intent(getApplicationContext(), Compare.class));
+                   //startActivity(new Intent(getApplicationContext(), ConfirmationMessageAndPaymentInfo.class));
 
                }
             }
@@ -96,23 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                        Map<String,Object> map=document.getData();
                        String user_type=map.get("user_type").toString();
-                       User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"");
-                       user.setAdmin(map.containsKey("admin"));
-                       if(map.containsKey("disabled"))
-                           user.setDisabled((Boolean) map.get("disabled"));
-                       else user.setDisabled(false);
-                       Log.d("=============", String.valueOf(user.isDisabled()));
-                       String location="";
-                       if(map.containsKey("location")){
-                           location=map.get("location").toString();
-                       }
-                       User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"",location);
-                       SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
-                       /*if(*//*!user.isAdmin() &&*//*user.isDisabled()){
-                           Log.d("=============", String.valueOf(user.isDisabled()));
-                           startActivity(new Intent(getApplicationContext(), DisabledActivity.class));
-                            finish();
-                       }*/
+                       SharedPrefManager.getInstance(getApplicationContext()).set_shared_pref(map);
                        if(user_type.equalsIgnoreCase("seller")){
 
                            startActivity(new Intent(getApplicationContext(), SellerDashboard.class));
@@ -134,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
        });
 
     }
+
+
 
     public void show_error_dialog(){
         AlertDialog.Builder alert=new AlertDialog.Builder(getApplicationContext());

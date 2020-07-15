@@ -9,20 +9,25 @@ public class User {
     public String device_id;
     private boolean admin = false;
     private boolean disabled = false;
-
-    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id) {
     public String location;
-
-    public User(String user_id, String user_name, String user_type, String phone_number, String image_path, String device_id, String location) {
+    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_type = user_type;
         this.phone_number = phone_number;
         this.image_path = image_path;
         this.device_id = device_id;
-        this.location = location;
     }
-    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id, boolean is_admin) {
+    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id,String location) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.user_type = user_type;
+        this.phone_number = phone_number;
+        this.image_path = image_path;
+        this.device_id = device_id;
+        this.location=location;
+    }
+    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id, boolean is_admin,boolean disabled,String location) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_type=user_type;
@@ -30,19 +35,9 @@ public class User {
         this.image_path = image_path;
         this.device_id=device_id;
         this.admin = is_admin;
+        this.disabled=disabled;
+        this.location=location;
     }
-
-    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id, boolean is_admin, boolean disabled) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-        this.user_type=user_type;
-        this.phone_number = phone_number;
-        this.image_path = image_path;
-        this.device_id=device_id;
-        this.admin = is_admin;
-        this.disabled = disabled;
-    }
-
     public boolean isAdmin() {
         return admin;
     }
@@ -103,8 +98,9 @@ public class User {
         return disabled;
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setDisabled(boolean disabled){
+            this.disabled = disabled;
+    }
     public String getLocation() {
         return location;
     }

@@ -16,7 +16,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content">
         <Button
-            android:onClick="seller"
+            android:onClick="buyer"
             android:layout_margin="20dp"
             android:layout_gravity="bottom"
             android:background="@drawable/buy"
@@ -28,7 +28,7 @@
             android:layout_height="40dp">
         </View>
         <Button
-            android:onClick="buyer"
+            android:onClick="seller"
             android:layout_margin="20dp"
             android:background="@drawable/sell"
             android:layout_width="match_parent"

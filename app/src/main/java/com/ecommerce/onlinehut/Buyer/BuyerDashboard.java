@@ -250,8 +250,8 @@ public class BuyerDashboard extends AppCompatActivity implements NavigationView.
                 if(item.getItemId()==R.id.log_out){
                     FirebaseAuth.getInstance().signOut();
                     LoginManager.getInstance().logOut();
-                    finish();
                     startActivity(new Intent(getApplicationContext(), SelectUserType.class));
+                    finish();
                 }
                 else if(item.getItemId()==R.id.settings){
 

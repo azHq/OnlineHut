@@ -58,7 +58,7 @@ public class NotificationSender {
             data.put("notification",notification);
             data.put("data",payload);
             notification_payload.put("data",data);
-            notification_payload.put("to", "d9iQeLAUQuGrEICxeNAEoE:APA91bGRuW-gtxKtUuV9TQKkv0GSBKQMNyzeriCvQBilbUJSIlVI7j0HoYzqGZrQP1zjPVlRtXawa_HcD3aOvD8BfoFVW-AMH_HedVMen-hZE6YZpVf2y9PZqjuutUyV9QIKUFdwhL3i");
+            notification_payload.put("to", receiver_device_id);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -76,12 +76,13 @@ public class NotificationSender {
                     @Override
                     public void onResponse(JSONObject response) {
 
+                        //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                       // Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
 
                     }
                 }){

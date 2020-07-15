@@ -98,7 +98,8 @@ public class Compare extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     tv_name.setText(name);
                     tv_price.setText(price+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
@@ -152,7 +153,8 @@ public class Compare extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     tv_name2.setText(name);
                     tv_price2.setText(price+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";

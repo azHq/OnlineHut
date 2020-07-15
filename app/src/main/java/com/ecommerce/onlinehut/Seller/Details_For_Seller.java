@@ -4,10 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -40,6 +45,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -68,11 +75,13 @@ public class Details_For_Seller extends AppCompatActivity {
     LinearLayout price_history_layout;
     EditText price_et;
     User user;
+    AlertDialog alertDialog;
     int price=0,previous_price=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details__for__seller);
+        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         animal_id=getIntent().getStringExtra("animal_id");
         firebaseAuth=FirebaseAuth.getInstance();
         user_id=firebaseAuth.getCurrentUser().getUid();
@@ -93,6 +102,7 @@ public class Details_For_Seller extends AppCompatActivity {
         tv_color=findViewById(R.id.color);
         tv_born=findViewById(R.id.born);
         tv_teeth=findViewById(R.id.teeth);
+
         price_et=findViewById(R.id.price_input);
         id_tv=findViewById(R.id.id);
         price_history_recycle=findViewById(R.id.price_history_recycle);
@@ -103,9 +113,22 @@ public class Details_For_Seller extends AppCompatActivity {
         highest_price_tv=findViewById(R.id.highest_price);
         recycleAdapter=new RecycleAdapter(imagesPathList);
         recyclerView.setAdapter(recycleAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         get_animal_data();
         get_price_history();
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void read_details(View view){
 
@@ -180,14 +203,15 @@ public class Details_For_Seller extends AppCompatActivity {
                     float height=Float.parseFloat(map.get("height").toString());
                     int teeth=Integer.parseInt(map.get("teeth").toString());
                     String born=map.get("born").toString();
-                    String compress_image_path=""; map.get("compress_image_path").toString();
+                    String compress_image_path=map.get("compress_image_path").toString();
                     String[] image_paths=map.get("original_image_path").toString().split(",");
                     String image_path=image_paths[0];
                     System.out.println("image path:"+image_path+" length:"+image_paths.length);
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,"",name,price,age,color,weight,height,teeth,born,image_path,compress_image_path,video_path,highest_bid,total_bid);
                     imagesPathList.addAll(Arrays.asList(image_paths));
                     recycleAdapter.notifyDataSetChanged();
                     tv_name.setText(name);
@@ -349,8 +373,69 @@ public class Details_For_Seller extends AppCompatActivity {
 
     public void edit(View view){
 
+        Intent intent=new Intent(getApplicationContext(),EditAnimalInfo.class);
+        intent.putExtra("animal_id",animal_id);
+        startActivity(intent);
+
     }
     public void delete(View view){
 
+        show_exit_dialog(Details_For_Seller.this);
+
+    }
+
+    public void yes_delete(){
+        progressDialog.show();
+        DocumentReference  documentReference= db.collection("AllAnimals").document(animal_id);
+        documentReference.delete();
+        StorageReference storageReference=null;
+        for(int i=0;i<imagesPathList.size();i++){
+            if(imagesPathList.get(i).length()>5){
+                storageReference= FirebaseStorage.getInstance().getReferenceFromUrl(imagesPathList.get(i));
+                storageReference.delete();
+            }
+
+        }
+        if(animal.compress_image_path.length()>5){
+            storageReference= FirebaseStorage.getInstance().getReferenceFromUrl(animal.compress_image_path);
+            storageReference.delete();
+        }
+        if(animal.video_path.length()>0){
+            storageReference= FirebaseStorage.getInstance().getReferenceFromUrl(animal.video_path);
+
+            storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    progressDialog.dismiss();
+                    finish();
+                }
+            });
+        }
+    }
+
+    public void show_exit_dialog(Context context){
+        AlertDialog.Builder alert=new AlertDialog.Builder(context);
+        View view= LayoutInflater.from(context).inflate(R.layout.exit_panel,null);
+        alert.setView(view);
+        alertDialog=alert.show();;
+        Button yes=view.findViewById(R.id.yes);
+        Button no=view.findViewById(R.id.no);
+        TextView title_tv=view.findViewById(R.id.title);
+        title_tv.setText(R.string.app_name);
+        TextView body_tv=view.findViewById(R.id.body);
+        body_tv.setText(R.string.delete_permission);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                yes_delete();
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
     }
 }

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
         android:allowBackup="true"
@@ -16,7 +17,17 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Admin.settings.SettingsActivity"></activity>
+        <activity
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/NoActionBarTheme"
+            android:name=".Buyer.ConfirmationMessageAndPaymentInfo">
+        </activity>
+        <activity android:name=".Seller.UnSoldAnimalList" />
+        <activity
+            android:name=".Seller.EditAnimalInfo"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".Buyer.Payment" />
+        <activity android:name=".Admin.settings.SettingsActivity" />
         <activity android:name=".DisabledActivity" />
         <activity android:name=".Admin.deposite.DepositeActivity" />
         <activity android:name=".Admin.all_users.AllUsers" />
@@ -24,10 +35,7 @@
             android:name=".Admin.AdminPanel"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
-        <activity
-            android:name=".Seller.Add_New_Animal"
-            android:label="@string/add_new_animal"
-        <activity android:name=".Seller.Details_For_Seller"></activity>
+        <activity android:name=".Seller.Details_For_Seller" />
         <activity android:name=".Buyer.PriceHistoryForBuyer" />
         <activity android:name=".Seller.SoldAnimalListForSeller" />
         <activity android:name=".Buyer.RequestConfirmation" />
@@ -74,10 +82,6 @@
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".Seller.SellerDashboard"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme" />
-        <activity
-            android:name=".Admin.AdminPanel"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
         <activity

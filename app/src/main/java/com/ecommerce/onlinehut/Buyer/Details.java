@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -248,7 +249,8 @@ public class Details extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     imagesPathList.addAll(Arrays.asList(image_paths));
                     recycleAdapter.notifyDataSetChanged();
                     tv_name.setText(name);

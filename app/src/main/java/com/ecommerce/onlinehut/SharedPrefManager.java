@@ -2,6 +2,9 @@ package com.ecommerce.onlinehut;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import java.util.Map;
 
 public class SharedPrefManager {
 
@@ -17,7 +20,6 @@ public class SharedPrefManager {
     private static final String GEOPOINT="GEOPOINT";
     private static final String IS_DISABLED = "DISABLED";
     private static final String LOCATION="LOCATION";
-    private static final String GEOPOINT="GEOPOINT";
     private static final String NUMBER_OF_UNSEEN_NOTIFICATION="NUMBER_OF_UNSEEN_NOTIFICATION";
 
     private static SharedPrefManager mInstance;
@@ -65,6 +67,20 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(USER_ID, null) != null;
     }
+    public void set_shared_pref(Map<String,Object> map){
+        User user=new User(map.get("user_id")+"",map.get("user_name")+"",map.get("user_type")+"",map.get("phone_number")+"",map.get("image_path")+"",map.get("device_id")+"");
+        user.setAdmin(map.containsKey("admin"));
+        if(map.containsKey("disabled"))
+            user.setDisabled((Boolean) map.get("disabled"));
+        else user.setDisabled(false);
+        Log.d("=============", String.valueOf(user.isDisabled()));
+        String location="";
+        if(map.containsKey("location")){
+            location=map.get("location").toString();
+        }
+        user.setLocation(location);
+        userLogin(user);
+    }
 
 
     public User getUser() {
@@ -77,7 +93,7 @@ public class SharedPrefManager {
                 sharedPreferences.getString(IMAGE_PATH,null),
                 sharedPreferences.getString(DEVICE_ID,null),
                 sharedPreferences.getBoolean(IS_ADMIN, false),
-                sharedPreferences.getBoolean(IS_DISABLED, false)
+                sharedPreferences.getBoolean(IS_DISABLED, false),
                 sharedPreferences.getString(LOCATION,null)
         );
     }
@@ -88,8 +104,6 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(DEVICE_ID,device_id);
     }
-
-
     public void logout() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

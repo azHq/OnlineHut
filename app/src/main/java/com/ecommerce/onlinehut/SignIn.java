@@ -202,13 +202,15 @@ public class SignIn extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        Map<String,Object>  map=document.getData();
                         user_type=document.get("user_type").toString();
                         SignIn.this.user_id=user_id;
-                        getDeviceId(user_id);
+                        getDeviceId(user_id,"update",map);
 
                     } else {
                         SignIn.this.user_id=user_id;
-                        set_user_data(user_id);
+                        getDeviceId(user_id,"set",null);
+
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Authentication failed.",
@@ -218,7 +220,7 @@ public class SignIn extends AppCompatActivity {
         });
 
     }
-    public void getDeviceId(String user_id){
+    public void getDeviceId(String user_id,String type,Map<String,Object> data){
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -229,9 +231,17 @@ public class SignIn extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please Check Your Internet Connection",Toast.LENGTH_LONG).show();
                             return;
                         }
-
                         device_id = task.getResult().getToken();
-                        update_login_status(device_id,user_id);
+                        if(type.equalsIgnoreCase("update")){
+                            SharedPrefManager.getInstance(getApplicationContext()).set_shared_pref(data);
+                            update_login_status(device_id,user_id);
+                        }
+                        else{
+
+                            set_user_data(user_id);
+                        }
+
+
 
 
 
@@ -251,6 +261,7 @@ public class SignIn extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
                 if(user_type.equalsIgnoreCase("seller")){
+
 
                     startActivity(new Intent(getApplicationContext(), SellerDashboard.class));
                     finish();
@@ -272,10 +283,11 @@ public class SignIn extends AppCompatActivity {
         user.put("email", email);
         user.put("image_path", image_path);
         user.put("device_id", device_id);
+        user.put("location", "");
         user.put("create_at", FieldValue.serverTimestamp());
         user.put("logged_in", true);
         user.put("online", true);
-
+        SharedPrefManager.getInstance(getApplicationContext()).set_shared_pref(user);
         documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -46,9 +48,10 @@ public class RequestConfirmation extends AppCompatActivity {
     int price=0,previous_price=0;
     RecyclerView recyclerView;
     TextView name_tv,price_tv,id_tv;
-    TextView buyer_name_tv,buyer_price_tv,buyer_location_tv,time_tv;
+    TextView buyer_name_tv,buyer_price_tv,buyer_location_tv,time_tv,comfirm_message;
     ImageView imageView;
     Animal animal;
+    public long charge_percentage=0;
     TextView empty;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,32 +70,66 @@ public class RequestConfirmation extends AppCompatActivity {
         name_tv=findViewById(R.id.name);
         price_tv=findViewById(R.id.price);
         buyer_price_tv=findViewById(R.id.buyer_price);
+        comfirm_message=findViewById(R.id.buyer_price);
         id_tv=findViewById(R.id.id);
         imageView=findViewById(R.id.image);
         get_price_history(document_id);
+        get_AppConfigurationData();
     }
     public void confirm(View view){
 
         update_bidhistory();
     }
+    public void get_AppConfigurationData(){
+        DocumentReference documentReference=db.collection("AppConfiguration").document("AppConfiguration");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    if(documentSnapshot.exists())
+                    {
+                        Map<String,Object> data=documentSnapshot.getData();
+                        String minimum_payment=data.get("minimum_payment").toString();
+                        String expire_time=data.get("confirmation_expire_time").toString();
+                        charge_percentage=(long)data.get("charge");
+                        comfirm_message.setText("বিঃদ্রঃ আপনাকে "+expire_time+" ঘণ্টার মধ্যে "+minimum_payment+"% পেমেন্ট কমপ্লিট করতে হবে।");
+
+                    }
+
+                }
+            }
+        });
+    }
     public void update_bidhistory(){
         progressDialog.show();
         DocumentReference documentReference=db.collection("BidHistory").document(document_id);
         Map<String,Object> map=new HashMap<>();
-        map.put("state","confirm");
+        map.put("sold_status","confirm");
+        map.put("sold_time", FieldValue.serverTimestamp());
         documentReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
             }
         });
+        int charge=(int)(Integer.parseInt(priceHistoryItem.price)*(charge_percentage/100.0f));
         documentReference=db.collection("AllAnimals").document(animal.animal_id);
         map=new HashMap<>();
-        map.put("state","confirm");
+        map.put("sold_status","confirm");
+        map.put("buyer_id",user_id);
+        map.put("payment_complete",0);
+        map.put("charge",charge);
+        map.put("sold_price",priceHistoryItem.price);
+        map.put("sold_time", FieldValue.serverTimestamp());
         documentReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
+                Intent intent=new Intent(getApplicationContext(),ConfirmationMessageAndPaymentInfo.class);
+                intent.putExtra("document_id",animal.animal_id);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -123,6 +160,7 @@ public class RequestConfirmation extends AppCompatActivity {
                         get_animal_data(animal_id);
                         buyer_price_tv.setText("আপনি "+ EngToBanConverter.getInstance().convert(price)+" "+getString(R.string.taka)+" দাম করেছেন।");
                         buyer_price_tv.setSelected(true);
+
 
                     }
                 }
@@ -165,7 +203,8 @@ public class RequestConfirmation extends AppCompatActivity {
                     String video_path=map.get("video_path").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                    animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_alt_id=map.get("alternative_id").toString();
+                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     if(image_paths[0].length()>0){
 
                         Picasso.get().load(image_paths[0]).into(imageView);

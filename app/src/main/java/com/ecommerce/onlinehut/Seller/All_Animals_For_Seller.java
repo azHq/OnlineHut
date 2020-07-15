@@ -43,6 +43,7 @@ public class All_Animals_For_Seller extends Fragment {
     TextView empty;
     ProgressDialog progressDialog;
     Button add_new_animal;
+    int animal_alt_id=0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,9 +59,12 @@ public class All_Animals_For_Seller extends Fragment {
         add_new_animal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(),Add_New_Animal.class));
+                Intent tnt=new Intent(getContext(),Add_New_Animal.class);
+                tnt.putExtra("animal_alt_id",animal_alt_id);
+                startActivity(tnt);
             }
         });
+
         return view;
     }
 
@@ -68,6 +72,24 @@ public class All_Animals_For_Seller extends Fragment {
     public void onResume() {
         super.onResume();
         get_all_animals_data();
+        get_animal_alt_id();
+    }
+    public void get_animal_alt_id(){
+        Query documentReference=db.collection("AllAnimals");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isComplete()) {
+
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && querySnapshot.size() > 0) {
+                        animal_alt_id=querySnapshot.size();
+                    }
+                }
+            }
+        });
+
     }
 
     public void get_all_animals_data(){
@@ -100,7 +122,8 @@ public class All_Animals_For_Seller extends Fragment {
                             String video_path=map.get("video_path").toString();
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                            Animal animal=new Animal(animal_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            String animal_alt_id=map.get("alternative_id").toString();
+                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                             animals2.add(animal);
                             if(animals2.size()==2){
                                 animals.add(animals2);

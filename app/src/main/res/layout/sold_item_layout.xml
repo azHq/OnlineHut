@@ -5,280 +5,444 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/item"
     android:weightSum="6">
 
     <androidx.cardview.widget.CardView
         app:cardElevation="5dp"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/image"
-            android:scaleType="fitXY"
-            android:src="@drawable/cow_image1"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-        </ImageView>
-    </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-            <View
-                android:background="@color/magenta_transparent2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/table_border_width">
-            </View>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_height="@dimen/table_cell_height_35">
-                <TextView
-                    android:background="@drawable/table_border3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/light_megenda"
-                    android:text="@string/id"
-                    android:layout_height="match_parent">
-                </TextView>
-                <TextView
-                    android:id="@+id/id"
-                    android:background="@drawable/table_border4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/sp_14"
-                    android:singleLine="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:text="00"
-                    android:textColor="@color/light_megenda"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-                </TextView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_height="@dimen/table_cell_height_35">
-                <TextView
-                    android:background="@drawable/table_border3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/light_megenda"
-                    android:text="@string/animal_name"
-                    android:layout_height="match_parent">
-                </TextView>
-                <TextView
-                    android:id="@+id/name"
-                    android:background="@drawable/table_border4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:text="00"
-                    android:textColor="@color/light_megenda"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-                </TextView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_height="@dimen/table_cell_height_35">
-                <TextView
-                    android:background="@drawable/table_border3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/light_megenda"
-                    android:text="@string/highest_bid"
-                    android:layout_height="match_parent">
-                </TextView>
-                <TextView
-                    android:id="@+id/name"
-                    android:background="@drawable/table_border4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:text="00"
-                    android:textColor="@color/light_megenda"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-                </TextView>
-            </LinearLayout>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight=".6"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:background="@drawable/table_border4"
-            android:layout_height="match_parent">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_margin="@dimen/dp_10"
-                android:background="@drawable/round_back_white_with_border"
-                android:onClick="upload_video"
-                android:text="@string/pricing"
-                android:textColor="@color/light_megenda">
-            </Button>
-
-        </LinearLayout>
-
-    </LinearLayout>
-    <View
-        android:background="@color/magenta_transparent2"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/table_border_width">
-    </View>
-    <androidx.cardview.widget.CardView
-        android:layout_margin="@dimen/dp_10"
-        android:layout_width="match_parent"
-        app:cardCornerRadius="5dp"
-        android:layout_height="115dp">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_margin="2dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/image"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/cow_image1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </ImageView>
 
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_marginEnd="25dp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent">
+                </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/seller_image"
-                        android:src="@drawable/male_profile"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp">
-                    </de.hdodenhof.circleimageview.CircleImageView>
-                    <TextView
-                        android:id="@+id/seller_name"
-                        android:text="user name"
-                        android:gravity="center"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_margin="2dp"
+                    android:layout_height="wrap_content">
+                    <View
+                        android:background="@color/magenta_transparent2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:id="@+id/seller_location"
-                        android:text="user name"
-                        android:gravity="center"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
+                        android:layout_height="@dimen/table_border_width">
+                    </View>
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:id="@+id/seller_id"
-                        android:text="user name"
-                        android:gravity="center"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_height="30dp">
+                        <TextView
+                            android:background="@drawable/table_border3"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/sp_12"
+                            android:gravity="center"
+                            android:textColor="@color/light_megenda"
+                            android:text="@string/id"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/id"
+                            android:background="@drawable/table_border4"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:singleLine="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:ellipsize="marquee"
+                            android:text="00"
+                            android:textColor="@color/light_megenda"
+                            android:gravity="center"
+                            android:layout_height="match_parent">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </TextView>
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_height="30dp">
+                        <TextView
+                            android:background="@drawable/table_border3"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:textColor="@color/light_megenda"
+                            android:text="@string/animal_name"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/name"
+                            android:background="@drawable/table_border4"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:ellipsize="marquee"
+                            android:text="00"
+                            android:textSize="12sp"
+                            android:textColor="@color/light_megenda"
+                            android:gravity="center"
+                            android:layout_height="match_parent">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_height="30dp">
+                        <TextView
+                            android:background="@drawable/table_border3"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/light_megenda"
+                            android:text="@string/animal_price"
+                            android:textSize="12sp"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/price"
+                            android:background="@drawable/table_border4"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:ellipsize="marquee"
+                            android:text="00"
+                            android:textSize="12sp"
+                            android:textColor="@color/light_megenda"
+                            android:gravity="center"
+                            android:layout_height="match_parent">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_height="30dp">
+                        <TextView
+                            android:background="@drawable/table_border3"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/light_megenda"
+                            android:text="@string/payment_completed"
+                            android:textSize="12sp"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/payment_complete"
+                            android:background="@drawable/table_border4"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:ellipsize="marquee"
+                            android:text="00"
+                            android:textSize="12sp"
+                            android:textColor="@color/light_megenda"
+                            android:gravity="center"
+                            android:layout_height="match_parent">
+                        </TextView>
+                    </LinearLayout>
+
+
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
-                android:layout_weight="1"
-                android:layout_marginStart="25dp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
+                android:layout_margin="2dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:background="@color/magenta_transparent2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/buyer_image"
-                        android:src="@drawable/male_profile"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp">
-                    </de.hdodenhof.circleimageview.CircleImageView>
+                    android:layout_height="@dimen/table_border_width">
+                </View>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="30dp">
                     <TextView
-                        android:id="@+id/buyer_location"
-                        android:text="user name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0207"
+                        android:background="@drawable/table_border3"
                         android:gravity="center"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:textSize="12sp"
+                        android:text="@string/charge"
+                        android:textColor="@color/light_megenda">
+
                     </TextView>
+
                     <TextView
-                        android:id="@+id/price"
-                        android:text="user name"
-                        android:gravity="center"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:ellipsize="marquee"
+                        android:id="@+id/charge"
+                        android:background="@drawable/table_border4"
+                        android:layout_width="0dp"
+                        android:layout_weight=".982"
                         android:singleLine="true"
                         android:marqueeRepeatLimit="marquee_forever"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:ellipsize="marquee"
+                        android:text="00"
+                        android:textSize="12sp"
+                        android:textColor="@color/light_megenda"
+                        android:gravity="center"
+                        android:layout_height="match_parent">
                     </TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="30dp">
                     <TextView
-                        android:id="@+id/buyer_location"
-                        android:text="user name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0207"
+                        android:background="@drawable/table_border3"
                         android:gravity="center"
-                        android:ellipsize="marquee"
+                        android:textSize="12sp"
+                        android:text="@string/charge"
+                        android:textColor="@color/light_megenda">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sold_price"
+                        android:background="@drawable/table_border4"
+                        android:layout_width="0dp"
+                        android:layout_weight=".982"
                         android:singleLine="true"
                         android:marqueeRepeatLimit="marquee_forever"
-                        android:textSize="@dimen/sp_16"
-                        android:textColor="#252525"
-                        android:fontFamily="serif"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:ellipsize="marquee"
+                        android:text="00"
+                        android:textSize="12sp"
+                        android:textColor="@color/light_megenda"
+                        android:gravity="center"
+                        android:layout_height="match_parent">
                     </TextView>
                 </LinearLayout>
             </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                app:cardCornerRadius="5dp"
+                android:layout_height="115dp">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_weight=".7"
+                        android:layout_marginEnd="5dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/seller_image"
+                                android:src="@drawable/male_profile"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp">
+                            </de.hdodenhof.circleimageview.CircleImageView>
+                            <TextView
+                                android:id="@+id/seller_id"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:textColor="@color/light_megenda"
+                                android:textSize="@dimen/sp_16"
+                                android:fontFamily="serif"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:id="@+id/seller_name"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp_16"
+                                android:textColor="@color/light_megenda"
+                                android:fontFamily="serif"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:id="@+id/seller_location"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp_16"
+                                android:textColor="@color/light_megenda"
+                                android:fontFamily="serif"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_weight=".6"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/status"
+                            android:text="@string/confirm2"
+                            android:gravity="center"
+                            android:textSize="@dimen/sp_20"
+                            android:textColor="@color/light_megenda"
+                            android:fontFamily="serif"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:layout_weight="1"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/time"
+                            android:text="@string/confirm2"
+                            android:gravity="center"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="@color/light_megenda"
+                            android:fontFamily="serif"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:layout_weight="1"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/time_remain"
+                            android:text="@string/time_remain"
+                            android:gravity="center"
+                            android:textSize="@dimen/sp_18"
+                            android:textColor="@color/light_megenda"
+                            android:fontFamily="serif"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:layout_weight="1"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/timer"
+                            android:text="6:20:00"
+                            android:gravity="center"
+                            android:textSize="@dimen/sp_20"
+                            android:textColor="#A00000"
+                            android:fontFamily="serif"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:layout_weight="1"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_weight=".7"
+                        android:layout_marginStart="5dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/buyer_image"
+                                android:src="@drawable/male_profile"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp">
+                            </de.hdodenhof.circleimageview.CircleImageView>
+                            <TextView
+                                android:id="@+id/buyer_id"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp_16"
+                                android:textColor="@color/light_megenda"
+                                android:fontFamily="serif"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:id="@+id/buyer_name"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp_16"
+                                android:textColor="@color/light_megenda"
+                                android:fontFamily="serif"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:id="@+id/buyer_location"
+                                android:text="user name"
+                                android:gravity="center"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:textSize="@dimen/sp_16"
+                                android:textColor="@color/light_megenda"
+                                android:fontFamily="serif"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
-    <View
-        android:background="@color/divider_color1"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/table_border_width">
-    </View>
+
 
 </LinearLayout>

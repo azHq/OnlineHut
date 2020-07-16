@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,12 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".About"></activity>
+        <activity android:name=".Seller.ContactForSeller" />
         <activity
-            android:windowSoftInputMode="stateHidden"
+            android:name=".Buyer.ConfirmationMessageAndPaymentInfo"
             android:theme="@style/NoActionBarTheme"
-            android:name=".Buyer.ConfirmationMessageAndPaymentInfo">
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".Seller.UnSoldAnimalList" />
         <activity
             android:name=".Seller.EditAnimalInfo"
@@ -43,7 +44,9 @@
             android:name=".Seller.NewPriceRequest"
             android:theme="@style/NoActionBarTheme" />
         <activity android:name=".Seller.PriceHistoryForSeller" />
-        <activity android:name=".Messenger" />
+        <activity
+            android:theme="@style/NoActionBarTheme"
+            android:name=".Messenger" />
         <activity android:name=".Buyer.Compare" />
         <activity
             android:name=".Buyer.Details"

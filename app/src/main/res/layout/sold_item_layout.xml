@@ -227,7 +227,7 @@
                         android:background="@drawable/table_border3"
                         android:gravity="center"
                         android:textSize="12sp"
-                        android:text="@string/charge"
+                        android:text="@string/sold_price"
                         android:textColor="@color/light_megenda">
 
                     </TextView>

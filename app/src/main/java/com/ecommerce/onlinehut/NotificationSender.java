@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -64,12 +65,34 @@ public class NotificationSender {
             e.printStackTrace();
         }
         sendNotification(notification_payload);
-
-
+        set_notification_data(title, body, sender_id, receiver_id, document_id, sender_device_id, receiver_device_id, activity_type);
 
 
     }
-    public void sendNotification(JSONObject jsonObject) {
+    private void set_notification_data(String title,String body,String sender_id,String receiver_id,String document_id,String sender_device_id,String receiver_device_id,String activity_type){
+
+
+        Map<String,Object> data=new HashMap<>();
+        data.put("title",title);
+        data.put("body",body);
+        data.put("sender_id",sender_id);
+        data.put("receiver_id",receiver_id);
+        data.put("document_id",document_id);
+        data.put("sender_device_id",sender_device_id);
+        data.put("receiver_device_id",receiver_device_id);
+        data.put("activity_type",activity_type);
+        data.put("seen_status","unseen");
+        data.put("time",FieldValue.serverTimestamp());
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        DocumentReference documentReference=db.collection("AllNotifications").document();
+        documentReference.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+    private void sendNotification(JSONObject jsonObject) {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, jsonObject,
                 new Response.Listener<JSONObject>() {

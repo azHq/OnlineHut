@@ -29,6 +29,7 @@ import com.ecommerce.onlinehut.CustomAlertDialog;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
 import com.ecommerce.onlinehut.SharedPrefManager;
+import com.ecommerce.onlinehut.Transaction;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -192,8 +193,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             @Override
             public void onClick(View view) {
 
-                actionBar.setTitle("All Teachers");
-                //changeFragmentView(new Teacher_List());
+                title_tv.setText(R.string.transaction_history);
+                active_indicator(4);
+                changeFragmentView(new TransactionHistoryForSeller());
             }
         });
         RelativeLayout pay_fees=findViewById(R.id.contact);
@@ -201,8 +203,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             @Override
             public void onClick(View view) {
 
-
-                //startActivity(new Intent(getApplicationContext(), Payment.class));
+                title_tv.setText(R.string.contact);
+                active_indicator(5);
+                changeFragmentView(new ContactForSeller());
             }
         });
         RelativeLayout notice=findViewById(R.id.about);

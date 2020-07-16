@@ -48,7 +48,7 @@ public class ConfirmationMessageAndPaymentInfo extends AppCompatActivity {
     TextView confirm_message,bkash_acc_number,rocket_acc_number,nagad_acc_number,mail_tv,phone_number_tv;
     Button submit_btn,call_btn,mail_btn,message_btn;
     EditText referral_code_et;
-    String admin_device_id="",mail,phone_number="";
+    String admin_device_id="",mail,phone_number="",admin_id="";
     CardView referral_code_card_view;
     public final  int PHONE_CALL_PERMISSION=1;
     @Override
@@ -132,6 +132,26 @@ public class ConfirmationMessageAndPaymentInfo extends AppCompatActivity {
         });
 
     }
+    public void get_device_id(String user_id){
+        DocumentReference documentReference = db.collection("Users").document(user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    progressDialog.dismiss();
+                    if (document.exists()) {
+
+                        Map<String, Object> map = document.getData();
+                        if (map.containsKey("device_id")) {
+
+                            admin_device_id=map.get("device_id").toString();
+                        }
+                    }
+                }
+            }
+        });
+    }
     public void start_call(){
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
         Toast.makeText(getApplicationContext(),"call sending",Toast.LENGTH_LONG).show();
@@ -168,11 +188,13 @@ public class ConfirmationMessageAndPaymentInfo extends AppCompatActivity {
         }
     }
     public void get_AppConfigurationData(){
+        progressDialog.show();
         DocumentReference documentReference=db.collection("AppConfiguration").document("AppConfiguration");
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isComplete()){
+                    progressDialog.dismiss();
                     DocumentSnapshot documentSnapshot=task.getResult();
                     if(documentSnapshot.exists())
                     {
@@ -189,6 +211,8 @@ public class ConfirmationMessageAndPaymentInfo extends AppCompatActivity {
                         mail=data.get("email").toString();
                         mail_tv.setText(mail);
                         phone_number=data.get("phone_number").toString();
+                        admin_id=data.get("admin_id").toString();
+                        get_device_id(admin_id);
                         phone_number_tv.setText(EngToBanConverter.getInstance().convert(phone_number));
                     }
 

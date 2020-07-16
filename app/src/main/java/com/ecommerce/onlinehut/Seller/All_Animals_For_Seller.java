@@ -223,7 +223,7 @@ public class All_Animals_For_Seller extends Fragment {
                 holder.name_tv1.setText(getString(R.string.name2) +" : "+animal.name);
                 holder.price_tv1.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
                 holder.highest_bid_tv1.setText(getString(R.string.highest_bid)+" : "+animal.highest_bid+" "+getString(R.string.taka));
-                holder.total_bid_tv1.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.ti));
+                holder.total_bid_tv1.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.jon));
                 if(animal.image_path!=null&&animal.image_path.length()>5){
                     Picasso.get().load(animal.image_path).into(holder.animal_image1);
                 }

@@ -130,7 +130,8 @@ public class SoldAnimalListForSeller extends Fragment {
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             String animal_alt_id=map.get("alternative_id").toString();
-                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,buyer_id,sold_status,payment_complete,charge,time,animal_type,name,price,age,color,weight,height,teeth,born,image_paths[0],video_path,highest_bid,total_bid,compress_image_path);
+                            int sold_price= Integer.parseInt(map.get("sold_price").toString());
+                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,buyer_id,sold_status,sold_price,payment_complete,charge,time,animal_type,name,price,age,color,weight,height,teeth,born,image_paths[0],video_path,highest_bid,total_bid,compress_image_path);
                             animals.add(animal);
 
                         }
@@ -226,7 +227,7 @@ public class SoldAnimalListForSeller extends Fragment {
             holder.price_tv1.setText(animal.price+" "+getString(R.string.taka));
             holder.payment_complete_tv1.setText(animal.payment_complete+" "+getString(R.string.taka));
             holder.charge_tv.setText(animal.charge+" "+getString(R.string.taka));
-            holder.sold_price.setText(animal.charge);
+            holder.sold_price.setText(animal.sold_price+"");
             if(animal.image_path!=null&&animal.image_path.length()>5){
                 Picasso.get().load(animal.image_path).into(holder.animal_image1);
             }

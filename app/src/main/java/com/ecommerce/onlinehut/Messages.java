@@ -4,21 +4,27 @@ public class Messages {
     public String id;
     public String message;
     public String sender_id;
+    public String sender_name;
+    public String sender_image_path;
     public String sender_type;
     public String receiver_id;
+    public String receiver_name;
+    public String receiver_image_path;
     public String receiver_type;
     public String time;
-    public String date;
 
-    public Messages(String id, String message, String sender_id, String sender_type, String receiver_id, String receiver_type, String time, String date) {
+    public Messages(String id, String message, String sender_id, String sender_name, String sender_image_path, String sender_type, String receiver_id, String receiver_name, String receiver_image_path, String receiver_type, String time) {
         this.id = id;
         this.message = message;
         this.sender_id = sender_id;
+        this.sender_name = sender_name;
+        this.sender_image_path = sender_image_path;
         this.sender_type = sender_type;
         this.receiver_id = receiver_id;
+        this.receiver_name = receiver_name;
+        this.receiver_image_path = receiver_image_path;
         this.receiver_type = receiver_type;
         this.time = time;
-        this.date = date;
     }
 
     public String getId() {
@@ -77,11 +83,5 @@ public class Messages {
         this.time = time;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 }

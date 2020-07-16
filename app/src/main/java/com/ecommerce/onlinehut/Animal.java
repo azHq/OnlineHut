@@ -6,6 +6,7 @@ public class Animal {
     public String user_id;
     public String buyer_id;
     public String sold_status;
+    public int sold_price;
     public int payment_complete;
     public int charge;
     public String animal_type;
@@ -62,12 +63,13 @@ public class Animal {
         this.total_bid = total_bid;
     }
 
-    public Animal(String animal_id,String animal_alt_id,String user_id, String buyer_id, String sold_status,int payment_complete,int charge,String time, String animal_type, String name, int price, float age, String color, float weight, float height, int teeth, String born, String image_path, String video_path, int highest_bid, int total_bid, String compress_image_path) {
+    public Animal(String animal_id,String animal_alt_id,String user_id, String buyer_id, String sold_status,int sold_price,int payment_complete,int charge,String time, String animal_type, String name, int price, float age, String color, float weight, float height, int teeth, String born, String image_path, String video_path, int highest_bid, int total_bid, String compress_image_path) {
         this.animal_id = animal_id;
         this.animal_alt_id=animal_alt_id;
         this.user_id = user_id;
         this.buyer_id = buyer_id;
         this.sold_status = sold_status;
+        this.sold_price=sold_price;
         this.payment_complete=payment_complete;
         this.charge=charge;
         this.time=time;

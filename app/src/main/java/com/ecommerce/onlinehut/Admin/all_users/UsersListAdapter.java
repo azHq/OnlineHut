@@ -1,10 +1,15 @@
 package com.ecommerce.onlinehut.Admin.all_users;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -66,11 +71,11 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
                                 Menu.viewProfile(u, view.getContext());
                                 return true;
                             case R.id.disable:
-                                Menu.disableProfile(u, position,UsersListAdapter.this);
+                                show_disable_dialog(view.getContext(), u, position, UsersListAdapter.this);
                                 //handle menu2 click
                                 return true;
                             case R.id.enable:
-                                Menu.enableProfile(u, position,UsersListAdapter.this);
+                                show_enable_dialog(view.getContext(), u, position, UsersListAdapter.this);
                                 //handle menu2 click
                                 return true;
                             case R.id.delete:
@@ -84,6 +89,23 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
                 });
                 //displaying the popup
                 popup.show();
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.getContext().startActivity(new Intent(view.getContext(), UserDetails.class)
+                        .putExtra("user_id", u.getUser_id())
+                        .putExtra("user_name", u.getUser_name())
+                        .putExtra("user_type", u.getUser_type())
+                        .putExtra("phone_number", u.getPhone_number())
+                        .putExtra("image_path", u.getImage_path())
+                        .putExtra("device_id", u.getDevice_id())
+                        .putExtra("disabled", u.isDisabled())
+                        .putExtra("location", u.getLocation())
+                        .putExtra("is_admin", u.isAdmin())
+                );
             }
         });
     }
@@ -106,5 +128,57 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
             balanceTV = view.findViewById(R.id.balanceTV);
             statusTV = view.findViewById(R.id.statusTV);
         }
+    }
+
+    public void show_disable_dialog(Context context, User u, int position, UsersListAdapter usersListAdapter) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.exit_panel, null);
+        alert.setView(view);
+        AlertDialog alertDialog = alert.show();
+        ;
+        Button yes = view.findViewById(R.id.yes);
+        Button no = view.findViewById(R.id.no);
+        TextView title_tv = view.findViewById(R.id.title);
+        title_tv.setText(R.string.app_name);
+        TextView body_tv = view.findViewById(R.id.body);
+        body_tv.setText(R.string.disable_confirmation);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Menu.disableProfile(u, position, usersListAdapter, alertDialog);
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    public void show_enable_dialog(Context context, User u, int position, UsersListAdapter usersListAdapter) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.exit_panel, null);
+        alert.setView(view);
+        AlertDialog alertDialog = alert.show();
+        ;
+        Button yes = view.findViewById(R.id.yes);
+        Button no = view.findViewById(R.id.no);
+        TextView title_tv = view.findViewById(R.id.title);
+        title_tv.setText(R.string.app_name);
+        TextView body_tv = view.findViewById(R.id.body);
+        body_tv.setText(R.string.enable_confirmation);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Menu.enableProfile(u, position, usersListAdapter, alertDialog);
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
     }
 }

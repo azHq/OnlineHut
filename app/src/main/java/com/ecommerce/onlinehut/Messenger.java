@@ -55,6 +55,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.google.firebase.firestore.DocumentChange.Type.ADDED;
+
 public class Messenger extends AppCompatActivity {
 
     TextView message_view;
@@ -202,21 +204,26 @@ public class Messenger extends AppCompatActivity {
                if(queryDocumentSnapshots.size()>0){
 
                    for(DocumentChange documentChange:queryDocumentSnapshots.getDocumentChanges()){
-                       Map<String,Object> data=documentChange.getDocument().getData();
-                       String receiver_id=data.get("receiver_id").toString();
-                       if(receiver_id.equalsIgnoreCase(Messenger.this.sender_id)){
-                           String message_id=data.get("message_id").toString();
-                           String sender_id=data.get("sender_id").toString();
-                           String sender_name=Messenger.this.sender_name;
-                           String sender_image_path=Messenger.this.sender_image_path;
-                           String sender_type=data.get("sender_type").toString();
-                           String receiver_name=Messenger.this.receiver_name;
-                           String receiver_image_path=Messenger.this.receiver_image_path;
-                           String receiver_type=data.get("receiver_type").toString();
-                           String message=data.get("message").toString();
-                           String time=DateTimeConverter.getInstance().get_current_data_time();;
-                           messages.add(new Messages(message_id,message,sender_id,sender_name,sender_image_path,sender_type,receiver_id,receiver_name,receiver_image_path,receiver_type,time));
+
+                       if(documentChange.getType()==ADDED){
+                           System.out.println("message send");
+                           Map<String,Object> data=documentChange.getDocument().getData();
+                           String receiver_id=data.get("receiver_id").toString();
+                           if(receiver_id.equalsIgnoreCase(Messenger.this.sender_id)){
+                               String message_id=data.get("message_id").toString();
+                               String sender_id=data.get("sender_id").toString();
+                               String sender_name=Messenger.this.sender_name;
+                               String sender_image_path=Messenger.this.sender_image_path;
+                               String sender_type=data.get("sender_type").toString();
+                               String receiver_name=Messenger.this.receiver_name;
+                               String receiver_image_path=Messenger.this.receiver_image_path;
+                               String receiver_type=data.get("receiver_type").toString();
+                               String message=data.get("message").toString();
+                               String time=DateTimeConverter.getInstance().get_current_data_time();;
+                               messages.add(new Messages(message_id,message,sender_id,sender_name,sender_image_path,sender_type,receiver_id,receiver_name,receiver_image_path,receiver_type,time));
+                           }
                        }
+
                    }
                    recycleAdapter.notifyDataSetChanged();
                }

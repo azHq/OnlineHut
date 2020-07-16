@@ -43,7 +43,9 @@
             android:name=".Seller.NewPriceRequest"
             android:theme="@style/NoActionBarTheme" />
         <activity android:name=".Seller.PriceHistoryForSeller" />
-        <activity android:name=".Messenger" />
+        <activity
+            android:theme="@style/NoActionBarTheme"
+            android:name=".Messenger" />
         <activity android:name=".Buyer.Compare" />
         <activity
             android:name=".Buyer.Details"

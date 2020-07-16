@@ -198,4 +198,20 @@ public class Animal {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
+
+    public String getBuyer_id() {
+        return buyer_id;
+    }
+
+    public void setBuyer_id(String buyer_id) {
+        this.buyer_id = buyer_id;
+    }
+
+    public String getSold_status() {
+        return sold_status;
+    }
+
+    public void setSold_status(String sold_status) {
+        this.sold_status = sold_status;
+    }
 }

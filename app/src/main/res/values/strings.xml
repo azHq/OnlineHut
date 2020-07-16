@@ -123,4 +123,8 @@
     <string name="seller_name">বিক্রেতার নাম</string>
     <string name="sold_price">বিক্রিত দাম</string>
     <string name="referral_code_length">রেফারাল কোড ৫ সংখ্যার হতে হবে।</string>
+    <string name="enter_your_admin_panel_password">অ্যাডমিন প্যানেলের পাসওয়ার্ড দিন</string>
+    <string name="verify_admin">ভেরিফাই</string>
+    <string name="disable_confirmation">ডিজেবল করতে চান?</string>
+    <string name="enable_confirmation">এন্যাবল করতে চান?</string>
 </resources>

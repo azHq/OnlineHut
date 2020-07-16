@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,26 +54,28 @@ public class Menu {
         Toast.makeText(context, "Deletion not supported", Toast.LENGTH_SHORT).show();
     }
 
-    public static void disableProfile(User u, int pos, UsersListAdapter usersListAdapter) {
+    public static void disableProfile(User u, int pos, UsersListAdapter usersListAdapter, AlertDialog alertDialog) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> map = new HashMap();
         map.put("disabled", true);
         db.collection("Users").document(u.getUser_id()).set(map, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                alertDialog.dismiss();
                 u.setDisabled(true);
                 usersListAdapter.notifyItemChanged(pos);
             }
         });
     }
 
-    public static void enableProfile(User u, int pos, UsersListAdapter usersListAdapter) {
+    public static void enableProfile(User u, int pos, UsersListAdapter usersListAdapter, AlertDialog alertDialog) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> map = new HashMap();
         map.put("disabled", false);
         db.collection("Users").document(u.getUser_id()).set(map, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                alertDialog.dismiss();
                 u.setDisabled(false);
                 usersListAdapter.notifyItemChanged(pos);
             }

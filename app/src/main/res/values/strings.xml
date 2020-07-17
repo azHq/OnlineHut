@@ -134,4 +134,15 @@
     <string name="contact">যোগাযোগ</string>
     <string name="disable_confirmation">ডিজেবল করতে চান?</string>
     <string name="enable_confirmation">এন্যাবল করতে চান?</string>
+    <string-array name="tx_methods">
+        <item>
+            বিকাশ
+        </item>
+        <item>
+            রকেট
+        </item>
+        <item>
+            নগদ
+        </item>
+    </string-array>
 </resources>

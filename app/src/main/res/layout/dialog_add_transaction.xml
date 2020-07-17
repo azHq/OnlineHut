@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#DCAE48EF"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:text="পেমেন্ট ইনপুট করুন"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label7"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="ক্রেতা আইডি"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/userid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label7"
+            android:ems="10"
+            android:hint="ক্রেতা আইডি"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            tools:listitem="@android:layout/simple_list_item_1" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/label6"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="পশু আইডি"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/animalid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label6"
+            android:ems="10"
+            android:hint="পশু আইডি"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="@string/phone_number"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label"
+            android:ems="10"
+            android:hint="@string/phone_number"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label2"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="TxID"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/txid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label2"
+            android:ems="10"
+            android:hint="TxID"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label3"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="ব্যালেন্স"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label3"
+            android:ems="10"
+            android:hint="ব্যালেন্স"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label4"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="মাধ্যম"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/gateway"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label4"
+            android:ems="10"
+            android:entries="@array/tx_methods"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_rect_with_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label5"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="always"
+            android:text="সময়"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/label5"
+            android:ems="10"
+            android:enabled="true"
+            android:hint="সময়"
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Cancel"
+            android:textColor="#9C27B0" />
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Add"
+            android:textColor="#9C27B0" />
+    </LinearLayout>
+
+</LinearLayout>

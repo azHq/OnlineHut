@@ -251,7 +251,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        pass.setText("azaz1234"); //todo:remove this
+                        pass.setText("pass1234"); //todo:remove this
                         String password = pass.getText().toString();
                         if (password.isEmpty()) {
                             Toast.makeText(getApplicationContext(), "Empty password not allowed", Toast.LENGTH_SHORT).show();

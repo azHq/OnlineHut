@@ -2,23 +2,23 @@ package com.ecommerce.onlinehut.Admin.all_users;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ecommerce.onlinehut.Animal;
-import com.ecommerce.onlinehut.Buyer.All_Animals_For_Buyer;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,7 +33,7 @@ public class UserDetails extends AppCompatActivity {
 
     User user;
     String user_id, user_name, user_type, phone_number, image_path, device_id;
-    boolean is_admin,  disabled;
+    boolean is_admin, disabled;
     String location;
 
     private TextView name, id, empty;
@@ -41,9 +41,12 @@ public class UserDetails extends AppCompatActivity {
     private RecyclerView rv;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private List<Animal> animals = new ArrayList<>();
-    ArrayList<String> imagesPathList=new ArrayList<>();
+    private List<Animal> soldAnimals = new ArrayList<>();
+    private List<Animal> unsoldAnimals = new ArrayList<>();
+    private ArrayList<Animal> animals = new ArrayList<>();
+    private ArrayList<String> imagesPathList = new ArrayList<>();
     private UserAnimalListAdapter animalListAdapter;
+    private BottomNavigationView navigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,71 +69,96 @@ public class UserDetails extends AppCompatActivity {
         id = findViewById(R.id.idTV);
         pp = findViewById(R.id.pp);
         rv = findViewById(R.id.animalsRV);
+        navigationBar = findViewById(R.id.bottom_nav);
 
         name.setText(user.getUser_name());
         id.setText(user.getUser_id());
 
+
         if (user.getImage_path().length() > 5)
             Picasso.get().load(user.getImage_path()).into(pp);
 
-        getAnimals();
+        if (user.getUser_type().equalsIgnoreCase("seller")) {
+            navigationBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.sold:
+                            getSoldAnimals();
+                            return true;
+                        case R.id.unsold:
+                            getUnsoldAnimals();
+                            return true;
+                    }
+                    return false;
+                }
+            });
+
+            navigationBar.setSelectedItemId(R.id.sold);
+        }
+        else {
+            navigationBar.setVisibility(View.GONE);
+            getAllAnimals();
+        }
     }
 
-    private void getAnimals() {
-        Query documentReference=db.collection("AllAnimals");
+    private void getSoldAnimals() {
+        if (soldAnimals != null && !soldAnimals.isEmpty()) {
+            initRV(soldAnimals);
+            return;
+        }
+        Query documentReference = db.collection("AllAnimals");
         documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                animals.clear();
+                soldAnimals.clear();
                 imagesPathList.clear();
-                if(task.isComplete()){
+                if (task.isComplete()) {
 
-                    QuerySnapshot querySnapshot=task.getResult();
-                    if(querySnapshot!=null&&querySnapshot.size()>0){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && querySnapshot.size() > 0) {
 
-                        for(QueryDocumentSnapshot queryDocumentSnapshot:querySnapshot){
-                            Map<String,Object> map=queryDocumentSnapshot.getData();
-                            if(user.getUser_type().equals("seller")){
-                                if(!user.getUser_id().equals(map.get("user_id")))
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : querySnapshot) {
+                            Map<String, Object> map = queryDocumentSnapshot.getData();
+                            if (user.getUser_type().equals("seller")) {
+                                if (!user.getUser_id().equals(map.get("user_id")))
                                     continue;
-                            }
-                            else
-                                if(!map.containsKey("buyer_id") || !user.getUser_id().equals(map.get("buyer_id")))
-                                    continue;
-                            String animal_id=map.get("animal_id").toString();
-                            String user_id=map.get("user_id").toString();
-                            String name=map.get("name").toString();
-                            int price=Integer.parseInt(map.get("price").toString());
-                            float age=Integer.parseInt(map.get("age").toString());
-                            String color=map.get("color").toString();
-                            float weight=Float.parseFloat(map.get("weight").toString());
-                            float height=Float.parseFloat(map.get("height").toString());
-                            int teeth=Integer.parseInt(map.get("teeth").toString());
-                            String born=map.get("born").toString();
-                            String compress_image_path=""; //map.get("compress_image_path").toString();
-                            String[] image_paths=map.get("original_image_path").toString().split(",");
-                            String image_path=image_paths[0];
-                            System.out.println("image path:"+image_path+" length:"+image_paths.length);
-                            String video_path=map.get("video_path").toString();
-                            int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
-                            int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                            String animal_alt_id=map.get("alternative_id").toString();
-                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            } else if (!map.containsKey("buyer_id") || !user.getUser_id().equals(map.get("buyer_id")))
+                                continue;
+                            if (!map.get("sold_status").toString().equalsIgnoreCase("confirm"))
+                                continue;
+                            String animal_id = map.get("animal_id").toString();
+                            String user_id = map.get("user_id").toString();
+                            String name = map.get("name").toString();
+                            int price = Integer.parseInt(map.get("price").toString());
+                            float age = Integer.parseInt(map.get("age").toString());
+                            String color = map.get("color").toString();
+                            float weight = Float.parseFloat(map.get("weight").toString());
+                            float height = Float.parseFloat(map.get("height").toString());
+                            int teeth = Integer.parseInt(map.get("teeth").toString());
+                            String born = map.get("born").toString();
+                            String compress_image_path = ""; //map.get("compress_image_path").toString();
+                            String[] image_paths = map.get("original_image_path").toString().split(",");
+                            String image_path = image_paths[0];
+                            System.out.println("image path:" + image_path + " length:" + image_paths.length);
+                            String video_path = map.get("video_path").toString();
+                            int highest_bid = Integer.parseInt(map.get("highest_bid").toString());
+                            int total_bid = Integer.parseInt(map.get("total_bid").toString());
+                            String animal_alt_id = map.get("alternative_id").toString();
+                            Animal animal = new Animal(animal_id, animal_alt_id, user_id, name, price, age, color, weight, height, teeth, born, image_path, video_path, highest_bid, total_bid);
                             animal.setSold_status(map.get("sold_status").toString());
-                            animal.setBuyer_id(map.containsKey("buyer_id")?map.get("buyer_id").toString():null);
-                            animals.add(animal);
+                            animal.setBuyer_id(map.containsKey("buyer_id") ? map.get("buyer_id").toString() : null);
+                            soldAnimals.add(animal);
                             imagesPathList.add(compress_image_path);
                         }
-                        initRV();
-                    }
-                    else{
+                        initRV(soldAnimals);
+                    } else {
                         rv.setVisibility(View.GONE);
                         empty.setVisibility(View.VISIBLE);
                     }
 
-                }
-                else{
+                } else {
 
                     rv.setVisibility(View.GONE);
                     empty.setVisibility(View.VISIBLE);
@@ -143,7 +171,143 @@ public class UserDetails extends AppCompatActivity {
         });
     }
 
-    private void initRV() {
+    private void getUnsoldAnimals() {
+        if (unsoldAnimals != null && !unsoldAnimals.isEmpty()) {
+            initRV(unsoldAnimals);
+            return;
+        }
+        Query documentReference = db.collection("AllAnimals");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                unsoldAnimals.clear();
+                imagesPathList.clear();
+                if (task.isComplete()) {
+
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && querySnapshot.size() > 0) {
+
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : querySnapshot) {
+                            Map<String, Object> map = queryDocumentSnapshot.getData();
+                            if (user.getUser_type().equals("seller")) {
+                                if (!user.getUser_id().equals(map.get("user_id")))
+                                    continue;
+                            } else if (!map.containsKey("buyer_id") || !user.getUser_id().equals(map.get("buyer_id")))
+                                continue;
+
+                            if (!map.get("sold_status").toString().equalsIgnoreCase("unsold"))
+                                continue;
+
+                            String animal_id = map.get("animal_id").toString();
+                            String user_id = map.get("user_id").toString();
+                            String name = map.get("name").toString();
+                            int price = Integer.parseInt(map.get("price").toString());
+                            float age = Integer.parseInt(map.get("age").toString());
+                            String color = map.get("color").toString();
+                            float weight = Float.parseFloat(map.get("weight").toString());
+                            float height = Float.parseFloat(map.get("height").toString());
+                            int teeth = Integer.parseInt(map.get("teeth").toString());
+                            String born = map.get("born").toString();
+                            String compress_image_path = ""; //map.get("compress_image_path").toString();
+                            String[] image_paths = map.get("original_image_path").toString().split(",");
+                            String image_path = image_paths[0];
+                            System.out.println("image path:" + image_path + " length:" + image_paths.length);
+                            String video_path = map.get("video_path").toString();
+                            int highest_bid = Integer.parseInt(map.get("highest_bid").toString());
+                            int total_bid = Integer.parseInt(map.get("total_bid").toString());
+                            String animal_alt_id = map.get("alternative_id").toString();
+                            Animal animal = new Animal(animal_id, animal_alt_id, user_id, name, price, age, color, weight, height, teeth, born, image_path, video_path, highest_bid, total_bid);
+                            animal.setSold_status(map.get("sold_status").toString());
+                            animal.setBuyer_id(map.containsKey("buyer_id") ? map.get("buyer_id").toString() : null);
+                            unsoldAnimals.add(animal);
+                            imagesPathList.add(compress_image_path);
+                        }
+                        initRV(soldAnimals);
+                    } else {
+                        rv.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
+                    }
+
+                } else {
+
+                    rv.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+
+
+        });
+    }
+
+    private void getAllAnimals(){
+        Query documentReference = db.collection("AllAnimals");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                animals.clear();
+                imagesPathList.clear();
+                if (task.isComplete()) {
+
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && querySnapshot.size() > 0) {
+
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : querySnapshot) {
+                            Map<String, Object> map = queryDocumentSnapshot.getData();
+                            if (user.getUser_type().equals("seller")) {
+                                if (!user.getUser_id().equals(map.get("user_id")))
+                                    continue;
+                            } else if (!map.containsKey("buyer_id") || !user.getUser_id().equals(map.get("buyer_id")))
+                                continue;
+                            if (!map.get("sold_status").toString().equalsIgnoreCase("confirm"))
+                                continue;
+                            String animal_id = map.get("animal_id").toString();
+                            String user_id = map.get("user_id").toString();
+                            String name = map.get("name").toString();
+                            int price = Integer.parseInt(map.get("price").toString());
+                            float age = Integer.parseInt(map.get("age").toString());
+                            String color = map.get("color").toString();
+                            float weight = Float.parseFloat(map.get("weight").toString());
+                            float height = Float.parseFloat(map.get("height").toString());
+                            int teeth = Integer.parseInt(map.get("teeth").toString());
+                            String born = map.get("born").toString();
+                            String compress_image_path = ""; //map.get("compress_image_path").toString();
+                            String[] image_paths = map.get("original_image_path").toString().split(",");
+                            String image_path = image_paths[0];
+                            System.out.println("image path:" + image_path + " length:" + image_paths.length);
+                            String video_path = map.get("video_path").toString();
+                            int highest_bid = Integer.parseInt(map.get("highest_bid").toString());
+                            int total_bid = Integer.parseInt(map.get("total_bid").toString());
+                            String animal_alt_id = map.get("alternative_id").toString();
+                            Animal animal = new Animal(animal_id, animal_alt_id, user_id, name, price, age, color, weight, height, teeth, born, image_path, video_path, highest_bid, total_bid);
+                            animal.setSold_status(map.get("sold_status").toString());
+                            animal.setBuyer_id(map.containsKey("buyer_id") ? map.get("buyer_id").toString() : null);
+                            animals.add(animal);
+                            imagesPathList.add(compress_image_path);
+                        }
+                        initRV(animals);
+                    } else {
+                        rv.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
+                    }
+
+                } else {
+
+                    rv.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+
+
+        });
+    }
+
+    private void initRV(List<Animal> animals) {
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         // specify an adapter (see also next example)

@@ -1,6 +1,6 @@
 package com.ecommerce.onlinehut.models;
 
-public class Setting {
+public class Setting implements Comparable{
     private String label, value;
 
     public Setting(String label, String value) {
@@ -22,5 +22,10 @@ public class Setting {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return getLabel().compareTo(((Setting)o).getLabel());
     }
 }

@@ -31,6 +31,7 @@
         <activity android:name=".DisabledActivity" />
         <activity android:name=".Admin.deposite.DepositeActivity" />
         <activity android:name=".Admin.all_users.AllUsers" />
+        <activity android:name=".Admin.all_users.UserDetails"/>
         <activity
             android:name=".Admin.AdminPanel"
             android:screenOrientation="portrait"

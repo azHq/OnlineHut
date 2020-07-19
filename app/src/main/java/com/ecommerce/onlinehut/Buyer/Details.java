@@ -75,7 +75,7 @@ public class Details extends AppCompatActivity {
     ProgressDialog progressDialog;
     Animal animal;
     ImageView imageView;
-    TextView tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv;
+    TextView tv_price,location_tv,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv;
     RecyclerView price_history_recycle;
     RecycleAdapterPriceHistory recycleAdapterPriceHistory;
     LinearLayout price_history_layout;
@@ -103,6 +103,7 @@ public class Details extends AppCompatActivity {
         imageView=findViewById(R.id.image_view);
         tv_name=findViewById(R.id.name);
         tv_price=findViewById(R.id.price);
+        location_tv=findViewById(R.id.location);
         tv_age=findViewById(R.id.age);
         tv_weight=findViewById(R.id.weight);
         tv_height=findViewById(R.id.height);
@@ -167,7 +168,7 @@ public class Details extends AppCompatActivity {
     public void submit_price(View view){
 
        if(price_et.getText().length()>0){
-           price=Integer.parseInt(price_et.getText().toString());
+           price=Integer.parseInt(EngToBanConverter.getInstance().convert_bangla_to_english(price_et.getText().toString()));
        }
        else{
            CustomAlertDialog.getInstance().show_error_dialog(Details.this,getString(R.string.input_error),getString(R.string.price)+getString(R.string.write));
@@ -297,6 +298,7 @@ public class Details extends AppCompatActivity {
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
                     String animal_type=map.get("type").toString();
+                    String location=map.get("location").toString();
                     animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     for(int i=0;i<image_paths.length;i++){
                         String[] str={image_paths[i],"image"};
@@ -308,6 +310,7 @@ public class Details extends AppCompatActivity {
                     }
                     recycleAdapter.notifyDataSetChanged();
                     tv_name.setText(name);
+                    location_tv.setText(location);
                     tv_price.setText(EngToBanConverter.getInstance().convert(price+"")+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
                     String month=(int)(age%12)+"";

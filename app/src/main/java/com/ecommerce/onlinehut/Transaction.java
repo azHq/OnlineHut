@@ -78,11 +78,11 @@ public class Transaction implements Comparator<Notification> {
     }
 
     public String getTime() {
-        return time;
+        return time2;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String time2) {
+        this.time2 = time2;
     }
 
     public String getImage_path() {

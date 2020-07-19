@@ -74,7 +74,7 @@ public class Details_For_Seller extends AppCompatActivity {
     ProgressDialog progressDialog;
     Animal animal;
     ImageView imageView;
-    TextView tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv;
+    TextView tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv,location_tv;
     RecyclerView price_history_recycle;
     RecycleAdapterPriceHistory recycleAdapterPriceHistory;
     LinearLayout price_history_layout;
@@ -99,6 +99,7 @@ public class Details_For_Seller extends AppCompatActivity {
         imageView=findViewById(R.id.image_view);
         tv_name=findViewById(R.id.name);
         tv_price=findViewById(R.id.price);
+        location_tv=findViewById(R.id.location);
         tv_age=findViewById(R.id.age);
         tv_weight=findViewById(R.id.weight);
         tv_height=findViewById(R.id.height);
@@ -226,6 +227,7 @@ public class Details_For_Seller extends AppCompatActivity {
                     String image_path=image_paths[0];
                     System.out.println("image path:"+image_path+" length:"+image_paths.length);
                     String video_path=map.get("video_path").toString();
+                    String location=map.get("location").toString();
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
@@ -242,6 +244,7 @@ public class Details_For_Seller extends AppCompatActivity {
                     recycleAdapter.notifyDataSetChanged();
                     id_tv.setText("A-"+animal_alt_id);
                     tv_name.setText(name);
+                    location_tv.setText(location);
                     tv_price.setText(price+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
                     String month=(int)(age%12)+"";

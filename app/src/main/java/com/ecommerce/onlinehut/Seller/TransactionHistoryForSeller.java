@@ -69,7 +69,7 @@ public class TransactionHistoryForSeller extends Fragment {
 
     public void get_transaction_history_data()
     {
-        Query query=db.collection("Transaction").whereEqualTo("receiver_id",user_id);
+        Query query=db.collection("Transaction").whereEqualTo("user_id",user_id);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -81,14 +81,15 @@ public class TransactionHistoryForSeller extends Fragment {
 
                         Map<String,Object> data=documentSnapshot.getData();
                         String image_path=data.get("image_path").toString();
-                        String sender_name=data.get("sender_name").toString();
-                        String sender_id=data.get("sender_id").toString();
+                        String sender_name=data.get("user_name").toString();
+                        String sender_id=data.get("user_id").toString();
                         String phone_number=data.get("phone_number").toString();
                         int amount=Integer.parseInt(data.get("amount").toString());
                         String trxId=data.get("transaction_id").toString();
                         String animal_id=data.get("animal_id").toString();
                         String payment_method=data.get("payment_method").toString();
-                        Timestamp time= (Timestamp)data.get("sold_time");
+                        String time=data.get("time").toString();
+                        System.out.println("time:"+time);
                         transactions.add(new Transaction(image_path,sender_name,sender_id,phone_number,amount,trxId,animal_id,payment_method,time));
                     }
                     recycleAdapter.notifyDataSetChanged();
@@ -96,19 +97,8 @@ public class TransactionHistoryForSeller extends Fragment {
                     empty.setVisibility(View.GONE);
                 }
                 else{
-//                    recyclerView.setVisibility(View.GONE);
-//                    empty.setVisibility(View.VISIBLE);
-
-                    //should remove
-                    recyclerView.setVisibility(View.VISIBLE);
-                    empty.setVisibility(View.GONE);
-
-                    Date date=new Date();
-                    date.getTime();
-                    for(int i=0;i<10;i++){
-                        transactions.add(new Transaction("","Azazul","123456","01795528283",1000,"1234","12345","Bkash","12-12-2020"));
-                    }
-
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
                     recycleAdapter.notifyDataSetChanged();
 
                 }
@@ -180,7 +170,7 @@ public class TransactionHistoryForSeller extends Fragment {
             if(transaction.image_path!=null&&transaction.image_path.length()>5){
                 Picasso.get().load(transaction.image_path).into(holder.image);
             }
-            holder.animal_id.setText(transaction.animal_id);
+            holder.trxId.setText(transaction.transaction_id);
             if(transaction.payment_method.equalsIgnoreCase("bkash")){
                 holder.logo.setImageResource(R.drawable.bkash_icon);
             }
@@ -193,7 +183,7 @@ public class TransactionHistoryForSeller extends Fragment {
             holder.phone_number.setText(getString(R.string.phone_number)+" : "+transaction.phone_number);
             holder.trxId.setText("trxId : "+transaction.transaction_id);
             holder.payment_method.setText(getString(R.string.medium)+" : "+transaction.payment_method);
-            holder.time.setText(getString(R.string.time)+" : "+transaction.time);
+            holder.time.setText(getString(R.string.time)+" : "+transaction.time2);
         }
 
         @Override

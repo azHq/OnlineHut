@@ -57,7 +57,7 @@ public class DepositeActivity extends AppCompatActivity {
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private TransactionListAdapter recycleAdapter;
     private Calendar calender;
-    EditText animalid, txid, phone, amount, time;
+    EditText animalid, txid, phone, amount, time,animal_id;
     Button save, cancel;
 
     @Override
@@ -112,6 +112,7 @@ public class DepositeActivity extends AppCompatActivity {
         txid = v.findViewById(R.id.txid);
         phone = v.findViewById(R.id.phone);
         amount = v.findViewById(R.id.amount);
+        animal_id= v.findViewById(R.id.amount);
         time = v.findViewById(R.id.time);
         save = v.findViewById(R.id.add);
         cancel = v.findViewById(R.id.cancel);
@@ -144,7 +145,7 @@ public class DepositeActivity extends AppCompatActivity {
                 Transaction transaction = new Transaction("", ((User) userid.getSelectedItem()).getUser_name(),
                         ((User) userid.getSelectedItem()).getUser_id(),
                         phone.getText().toString(), Integer.parseInt(amount.getText().toString()),
-                        txid.getText().toString(), gateway.getSelectedItem().toString(), time.getText().toString());
+                        txid.getText().toString(),animal_id.getText().toString(), gateway.getSelectedItem().toString(), time.getText().toString());
                 db.collection("Transaction").document().set(transaction).addOnCompleteListener(
                         new OnCompleteListener<Void>() {
                             @Override
@@ -182,8 +183,9 @@ public class DepositeActivity extends AppCompatActivity {
                         int amount=Integer.parseInt(data.get("amount").toString());
                         String trxId=data.get("transaction_id").toString();
                         String payment_method=data.get("payment_method").toString();
+                        String animal_id=data.get("animal_id").toString();
                         String time= data.get("time").toString();
-                        transactions.add(new Transaction(image_path,sender_name,sender_id,phone_number,amount,trxId,payment_method,time));
+                        transactions.add(new Transaction(image_path,sender_name,sender_id,phone_number,amount,trxId,animal_id,payment_method,time));
                     }
                     initRV(transactions);
                 }

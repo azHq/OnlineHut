@@ -59,7 +59,7 @@ public class Sold_Item_Details extends AppCompatActivity {
     ProgressDialog progressDialog;
     Animal animal;
     ImageView imageView;
-    TextView tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv;
+    TextView tv_price,tv_location,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv,id_tv;
     RecyclerView price_history_recycle;
     LinearLayout price_history_layout;
     EditText price_et;
@@ -85,6 +85,7 @@ public class Sold_Item_Details extends AppCompatActivity {
         tv_name=findViewById(R.id.name);
         tv_price=findViewById(R.id.price);
         tv_age=findViewById(R.id.age);
+        tv_location=findViewById(R.id.location);
         tv_weight=findViewById(R.id.weight);
         tv_height=findViewById(R.id.height);
         tv_color=findViewById(R.id.color);
@@ -94,7 +95,7 @@ public class Sold_Item_Details extends AppCompatActivity {
         id_tv=findViewById(R.id.id);
         price_history_recycle=findViewById(R.id.price_history_recycle);
         price_history_layout=findViewById(R.id.price_history_layout);
-        id_tv.setText(animal_id);
+
         highest_price_tv=findViewById(R.id.highest_price);
         recycleAdapter=new RecycleAdapter(imagesPathList);
         recyclerView.setAdapter(recycleAdapter);
@@ -144,11 +145,13 @@ public class Sold_Item_Details extends AppCompatActivity {
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
+                    String location=map.get("location").toString();
                     String animal_type=map.get("type").toString();
                     animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     imagesPathList.addAll(Arrays.asList(image_paths));
                     recycleAdapter.notifyDataSetChanged();
                     tv_name.setText(name);
+                    id_tv.setText("A-"+animal_alt_id);
                     tv_price.setText(price+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
                     String month=(int)(age%12)+"";
@@ -158,6 +161,7 @@ public class Sold_Item_Details extends AppCompatActivity {
                     tv_height.setText(height+" "+getString(R.string.feet));
                     tv_teeth.setText(teeth+" "+getString(R.string.ti));
                     tv_born.setText(born+"");
+                    tv_location.setText(location);
                     highest_price_tv.setText(highest_bid+" "+getString(R.string.taka));
                     get_user_data(user_id);
                 }

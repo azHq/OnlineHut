@@ -174,7 +174,7 @@ public class TransactionHistoryForBuyer extends Fragment {
             if(transaction.image_path!=null&&transaction.image_path.length()>5){
                 Picasso.get().load(transaction.image_path).into(holder.image);
             }
-            holder.animal_id.setText(transaction.animal_id);
+            holder.trxId.setText(transaction.transaction_id);
             if(transaction.payment_method.equalsIgnoreCase("bkash")){
                 holder.logo.setImageResource(R.drawable.bkash_icon);
             }

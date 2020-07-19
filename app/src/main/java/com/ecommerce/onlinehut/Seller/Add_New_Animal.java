@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -82,9 +83,9 @@ import id.zelory.compressor.Compressor;
 
 public class Add_New_Animal extends AppCompatActivity {
 
-    EditText animal_name_et,animal_price_et,age_et,weight_et,height_et,teeth_et,born_et;
+    EditText animal_name_et,animal_price_et,age_et,weight_et,height_et,teeth_et,born_et,location_et;
     public final String TAG="Add_New_Animal";
-    String name,age,color,weight,height,tooth,born,compress_image_path="",original_image_path="",video_path="",animal_type="";
+    String name,age,color,location,weight,height,tooth,born,compress_image_path="",original_image_path="",video_path="",animal_type="";
     AlertDialog alertDialog;
     int price=0;
     Spinner animal_color_type,animal_type_sp,number_of_teeth_sp,year_sp,month_sp;
@@ -123,6 +124,7 @@ public class Add_New_Animal extends AppCompatActivity {
     boolean[] completed=new boolean[3];
     int count=0;
     int animal_alt_id=0;
+    public int total_upload_count=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +141,7 @@ public class Add_New_Animal extends AppCompatActivity {
         storageReference=firebaseStorage.getReference();
         animal_name_et=findViewById(R.id.name);
         animal_price_et=findViewById(R.id.price);
+        location_et=findViewById(R.id.location);
         videoView=findViewById(R.id.video_view);
         play_btn=findViewById(R.id.play_btn);
         percentage=findViewById(R.id.percentage);
@@ -194,6 +197,13 @@ public class Add_New_Animal extends AppCompatActivity {
                 if(position>0){
 
                     year=position;
+                    int li=parent.getChildCount();
+                    if(li>0) {
+                        View linearLayout=parent.getChildAt(0);
+                        LinearLayout linearLayout1=linearLayout.findViewById(R.id.linear1);
+                        TextView textView=(TextView) linearLayout1.getChildAt(0);
+                        textView.setTextColor(Color.BLACK);
+                    }
                 }
                 else{
                     year=0;
@@ -225,7 +235,13 @@ public class Add_New_Animal extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 if(position>0){
-
+                    int li=parent.getChildCount();
+                    if(li>0) {
+                        View linearLayout=parent.getChildAt(0);
+                        LinearLayout linearLayout1=linearLayout.findViewById(R.id.linear1);
+                        TextView textView=(TextView) linearLayout1.getChildAt(0);
+                        textView.setTextColor(Color.BLACK);
+                    }
                     month=position-1;
                 }
                 else{
@@ -254,6 +270,13 @@ public class Add_New_Animal extends AppCompatActivity {
                 if(position>0){
 
                     animal_type=animal_types.get(position);
+                    int li=parent.getChildCount();
+                    if(li>0) {
+                        View linearLayout=parent.getChildAt(0);
+                        LinearLayout linearLayout1=linearLayout.findViewById(R.id.linear1);
+                        TextView textView=(TextView) linearLayout1.getChildAt(0);
+                        textView.setTextColor(Color.BLACK);
+                    }
                 }
                 else{
                     animal_type="";
@@ -280,6 +303,14 @@ public class Add_New_Animal extends AppCompatActivity {
 
                 if(position>0){
                     color=colors.get(position);
+
+                    int li=parent.getChildCount();
+                    if(li>0) {
+                        View linearLayout=parent.getChildAt(0);
+                        LinearLayout linearLayout1=linearLayout.findViewById(R.id.linear1);
+                        TextView textView=(TextView) linearLayout1.getChildAt(0);
+                        textView.setTextColor(Color.BLACK);
+                    }
                 }
                 else{
                     color="";
@@ -306,6 +337,14 @@ public class Add_New_Animal extends AppCompatActivity {
 
                 if(position>0){
                     tooth=teeth.get(position);
+
+                    int li=parent.getChildCount();
+                    if(li>0) {
+                        View linearLayout=parent.getChildAt(0);
+                        LinearLayout linearLayout1=linearLayout.findViewById(R.id.linear1);
+                        TextView textView=(TextView) linearLayout1.getChildAt(0);
+                        textView.setTextColor(Color.BLACK);
+                    }
                 }
                 else{
                     tooth="";
@@ -605,6 +644,12 @@ public class Add_New_Animal extends AppCompatActivity {
             show_error_dialog(R.string.input_error,getString(R.string.animal_price)+" "+getString(R.string.write));
             return;
         }
+        if(location_et.getText().toString().length()>0) location=location_et.getText().toString();
+        else{
+            show_error_dialog(R.string.input_error,getString(R.string.loading)+" "+getString(R.string.write));
+        }
+
+
         if(year<=0){
             show_error_dialog(R.string.input_error,getString(R.string.year)+" "+getString(R.string.select));
 
@@ -715,6 +760,7 @@ public class Add_New_Animal extends AppCompatActivity {
         user.put("type", animal_type);
         user.put("name", name);
         user.put("price", price);
+        user.put("location", location);
         user.put("age", age);
         user.put("color", color);
         user.put("teeth", tooth);
@@ -734,6 +780,7 @@ public class Add_New_Animal extends AppCompatActivity {
                 animal_price_et.setText("");
                 weight_et.setText("");
                 height_et.setText("");
+                location_et.setText("");
                 born_et.setText("");
                 submit_btn.setClickable(true);
                 animal_type_sp.setSelection(0);
@@ -744,8 +791,9 @@ public class Add_New_Animal extends AppCompatActivity {
         });
     }
     public void upload_images(){
-        progressDialog.dismiss();
 
+
+        total_upload_count=imagesPathList.size()+1;
         //upload images
         for(int i=0;i<imagesPathList.size();i++){
 
@@ -753,8 +801,13 @@ public class Add_New_Animal extends AppCompatActivity {
         }
         byte[] compress_bytes=compressImage1(Uri.fromFile(new File(imagesPathList.get(0))),70);
         upload_compress_image_to_firebase("compress_image_path",compress_bytes,imagesPathList.size());
-        if(video_uri!=null) upload_video_to_firebase("video_path",video_uri,0);
+        if(video_uri!=null){
+            total_upload_count+=1;
+            progressDialog.dismiss();
+            upload_video_to_firebase("video_path",video_uri,0);
+        }
         else{
+            progressDialog.dismiss();
             completed[2]=true;
             update("video_path","");
         }
@@ -808,15 +861,7 @@ public class Add_New_Animal extends AppCompatActivity {
                         update("original_image_path",image_path);
                     }
                     Log.d(TAG,"orginal image uploaded:"+image_path);
-                    count++;
-                    if(count>=imagesPathList.size()){
 
-                        completed[0]=true;
-                        if(completed[1]&&completed[2]){
-                            Log.d(TAG,"finish:0-"+completed[0]);
-                            finish();
-                        }
-                    }
                 }
                 else{
 
@@ -868,7 +913,6 @@ public class Add_New_Animal extends AppCompatActivity {
                         progressBar_layout.setVisibility(View.GONE);
                         Uri uri=task.getResult();
                         update(key,uri.toString());
-                        completed[2]=true;
                         Log.d(TAG,"Video uploaded:");
                         if(completed[0]&&completed[1]){
                             Log.d(TAG,"finish:2-"+completed[2]);
@@ -913,7 +957,13 @@ public class Add_New_Animal extends AppCompatActivity {
         documentReference.update(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                count++;
+                if(count>=total_upload_count){
+                    progressDialog.dismiss();
+                    Log.d(TAG,"finish:0-"+completed[0]);
+                    finish();
 
+                }
 
             }
         });

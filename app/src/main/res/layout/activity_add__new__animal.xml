@@ -48,7 +48,7 @@
                             android:inputType="none"
                             android:paddingLeft="@dimen/dp_10"
                             android:singleLine="true"
-                            android:textColor="@color/light_megenda"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/light_megenda"
                             android:textSize="@dimen/sp_16" />
 
@@ -90,13 +90,27 @@
                             android:layout_width="match_parent"
                             android:layout_height="44dp"
                             android:layout_marginTop="@dimen/dp_16"
+                            android:textColor="@color/black"
                             android:background="@drawable/round_back_white"
                             android:hint="@string/animal_price"
                             android:imeOptions="actionNext"
                             android:inputType="phone"
                             android:paddingLeft="@dimen/dp_16"
                             android:singleLine="true"
-                            android:textColor="@color/light_megenda"
+                            android:textColorHint="@color/light_megenda"
+                            android:textSize="@dimen/sp_16" />
+                        <EditText
+                            android:id="@+id/location"
+                            android:layout_width="match_parent"
+                            android:layout_height="44dp"
+                            android:layout_marginTop="@dimen/dp_16"
+                            android:background="@drawable/round_back_white"
+                            android:hint="@string/location"
+                            android:imeOptions="actionNext"
+                            android:inputType="none"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/light_megenda"
                             android:textSize="@dimen/sp_16" />
 
@@ -239,7 +253,7 @@
                             android:inputType="phone"
                             android:paddingLeft="@dimen/dp_16"
                             android:singleLine="true"
-                            android:textColor="@color/light_megenda"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/light_megenda"
                             android:textSize="@dimen/sp_16" />
 
@@ -254,7 +268,7 @@
                             android:inputType="phone"
                             android:paddingLeft="@dimen/dp_16"
                             android:singleLine="true"
-                            android:textColor="@color/light_megenda"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/light_megenda"
                             android:textSize="@dimen/sp_16" />
 
@@ -301,16 +315,16 @@
                             android:inputType="none"
                             android:paddingLeft="@dimen/dp_16"
                             android:singleLine="true"
-                            android:textColor="@color/light_megenda"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/light_megenda"
                             android:textSize="@dimen/sp_16" />
                     </LinearLayout>
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="10dp"
-                        android:background="@color/divider_color1"></View>
+                        android:background="@color/divider_color1">
+                    </View>
 
                     <LinearLayout
                         android:layout_width="match_parent"

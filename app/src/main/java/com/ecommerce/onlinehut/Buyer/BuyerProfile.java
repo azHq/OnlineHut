@@ -388,20 +388,8 @@ public class BuyerProfile extends Fragment {
                         ArrayList<Animal> animals2=new ArrayList<>();
                         for(QueryDocumentSnapshot queryDocumentSnapshot:querySnapshot){
                             Map<String,Object> map=queryDocumentSnapshot.getData();
-                            String animal_id=map.get("animal_id").toString();
-                            String user_id=map.get("user_id").toString();
-                            String name=map.get("name").toString();
-                            int price=Integer.parseInt(map.get("price").toString());
-                            float age=Integer.parseInt(map.get("age").toString());
-                            String color=map.get("color").toString();
-                            float weight=Float.parseFloat(map.get("weight").toString());
-                            float height=Float.parseFloat(map.get("height").toString());
-                            int teeth=Integer.parseInt(map.get("teeth").toString());
-                            int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
-                            int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                            String animal_alt_id=map.get("alternative_id").toString();
+
                             int sold_price=0;
-                            String sold_status=map.get("sold_status").toString();
                             if(map.containsKey("sold_price")){
                                 sold_price=Integer.parseInt(map.get("sold_price").toString());
                                 total_buy+=sold_price;

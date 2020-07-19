@@ -214,6 +214,31 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="@color/light_megenda"
+                            android:text="@string/location"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/location"
+                            android:background="@drawable/table_border4"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="00"
+                            android:textColor="@color/light_megenda"
+                            android:layout_height="match_parent">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_height="40dp">
+                        <TextView
+                            android:background="@drawable/table_border3"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/light_megenda"
                             android:text="@string/highest_bid"
                             android:layout_height="match_parent">
                         </TextView>

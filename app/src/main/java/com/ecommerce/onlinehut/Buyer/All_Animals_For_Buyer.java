@@ -950,7 +950,7 @@ public class All_Animals_For_Buyer extends Fragment {
             public void onClick(View v) {
                 String price_str=price_et.getText().toString();
                 if(price_str.length()>0){
-                    int price=Integer.parseInt(price_str);
+                    int price=Integer.parseInt(EngToBanConverter.getInstance().convert_bangla_to_english(price_str));
                     if(price>=minimum_price&&minimum_price<=animal.price||minimum_price>animal.price){
                         alertDialog.dismiss();
                         upload_new_price(price,animal);

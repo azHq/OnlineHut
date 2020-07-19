@@ -170,7 +170,7 @@ public class Add_New_Animal extends AppCompatActivity {
         weight_et=findViewById(R.id.weight);
         height_et=findViewById(R.id.height);
         progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Please Wait..");
+        progressDialog.setMessage("Please Wait....");
         imagesPathList.add("");
         imagesPathList.add("");
         imagesPathList.add("");

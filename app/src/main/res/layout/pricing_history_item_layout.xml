@@ -31,6 +31,7 @@
                     android:gravity="center"
                     android:layout_height="match_parent">
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image"
                         android:src="@drawable/male_profile"
                         android:layout_width="40dp"
                         android:layout_height="40dp">

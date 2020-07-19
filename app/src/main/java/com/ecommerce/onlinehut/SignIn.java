@@ -111,6 +111,10 @@ public class SignIn extends AppCompatActivity {
     }
     public void faceboo_sign_in(View view){
 
+        if(phone_number_et.getText().toString().length()==11){
+            Toast.makeText(getApplicationContext(),"You Already Have Enter Phone",Toast.LENGTH_LONG).show();
+            return;
+        }
         progressDialog.show();
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager login_manager= LoginManager.getInstance();

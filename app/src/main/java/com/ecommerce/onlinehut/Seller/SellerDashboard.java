@@ -20,7 +20,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -29,22 +32,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.onlinehut.About;
 import com.ecommerce.onlinehut.Admin.AdminPanel;
+import com.ecommerce.onlinehut.AllNotifications;
+import com.ecommerce.onlinehut.AnimationFactory;
 import com.ecommerce.onlinehut.DisabledActivity;
 import com.ecommerce.onlinehut.CustomAlertDialog;
+import com.ecommerce.onlinehut.Notification;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
 import com.ecommerce.onlinehut.SharedPrefManager;
 import com.ecommerce.onlinehut.Transaction;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
@@ -75,7 +88,11 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
     public ActionBar actionBar;
     String image_path = "";
     ImageView[] indicators = new ImageView[7];
-    TextView title_tv;
+    public TextView title_tv;
+    public static EditText search_et;
+    Button back_btn;
+    public String user_id="";
+    public static Button search_btn;
     public static TextView message_unseen;
     ImageView notification_btn;
 
@@ -94,6 +111,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         profile_picture = findViewById(R.id.profile_picture);
         title_tv = findViewById(R.id.title_bar);
         image_path = SharedPrefManager.getInstance(getApplicationContext()).getUser().image_path;
+        user_id=SharedPrefManager.getInstance(getApplicationContext()).getUser().user_id;
         if (image_path != null && image_path.length() > 5) {
             Picasso.get().load(image_path).into(profile_picture);
         }
@@ -111,6 +129,86 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         menu = findViewById(R.id.menu);
         menu2 = findViewById(R.id.menu_icon2);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        search_btn=findViewById(R.id.search_btn);
+        title_tv=findViewById(R.id.title_bar);
+        search_et=findViewById(R.id.search_et);
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_et.setVisibility(View.VISIBLE);
+                title_tv.setVisibility(View.GONE);
+                menu2.setVisibility(View.GONE);
+                notification_btn.setVisibility(View.GONE);
+                notification_btn.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out));
+                menu2.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out));
+                search_btn.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out));
+                title_tv.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out));
+                Animation animation= AnimationFactory.getInstance().right_to_left_scale_anim();
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                search_et.startAnimation(animation);
+            }
+        });
+        search_et.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (search_et.getRight() - search_et.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        // search_et.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_scale_reverse));
+                        Animation animation=AnimationFactory.getInstance().left_to_right_scale_anim();
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                search_et.setText("");
+                                search_et.setVisibility(View.GONE);
+                                title_tv.setVisibility(View.VISIBLE);
+                                menu2.setVisibility(View.VISIBLE);
+                                notification_btn.setVisibility(View.VISIBLE);
+                                notification_btn.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in));
+                                menu2.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in));
+                                search_btn.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in));
+                                title_tv.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in));
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        search_et.startAnimation(animation);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +226,13 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
 
                 showPopup(menu2);
 
+            }
+        });
+        notification_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent tnt=new Intent(getApplicationContext(), AllNotifications.class);
+                startActivity(tnt);
             }
         });
         frameLayout = findViewById(R.id.frame_layout);
@@ -157,6 +262,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             @Override
             public void onClick(View view) {
 
+                search_btn.setVisibility(View.GONE);
                 title_tv.setText(R.string.profile);
                 active_indicator(0);
                 changeFragmentView(new SellerProfile());
@@ -168,7 +274,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             @Override
             public void onClick(View view) {
 
-
+                search_btn.setVisibility(View.VISIBLE);
                 title_tv.setText(R.string.all_animals);
                 active_indicator(1);
                 changeFragmentView(new All_Animals_For_Seller());
@@ -178,8 +284,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         all_subject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                search_btn.setVisibility(View.VISIBLE);
                 title_tv.setText(R.string.sold_animals);
-                active_indicator(1);
+                active_indicator(2);
                 changeFragmentView(new SoldAnimalListForSeller());
             }
         });
@@ -187,7 +294,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         my_classes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                search_btn.setVisibility(View.VISIBLE);
                 title_tv.setText(R.string.unsold_animal);
                 active_indicator(3);
                 changeFragmentView(new UnSoldAnimalList());
@@ -198,7 +305,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         teachers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                search_btn.setVisibility(View.GONE);
                 title_tv.setText(R.string.transaction_history);
                 active_indicator(4);
                 changeFragmentView(new TransactionHistoryForSeller());
@@ -208,7 +315,7 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         pay_fees.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                search_btn.setVisibility(View.GONE);
                 title_tv.setText(R.string.contact);
                 active_indicator(5);
                 changeFragmentView(new ContactForSeller());
@@ -218,9 +325,10 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                actionBar.setTitle("Notice");
-                //changeFragmentView(new Notice());
+                search_btn.setVisibility(View.GONE);
+                title_tv.setText(R.string.about);
+                active_indicator(6);
+                changeFragmentView(new About());
             }
         });
 
@@ -229,6 +337,37 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         active_indicator(1);
         changeFragmentView(new All_Animals_For_Seller());
 
+    }
+    public void get_all_notifications(){
+        Query documentReference=db.collection("AllNotifications").whereEqualTo("receiver_id",user_id).whereEqualTo("seen_status","unseen");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isComplete()){
+
+                    QuerySnapshot querySnapshot=task.getResult();
+                    if(querySnapshot!=null&&querySnapshot.size()>0){
+
+                        message_unseen.setVisibility(View.VISIBLE);
+                        if(querySnapshot.size()<100){
+                            message_unseen.setText(querySnapshot.size()+"");
+                        }
+                        else{
+                            message_unseen.setText("99+");
+                        }
+                    }
+                    else{
+                        message_unseen.setVisibility(View.GONE);
+
+                    }
+
+                }
+
+
+            }
+
+
+        });
     }
 
     private void adminValidate() {
@@ -304,6 +443,12 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         super.onDestroy();
 
         message_unseen = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        get_all_notifications();
     }
 
     public void active_indicator(int index) {

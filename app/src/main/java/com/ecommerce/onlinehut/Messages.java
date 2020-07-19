@@ -1,6 +1,9 @@
 package com.ecommerce.onlinehut;
 
-public class Messages {
+import java.util.Comparator;
+import java.util.Date;
+
+public class Messages implements Comparable<Messages> {
     public String id;
     public String message;
     public String sender_id;
@@ -83,5 +86,13 @@ public class Messages {
         this.time = time;
     }
 
+
+    @Override
+    public int compareTo(Messages o) {
+        DateTimeConverter dateTimeConverter= DateTimeConverter.getInstance();
+        Date date1=dateTimeConverter.convert_string_to_date_time2(time);
+        Date date2=dateTimeConverter.convert_string_to_date_time2(o.time);
+        return date1.compareTo(date2);
+    }
 
 }

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import java.util.Map;
 
 public class UnSoldAnimalList extends Fragment {
     ArrayList<Animal> animals=new ArrayList<Animal>();
+    ArrayList<Animal> animals_temp=new ArrayList<Animal>();
     RecyclerView recyclerView;
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
@@ -43,6 +46,7 @@ public class UnSoldAnimalList extends Fragment {
     TextView empty;
     ProgressDialog progressDialog;
     Button add_new_animal;
+    RecycleAdapter recycleAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,11 +55,48 @@ public class UnSoldAnimalList extends Fragment {
         user_id=firebaseAuth.getCurrentUser().getUid();
         db=FirebaseFirestore.getInstance();
         recyclerView=view.findViewById(R.id.recycle);
+        recycleAdapter=new RecycleAdapter(animals);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recycleAdapter);
         add_new_animal=view.findViewById(R.id.add_new_animal);
         empty=view.findViewById(R.id.empty);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Please Wait");
+
+        SellerDashboard.search_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                String search_string=s.toString();
+                search(search_string);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
+    }
+    public void search(String search_string){
+
+        animals.clear();
+        search_string=search_string.toLowerCase().trim();
+        for(int i=0;i<animals_temp.size();i++){
+            Animal animal=animals_temp.get(i);
+            String animal_id="A-"+animal.animal_alt_id;
+            animal_id=animal_id.toLowerCase();
+            String animal_name=animal.name.toLowerCase();
+            if(animal_id.startsWith(search_string)||animal_name.startsWith(search_string)){
+                animals.add(animal);
+            }
+        }
+        recycleAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -65,8 +106,8 @@ public class UnSoldAnimalList extends Fragment {
     }
     public void get_all_animals_data(){
         progressDialog.show();
-        Query documentReference=db.collection("AllAnimals").whereEqualTo("sold_status","unsold");
-        documentReference.whereEqualTo("user_id",user_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Query documentReference=db.collection("AllAnimals").whereEqualTo("sold_status","unsold").whereEqualTo("user_id",user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -93,15 +134,15 @@ public class UnSoldAnimalList extends Fragment {
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             String animal_alt_id=map.get("alternative_id").toString();
-                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            String animal_type=map.get("type").toString();
+                            Animal animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                             animals.add(animal);
 
                         }
                         recyclerView.setVisibility(View.VISIBLE);
                         empty.setVisibility(View.GONE);
-                        RecycleAdapter recycleAdapter=new RecycleAdapter(animals);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(recycleAdapter);
+                        animals_temp.addAll(animals);
+
                     }
                     else{
                         recyclerView.setVisibility(View.GONE);
@@ -115,6 +156,7 @@ public class UnSoldAnimalList extends Fragment {
                     empty.setVisibility(View.VISIBLE);
 
                 }
+                recycleAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
 
             }
@@ -133,13 +175,14 @@ public class UnSoldAnimalList extends Fragment {
             View mView;
             CardView card1,card2;
             ImageView animal_image1,animal_image2;
-            TextView name_tv1,price_tv1,highest_bid_tv1;
+            TextView name_tv1,price_tv1,highest_bid_tv1,id_tv;
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
                 mView.setOnClickListener(this);
                 animal_image1=mView.findViewById(R.id.image);
                 name_tv1=mView.findViewById(R.id.name);
+                id_tv=mView.findViewById(R.id.id);
                 price_tv1=mView.findViewById(R.id.price);
                 card1=mView.findViewById(R.id.card1);
                 highest_bid_tv1=mView.findViewById(R.id.highest_price);
@@ -167,11 +210,13 @@ public class UnSoldAnimalList extends Fragment {
             holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
             holder.name_tv1.setText(getString(R.string.name2) +" : "+animal.name);
             holder.price_tv1.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
+            holder.id_tv.setText(getString(R.string.id)+" : A-"+animal.animal_alt_id);
             holder.highest_bid_tv1.setText(getString(R.string.highest_bid)+" : "+animal.highest_bid+" "+getString(R.string.taka));
             if(animal.image_path!=null&&animal.image_path.length()>5){
                 Picasso.get().load(animal.image_path).into(holder.animal_image1);
             }
             holder.name_tv1.setSelected(true);
+            holder.id_tv.setSelected(true);
             holder.price_tv1.setSelected(true);
             holder.highest_bid_tv1.setSelected(true);
             holder.card1.setOnClickListener(new View.OnClickListener() {

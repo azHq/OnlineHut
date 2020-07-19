@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
                if(firebaseUser==null){
 
-                   startActivity(new Intent(getApplicationContext(), SignIn.class));
+                   startActivity(new Intent(getApplicationContext(), SelectUserType.class));
                    finish();
                }
                else{

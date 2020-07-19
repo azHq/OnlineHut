@@ -8,17 +8,28 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 
+import com.ecommerce.onlinehut.Admin.ViewConfirmationRequestForBuy;
+import com.ecommerce.onlinehut.Admin.ViewPriceRequest;
 import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
 import com.ecommerce.onlinehut.Buyer.RequestConfirmation;
 import com.ecommerce.onlinehut.Seller.Add_New_Animal;
 import com.ecommerce.onlinehut.Seller.NewPriceRequest;
 import com.ecommerce.onlinehut.Seller.SellerDashboard;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +43,7 @@ import static android.view.View.VISIBLE;
 public class All_Notification_Service extends Service {
 
     public static boolean inside_messenger=false;
-    String title="",body="",activity_type="",sender_id="",receiver_id="",document_id="",sender_device_id="";
+    String title="",body="",activity_type="",sender_type="",sender_id="",receiver_id="",document_id="",sender_device_id="",notification_id="";
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -43,6 +54,8 @@ public class All_Notification_Service extends Service {
         document_id=(String)intent.getExtras().get("document_id");
         sender_device_id=(String)intent.getExtras().get("sender_device_id");
         activity_type=(String)intent.getExtras().get("activity_type");
+        sender_type=(String)intent.getExtras().get("sender_type");
+        notification_id=(String)intent.getExtras().get("notification_id");
         System.out.println(activity_type+","+document_id);
         generateNotification();
 
@@ -76,74 +89,124 @@ public class All_Notification_Service extends Service {
         Intent resultIntent=null;
         mBuilder.setAutoCancel(true);
 
-        if(activity_type.length()>0&&activity_type.equalsIgnoreCase("message")&&!inside_messenger){
-            resultIntent= new Intent(this, Messenger.class);
-            resultIntent.putExtra("sender_id",sender_id);
-            resultIntent.putExtra("document_id",document_id);
-            resultIntent.putExtra("sender_device_id",sender_device_id);
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-            mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
-            Notification note = mBuilder.build();
-            mNotificationManager.notify(notificationId, note);
-            SharedPrefManager.getInstance(getApplicationContext()).increase_unseen_notification();
-            if(SellerDashboard.message_unseen!=null){
+        if(activity_type.length()>0&&activity_type.equalsIgnoreCase("new message")){
 
-                int unseen_message=SharedPrefManager.getInstance(getApplicationContext()).get_unseen_notification();
-                if(unseen_message<0)SellerDashboard.message_unseen.setText(unseen_message+"");
-                else{
-                    SellerDashboard.message_unseen.setText("99+");
-                }
+            if(!Messenger.isMessaging){
+                resultIntent= new Intent(this, Messenger.class);
+                resultIntent.putExtra("sender_id",sender_id);
+                resultIntent.putExtra("receiver_id",receiver_id);
+                resultIntent.putExtra("document_id",document_id);
+                resultIntent.putExtra("sender_type",SharedPrefManager.getInstance(getApplicationContext()).getUser().getUser_type());
+                resultIntent.putExtra("receiver_type",sender_type);
+                resultIntent.putExtra("notification_id",notification_id);
+                resultIntent.putExtra("sender_device_id",SharedPrefManager.getInstance(getApplicationContext()).getUser().device_id);
+                resultIntent.putExtra("receiver_device_id",sender_device_id);
+
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(resultPendingIntent);
+                mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                Notification note = mBuilder.build();
+                mNotificationManager.notify(notificationId, note);
+                get_all_notifications();
             }
-            else if(BuyerDashboard.message_unseen!=null){
-                int unseen_message=SharedPrefManager.getInstance(getApplicationContext()).get_unseen_notification();
-                if(unseen_message<0){
-                    BuyerDashboard.message_unseen.setText(unseen_message+"");
-                }
-                else{
-                    BuyerDashboard.message_unseen.setText("99+");
-                }
+            else{
+                update_notification_status2( notification_id);
             }
+
         }
         else if(activity_type.length()>0&&activity_type.equalsIgnoreCase("new price")){
-            resultIntent= new Intent(this, NewPriceRequest.class);
+
+            if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin()){
+                resultIntent= new Intent(this, ViewPriceRequest.class);
+            }
+            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("seller")){
+                resultIntent= new Intent(this, NewPriceRequest.class);
+            }
             resultIntent.putExtra("sender_id",sender_id);
             resultIntent.putExtra("document_id",document_id);
+            resultIntent.putExtra("notification_id",notification_id);
             resultIntent.putExtra("sender_device_id",sender_device_id);
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent resultPendingIntent =PendingIntent.getActivity(getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             mBuilder.setContentIntent(resultPendingIntent);
             mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
             Notification note = mBuilder.build();
             mNotificationManager.notify(notificationId, note);
-            SharedPrefManager.getInstance(getApplicationContext()).increase_unseen_notification();
-            if(SellerDashboard.message_unseen!=null){
-
-                int unseen_message=SharedPrefManager.getInstance(getApplicationContext()).get_unseen_notification();
-                if(unseen_message<0)SellerDashboard.message_unseen.setText(unseen_message+"");
-                else{
-                    SellerDashboard.message_unseen.setText("99+");
-                }
-            }
+            get_all_notifications();
         }
         else if(activity_type.length()>0&&activity_type.equalsIgnoreCase("seller_want_to_sell")){
-            resultIntent= new Intent(this, RequestConfirmation.class);
+
+            if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin()){
+                resultIntent= new Intent(this, ViewConfirmationRequestForBuy.class);
+            }
+            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("buyer")){
+                resultIntent= new Intent(this, RequestConfirmation.class);
+            }
             resultIntent.putExtra("sender_id",sender_id);
             resultIntent.putExtra("document_id",document_id);
+            resultIntent.putExtra("notification_id",notification_id);
             resultIntent.putExtra("sender_device_id",sender_device_id);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
             mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
             Notification note = mBuilder.build();
             mNotificationManager.notify(notificationId, note);
-            SharedPrefManager.getInstance(getApplicationContext()).increase_unseen_notification();
-            if(BuyerDashboard.message_unseen!=null){
-
-                int unseen_message=SharedPrefManager.getInstance(getApplicationContext()).get_unseen_notification();
-                if(unseen_message<0)BuyerDashboard.message_unseen.setText(unseen_message+"");
-                else{
-                    BuyerDashboard.message_unseen.setText("99+");
-                }
-            }
+            get_all_notifications();
         }
+        else if(activity_type.length()>0&&activity_type.equalsIgnoreCase("confirm")) {
+
+            mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+            Notification note = mBuilder.build();
+            mNotificationManager.notify(notificationId, note);
+            get_all_notifications();
+        }
+    }
+    public void update_notification_status2(String document_id){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        Map<String, Object> map =new HashMap<>();
+        map.put("seen_status","seen");
+        DocumentReference documentReference1=db.collection("AllNotifications").document(document_id);
+        documentReference1.update(map);
+
+    }
+    public void get_all_notifications(){
+
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        Query documentReference=db.collection("AllNotifications").whereEqualTo("receiver_id",receiver_id).whereEqualTo("seen_status","unseen");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isComplete()){
+
+                    QuerySnapshot querySnapshot=task.getResult();
+                    if(querySnapshot!=null&&querySnapshot.size()>0){
+
+                        TextView textView=null;
+                        if(  BuyerDashboard.message_unseen!=null){
+                            textView=BuyerDashboard.message_unseen;
+                        }
+                        else if(SellerDashboard.message_unseen!=null){
+                            textView=SellerDashboard.message_unseen;
+                        }
+                        if(textView!=null){
+                            textView.setVisibility(View.VISIBLE);
+                            if(querySnapshot.size()<100){
+                                textView.setText(querySnapshot.size()+"");
+                            }
+                            else{
+                                textView.setText("99+");
+                            }
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+
+        });
     }
 }

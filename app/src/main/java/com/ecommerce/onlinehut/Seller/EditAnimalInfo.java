@@ -123,6 +123,7 @@ public class EditAnimalInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_animal_info);
+        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         animal_id=getIntent().getStringExtra("animal_id");
         firebaseAuth=FirebaseAuth.getInstance();
         user_id=firebaseAuth.getCurrentUser().getUid();
@@ -314,7 +315,13 @@ public class EditAnimalInfo extends AppCompatActivity {
         get_animal_data();
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void get_animal_data(){
         progressDialog.show();
         DocumentReference documentReference=db.collection("AllAnimals").document(animal_id);
@@ -506,7 +513,7 @@ public class EditAnimalInfo extends AppCompatActivity {
         @NonNull
         @Override
         public ViewAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.animal_images,parent,false);
+            View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.animal_images2,parent,false);
             return new ViewAdapter(view);
         }
 

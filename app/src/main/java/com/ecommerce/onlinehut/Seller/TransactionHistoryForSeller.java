@@ -27,6 +27,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -52,7 +53,7 @@ public class TransactionHistoryForSeller extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View view=inflater.inflate(R.layout.fragment_transaction_history_for_seller, container, false);
+        View view=inflater.inflate(R.layout.fragment_transaction_history_for_seller, container, false);
         firebaseAuth= FirebaseAuth.getInstance();
         user_id=firebaseAuth.getCurrentUser().getUid();
         db= FirebaseFirestore.getInstance();
@@ -85,9 +86,10 @@ public class TransactionHistoryForSeller extends Fragment {
                         String phone_number=data.get("phone_number").toString();
                         int amount=Integer.parseInt(data.get("amount").toString());
                         String trxId=data.get("transaction_id").toString();
+                        String animal_id=data.get("animal_id").toString();
                         String payment_method=data.get("payment_method").toString();
-                        String time= toDateStr(((Timestamp)data.get("sold_time")).getSeconds()*1000);
-                        transactions.add(new Transaction(image_path,sender_name,sender_id,phone_number,amount,trxId,payment_method,time));
+                        Timestamp time= (Timestamp)data.get("sold_time");
+                        transactions.add(new Transaction(image_path,sender_name,sender_id,phone_number,amount,trxId,animal_id,payment_method,time));
                     }
                     recycleAdapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
@@ -101,8 +103,10 @@ public class TransactionHistoryForSeller extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
 
+                    Date date=new Date();
+                    date.getTime();
                     for(int i=0;i<10;i++){
-                        transactions.add(new Transaction("","Azazul","123456","01795528283",1000,"1234","Bkash","12-07-2020"));
+                        transactions.add(new Transaction("","Azazul","123456","01795528283",1000,"1234","12345","Bkash","12-12-2020"));
                     }
 
                     recycleAdapter.notifyDataSetChanged();
@@ -129,7 +133,7 @@ public class TransactionHistoryForSeller extends Fragment {
 
             LinearLayout item;
             ImageView image,logo;
-            TextView name,id,phone_number,amount,trxId,payment_method,time;
+            TextView name,id,phone_number,amount,trxId,animal_id,payment_method,time;
             View mView;
             public ViewAdapter(View itemView) {
                 super(itemView);
@@ -138,12 +142,14 @@ public class TransactionHistoryForSeller extends Fragment {
                 image=mView.findViewById(R.id.image);
                 name=mView.findViewById(R.id.name);
                 id=mView.findViewById(R.id.id);
+                logo=mView.findViewById(R.id.logo);
                 phone_number=mView.findViewById(R.id.phone_number);
                 amount=mView.findViewById(R.id.amount);
                 payment_method=mView.findViewById(R.id.payment_method);
                 time=mView.findViewById(R.id.time);
                 trxId=mView.findViewById(R.id.transaction_id);
                 item=mView.findViewById(R.id.item);
+                animal_id=mView.findViewById(R.id.animal_id);
 
             }
 
@@ -169,9 +175,20 @@ public class TransactionHistoryForSeller extends Fragment {
             holder.image.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
             holder.name.setText(transaction.user_name);
             holder.id.setText(getString(R.string.sender_id)+" : "+transaction.user_id);
+            holder.animal_id.setText(getString(R.string.id)+" : A-"+transaction.animal_id);
             holder.amount.setText(getString(R.string.money_amount)+" : "+transaction.amount);
             if(transaction.image_path!=null&&transaction.image_path.length()>5){
                 Picasso.get().load(transaction.image_path).into(holder.image);
+            }
+            holder.animal_id.setText(transaction.animal_id);
+            if(transaction.payment_method.equalsIgnoreCase("bkash")){
+                holder.logo.setImageResource(R.drawable.bkash_icon);
+            }
+            else if(transaction.payment_method.equalsIgnoreCase("rocket")){
+                holder.logo.setImageResource(R.drawable.rocket_icon);
+            }
+            else if(transaction.payment_method.equalsIgnoreCase("nagad")){
+                holder.logo.setImageResource(R.drawable.nagad_icon);
             }
             holder.phone_number.setText(getString(R.string.phone_number)+" : "+transaction.phone_number);
             holder.trxId.setText("trxId : "+transaction.transaction_id);

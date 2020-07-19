@@ -94,7 +94,7 @@ public class SharedPrefManager {
                 sharedPreferences.getString(DEVICE_ID,null),
                 sharedPreferences.getBoolean(IS_ADMIN, false),
                 sharedPreferences.getBoolean(IS_DISABLED, false),
-                sharedPreferences.getString(LOCATION,null)
+                sharedPreferences.getString(LOCATION,"")
         );
     }
 

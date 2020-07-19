@@ -26,8 +26,9 @@
                 android:layout_height="25dp">
             </ImageView>
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/title_bar"
                 android:text="Home"
+                android:visibility="visible"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
                 android:textColor="#D7F2A8"
@@ -37,26 +38,62 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
             </TextView>
+            <EditText
+                android:id="@+id/search_et"
+                android:paddingStart="@dimen/dp_10"
+                android:paddingEnd="@dimen/dp_10"
+                android:visibility="gone"
+                android:textSize="15sp"
+                android:hint="@string/search_hint_for_animal"
+                android:textColorHint="@color/white"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="8dp"
+                android:drawableRight="@drawable/back_btn_yellow_rotate"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/search_et_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </EditText>
 
             <LinearLayout
                 android:gravity="end|center_vertical"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:src="@drawable/search"
+                <Button
+                    android:id="@+id/search_btn"
+                    android:background="@drawable/search"
                     android:layout_width="25dp"
                     android:layout_margin="10dp"
                     android:layout_height="25dp">
 
-                </ImageView>
-                <ImageView
-                    android:src="@drawable/notifications"
-                    android:layout_width="30dp"
-                    android:layout_margin="5dp"
-                    android:layout_height="30dp">
-
-                </ImageView>
+                </Button>
+                <RelativeLayout
+                    android:id="@+id/notification_layout"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/notification_btn"
+                        android:src="@drawable/notifications"
+                        android:layout_width="30dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="30dp">
+                    </ImageView>
+                    <TextView
+                        android:id="@+id/message_unseen"
+                        android:text="99"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/red_circle"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp">
+                    </TextView>
+                </RelativeLayout>
                 <ImageView
                     android:id="@+id/menu_icon2"
                     android:src="@drawable/menu2"
@@ -185,14 +222,14 @@
                             </ImageView>
                         </RelativeLayout>
                         <RelativeLayout
-                            android:id="@+id/sold"
-                            android:layout_marginTop="@dimen/menu_item_margin"
+                            android:id="@+id/buy_item"
+                            android:layout_marginTop="5dp"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:src="@drawable/sell_items"
+                                android:src="@drawable/buy_icon"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/menu_item_height">
                             </ImageView>
@@ -208,14 +245,14 @@
                             </ImageView>
                         </RelativeLayout>
                         <RelativeLayout
-                            android:id="@+id/unsold"
+                            android:id="@+id/payment"
                             android:layout_marginTop="5dp"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:src="@drawable/unsell_items"
+                                android:src="@drawable/payment_icon2"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/menu_item_height">
                             </ImageView>

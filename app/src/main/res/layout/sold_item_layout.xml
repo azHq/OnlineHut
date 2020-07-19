@@ -263,7 +263,7 @@
                     android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_weight=".7"
+                        android:layout_weight=".65"
                         android:layout_marginEnd="5dp"
                         android:layout_width="0dp"
                         android:layout_height="match_parent">
@@ -306,7 +306,7 @@
                             </TextView>
                             <TextView
                                 android:id="@+id/seller_location"
-                                android:text="user name"
+                                android:text=""
                                 android:gravity="center"
                                 android:textSize="@dimen/sp_16"
                                 android:textColor="@color/light_megenda"
@@ -320,7 +320,7 @@
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_weight=".6"
+                        android:layout_weight=".7"
                         android:layout_width="0dp"
                         android:orientation="vertical"
                         android:layout_height="match_parent">
@@ -370,7 +370,7 @@
                             android:id="@+id/timer"
                             android:text="6:20:00"
                             android:gravity="center"
-                            android:textSize="@dimen/sp_20"
+                            android:textSize="@dimen/sp_14"
                             android:textColor="#A00000"
                             android:fontFamily="serif"
                             android:ellipsize="marquee"
@@ -382,7 +382,7 @@
                         </TextView>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_weight=".7"
+                        android:layout_weight=".65"
                         android:layout_marginStart="5dp"
                         android:layout_width="0dp"
                         android:layout_height="match_parent">
@@ -425,7 +425,7 @@
                             </TextView>
                             <TextView
                                 android:id="@+id/buyer_location"
-                                android:text="user name"
+                                android:text=""
                                 android:gravity="center"
                                 android:ellipsize="marquee"
                                 android:singleLine="true"

@@ -11,6 +11,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ecommerce.onlinehut.Animal;
+import com.ecommerce.onlinehut.EngToBanConverter;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SharedPrefManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +49,7 @@ import java.util.Map;
 
 public class SoldAnimalListForSeller extends Fragment {
     ArrayList<Animal> animals=new ArrayList<Animal>();
+    ArrayList<Animal> animals_temp=new ArrayList<Animal>();
     RecyclerView recyclerView;
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
@@ -54,6 +58,7 @@ public class SoldAnimalListForSeller extends Fragment {
     ProgressDialog progressDialog;
     Button add_new_animal;
     long countdownmillis=0;
+    RecycleAdapter recycleAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,11 +67,46 @@ public class SoldAnimalListForSeller extends Fragment {
         user_id=firebaseAuth.getCurrentUser().getUid();
         db= FirebaseFirestore.getInstance();
         recyclerView=view.findViewById(R.id.recycle);
+        recycleAdapter=new RecycleAdapter(animals);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recycleAdapter);
         empty=view.findViewById(R.id.empty);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Please Wait");
+
+        SellerDashboard.search_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search_string=s.toString();
+                 search(search_string);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         get_AppConfigurationData();
         return view;
+    }
+
+    public void search(String search_string){
+
+        animals.clear();
+        search_string=search_string.toLowerCase().trim();
+        for(int i=0;i<animals_temp.size();i++){
+            Animal animal=animals_temp.get(i);
+            String animal_id="A-"+animal.animal_alt_id;
+            animal_id=animal_id.toLowerCase();
+            String animal_name=animal.name.toLowerCase();
+            if(animal_id.startsWith(search_string)||animal_name.startsWith(search_string)){
+                animals.add(animal);
+            }
+        }
+        recycleAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -134,16 +174,17 @@ public class SoldAnimalListForSeller extends Fragment {
                             Animal animal=new Animal(animal_id,animal_alt_id,user_id,buyer_id,sold_status,sold_price,payment_complete,charge,time,animal_type,name,price,age,color,weight,height,teeth,born,image_paths[0],video_path,highest_bid,total_bid,compress_image_path);
                             animals.add(animal);
 
+
                         }
+                        animals_temp.addAll(animals);
                         recyclerView.setVisibility(View.VISIBLE);
                         empty.setVisibility(View.GONE);
-                        RecycleAdapter recycleAdapter=new RecycleAdapter(animals);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(recycleAdapter);
+                        recycleAdapter.notifyDataSetChanged();
                     }
                     else{
                         recyclerView.setVisibility(View.GONE);
                         empty.setVisibility(View.VISIBLE);
+                        recycleAdapter.notifyDataSetChanged();
                     }
 
                 }
@@ -151,6 +192,7 @@ public class SoldAnimalListForSeller extends Fragment {
 
                     recyclerView.setVisibility(View.INVISIBLE);
                     empty.setVisibility(View.VISIBLE);
+                    recycleAdapter.notifyDataSetChanged();
 
                 }
                 progressDialog.dismiss();
@@ -224,10 +266,10 @@ public class SoldAnimalListForSeller extends Fragment {
             holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
             holder.id_tv.setText("A-"+animal.animal_alt_id);
             holder.name_tv1.setText(animal.name);
-            holder.price_tv1.setText(animal.price+" "+getString(R.string.taka));
-            holder.payment_complete_tv1.setText(animal.payment_complete+" "+getString(R.string.taka));
-            holder.charge_tv.setText(animal.charge+" "+getString(R.string.taka));
-            holder.sold_price.setText(animal.sold_price+"");
+            holder.price_tv1.setText(EngToBanConverter.getInstance().convert(animal.price+"") +" "+getString(R.string.taka));
+            holder.payment_complete_tv1.setText(EngToBanConverter.getInstance().convert(animal.payment_complete+"")+" "+getString(R.string.taka));
+            holder.charge_tv.setText(EngToBanConverter.getInstance().convert(animal.charge+"")+" "+getString(R.string.taka));
+            holder.sold_price.setText(EngToBanConverter.getInstance().convert(animal.sold_price+"")+" "+getString(R.string.taka));
             if(animal.image_path!=null&&animal.image_path.length()>5){
                 Picasso.get().load(animal.image_path).into(holder.animal_image1);
             }
@@ -255,7 +297,7 @@ public class SoldAnimalListForSeller extends Fragment {
                 holder.time_remain.setVisibility(View.VISIBLE);
                 long countMillis=System.currentTimeMillis()-getMillisFromDate(animal.time);
                 if(countMillis<countdownmillis){
-                    start_countdown_timer(holder.timer,countdownmillis-countMillis);
+                    start_countdown_timer(holder.timer,(countdownmillis-countMillis)/1000);
                 }
                 else{
                     holder.timer.setText("FINISH!!");
@@ -264,6 +306,7 @@ public class SoldAnimalListForSeller extends Fragment {
             }
             holder.time.setText(animal.time);
             holder.time.setSelected(true);
+            holder.timer.setSelected(true);
             holder.buyer_id_tv.setText(animal.buyer_id);
             holder.buyer_id_tv.setSelected(true);
             get_user_data(animal.buyer_id,holder.buyer_image_view,holder.buyer_name_tv,holder.buyer_location_tv);
@@ -282,12 +325,14 @@ public class SoldAnimalListForSeller extends Fragment {
         new CountDownTimer(countdowntime, 1000){
             long counter=countdowntime;
             public void onTick(long millisUntilFinished){
-                String hours=(int)(counter/(3600*1000))+"";
-                String minutes=(int)((counter/(60*1000))%60)+"";
-                String seconds=(int)((counter/(1000))%60)+"";
+                String hours=(int)(counter/(3600))+"";
+                String minutes=((int)(counter/(60))%60)+"";
+                String seconds=((int)(counter)%60)+"";
                 String time=hours+"'h:"+minutes+"'m:"+seconds+"'s";
                 timer.setText(time);
                if(counter>0) counter--;
+               System.out.println("time count:"+(counter/1000));
+                System.out.println("time count:"+((counter/1000)%2));
             }
             public  void onFinish(){
                 timer.setText("FINISH!!");

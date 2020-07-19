@@ -65,6 +65,7 @@
             android:layout_below="@+id/appbar"
             android:layout_marginBottom="10dp"
             android:layout_above="@+id/card"
+            app:stackFromEnd="true"
             android:background="@color/white">
 
         </androidx.recyclerview.widget.RecyclerView>

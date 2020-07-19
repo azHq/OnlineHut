@@ -26,7 +26,7 @@
                 </View>
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="520dp"
+                        android:layout_height="500dp"
                         android:weightSum="3"
                         android:layout_marginBottom="5dp"
                         android:background="@color/white"
@@ -42,7 +42,7 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="80dp"
+                                    android:layout_height="60dp"
                                     android:layout_weight="1"
                                     android:background="@drawable/table_border3"
                                     android:ellipsize="marquee"
@@ -68,6 +68,17 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
+                                    android:textSize="13sp"
+                                    android:background="@drawable/table_border3"
+                                    android:gravity="center"
+                                    android:text="@string/id"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:textSize="13sp"
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/animal_name"
@@ -78,6 +89,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
+                                    android:textSize="13sp"
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/animal_price"
@@ -88,6 +100,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
+                                    android:textSize="13sp"
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/highest_bid"
@@ -100,6 +113,7 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
+                                    android:textSize="13sp"
                                     android:text="@string/age"
                                     android:textColor="@color/light_megenda">
                                 </TextView>
@@ -111,7 +125,9 @@
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/color"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -120,7 +136,9 @@
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/weight"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -129,7 +147,10 @@
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/height"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -138,7 +159,10 @@
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/teeth"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -147,7 +171,10 @@
                                     android:background="@drawable/table_border3"
                                     android:gravity="center"
                                     android:text="@string/born"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
                             </LinearLayout>
 
                             <LinearLayout
@@ -158,7 +185,7 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="80dp"
+                                    android:layout_height="60dp"
                                     android:layout_weight="1"
                                     android:background="@drawable/table_border4"
                                     android:ellipsize="marquee"
@@ -171,14 +198,24 @@
                                     <ImageView
                                         android:id="@+id/image1"
                                         android:scaleType="fitXY"
-                                        android:layout_margin="5dp"
+                                        android:layout_margin="3dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
 
                                     </ImageView>
 
                                 </LinearLayout>
-
+                                <TextView
+                                    android:id="@+id/id1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
                                 <TextView
                                     android:id="@+id/name"
                                     android:layout_width="match_parent"
@@ -190,7 +227,10 @@
                                     android:marqueeRepeatLimit="marquee_forever"
                                     android:singleLine="true"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/price"
@@ -200,7 +240,10 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/highest_price"
@@ -210,7 +253,10 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/age"
@@ -220,7 +266,10 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/color"
@@ -230,7 +279,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/weight"
@@ -240,7 +291,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/height"
@@ -250,7 +303,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/teeth"
@@ -260,7 +315,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/born"
@@ -270,7 +327,10 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+
+                                </TextView>
                             </LinearLayout>
 
                             <LinearLayout
@@ -281,7 +341,7 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="80dp"
+                                    android:layout_height="60dp"
                                     android:layout_weight="1"
                                     android:background="@drawable/table_border4"
                                     android:ellipsize="marquee"
@@ -294,14 +354,24 @@
                                     <ImageView
                                         android:scaleType="fitXY"
                                         android:id="@+id/image2"
-                                        android:layout_margin="5dp"
+                                        android:layout_margin="3dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
 
                                     </ImageView>
 
                                 </LinearLayout>
-
+                                <TextView
+                                    android:id="@+id/id2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:textSize="13sp"
+                                    android:background="@drawable/table_border4"
+                                    android:gravity="center"
+                                    android:text="00"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
                                 <TextView
                                     android:id="@+id/name2"
                                     android:layout_width="match_parent"
@@ -313,7 +383,9 @@
                                     android:marqueeRepeatLimit="marquee_forever"
                                     android:singleLine="true"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/price2"
@@ -323,7 +395,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/highest_price2"
@@ -333,7 +407,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/age2"
@@ -343,7 +419,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/color2"
@@ -353,7 +431,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/weight2"
@@ -363,7 +443,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/height2"
@@ -373,7 +455,9 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
-                                    android:textColor="@color/light_megenda"></TextView>
+                                    android:textSize="13sp"
+                                    android:textColor="@color/light_megenda">
+                                </TextView>
 
                                 <TextView
                                     android:id="@+id/teeth2"
@@ -383,6 +467,7 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
+                                    android:textSize="13sp"
                                     android:textColor="@color/light_megenda">
 
                                 </TextView>
@@ -395,6 +480,7 @@
                                     android:background="@drawable/table_border4"
                                     android:gravity="center"
                                     android:text="00"
+                                    android:textSize="13sp"
                                     android:textColor="@color/light_megenda">
 
                                 </TextView>

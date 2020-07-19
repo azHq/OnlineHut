@@ -59,7 +59,7 @@
                 android:gravity="center"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/id"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:textSize="@dimen/sp_16"
@@ -69,6 +69,19 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:textColor="@color/light_megenda"
                     android:text="@string/id"
+                    android:layout_height="match_parent">
+                </TextView>
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/sp_16"
+                    android:gravity="center|start"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:textColor="@color/light_megenda"
+                    android:text="@string/animal_name"
                     android:layout_height="match_parent">
                 </TextView>
                 <TextView
@@ -81,7 +94,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:gravity="center|start"
                     android:textColor="@color/light_megenda"
-                    android:text="@string/id"
+                    android:text="@string/animal_price"
                     android:layout_height="match_parent">
                 </TextView>
                 <TextView
@@ -94,7 +107,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:gravity="center|start"
                     android:textColor="@color/light_megenda"
-                    android:text="@string/id"
+                    android:text="@string/highest_bid"
                     android:layout_height="match_parent">
                 </TextView>
             </LinearLayout>

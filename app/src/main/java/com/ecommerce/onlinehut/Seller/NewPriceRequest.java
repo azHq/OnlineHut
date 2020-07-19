@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ecommerce.onlinehut.Animal;
 import com.ecommerce.onlinehut.Buyer.PriceHistoryItem;
@@ -56,6 +57,7 @@ public class NewPriceRequest extends AppCompatActivity {
     ImageView imageView;
     Animal animal;
     TextView empty;
+    String notification_id="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,7 @@ public class NewPriceRequest extends AppCompatActivity {
         buyer_id=getIntent().getStringExtra("sender_id");
         buyer_device_id=getIntent().getStringExtra("sender_device_id");
         document_id=getIntent().getStringExtra("document_id");
+        notification_id=getIntent().getStringExtra("notification_id");
         firebaseAuth=FirebaseAuth.getInstance();
         user_id=firebaseAuth.getCurrentUser().getUid();
         progressDialog=new ProgressDialog(this);
@@ -80,6 +83,19 @@ public class NewPriceRequest extends AppCompatActivity {
         empty=findViewById(R.id.empty);
         imageView=findViewById(R.id.image);
         get_price_history(document_id);
+
+        if(notification_id!=null&&notification_id.length()>5){
+            update_notification_status2(notification_id);
+        }
+    }
+
+    public void update_notification_status2(String document_id){
+
+        Map<String, Object> map =new HashMap<>();
+        map.put("seen_status","seen");
+        DocumentReference documentReference1=db.collection("AllNotifications").document(document_id);
+        documentReference1.update(map);
+
     }
 
     public void cancel(View view){
@@ -87,7 +103,8 @@ public class NewPriceRequest extends AppCompatActivity {
     }
     public void accept(View view){
         update_bidhistory();
-        NotificationSender.getInstance().createNotification(getString(R.string.sell_request), SharedPrefManager.getInstance(getApplicationContext()).getUser().user_name+" পশুটি আপনার কাছে "+ EngToBanConverter.getInstance().convert(priceHistoryItem.price+"")+" টাকায় বিক্রি করতে রাজি হয়েছেন।",user_id,buyer_id,document_id,SharedPrefManager.getInstance(getApplicationContext()).getUser().device_id,buyer_device_id,"seller_want_to_sell");
+        NotificationSender.getInstance().createNotification(getString(R.string.sell_request), SharedPrefManager.getInstance(getApplicationContext()).getUser().user_name+" পশুটি আপনার কাছে "+ EngToBanConverter.getInstance().convert(priceHistoryItem.price+"")+" টাকায় বিক্রি করতে রাজি হয়েছেন।",user_id,SharedPrefManager.getInstance(getApplicationContext()).getUser().user_name,SharedPrefManager.getInstance(getApplicationContext()).getUser().image_path,"Seller",buyer_id,document_id,SharedPrefManager.getInstance(getApplicationContext()).getUser().device_id,buyer_device_id,"seller_want_to_sell");
+
     }
     public void update_bidhistory(){
         progressDialog.show();
@@ -98,6 +115,7 @@ public class NewPriceRequest extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
+                finish();
             }
         });
     }
@@ -170,14 +188,15 @@ public class NewPriceRequest extends AppCompatActivity {
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
-                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_type=map.get("type").toString();
+                    animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     if(image_paths[0].length()>0){
 
                         Picasso.get().load(image_paths[0]).into(imageView);
                     }
                     name_tv.setText(name);
                     price_tv.setText(EngToBanConverter.getInstance().convert( price+"")+" "+getString(R.string.taka));
-                    id_tv.setText(animal.animal_id);
+                    id_tv.setText("A-"+animal.animal_alt_id);
                 }
                 progressDialog.dismiss();
 

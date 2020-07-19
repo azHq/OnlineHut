@@ -27,6 +27,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     </ImageView>
+                    <VideoView
+                        android:visibility="gone"
+                        android:id="@+id/video_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </VideoView>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"

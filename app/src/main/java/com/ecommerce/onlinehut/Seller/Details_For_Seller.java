@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,8 +22,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.ecommerce.onlinehut.Animal;
 import com.ecommerce.onlinehut.Buyer.Details;
@@ -57,9 +60,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Details_For_Seller extends AppCompatActivity {
 
-    ArrayList<String> imagesPathList=new ArrayList<>();
+    ArrayList<String[]> imagesPathList=new ArrayList<>();
     ArrayList<PriceHistoryItem> priceHistoryItems=new ArrayList<>();
     RecycleAdapter recycleAdapter;
     RecyclerView recyclerView;
@@ -77,6 +82,8 @@ public class Details_For_Seller extends AppCompatActivity {
     User user;
     AlertDialog alertDialog;
     int price=0,previous_price=0;
+    VideoView videoView;
+    MediaController mediaController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,10 +95,6 @@ public class Details_For_Seller extends AppCompatActivity {
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Please wait....");
         db=FirebaseFirestore.getInstance();
-        imagesPathList.add("");
-        imagesPathList.add("");
-        imagesPathList.add("");
-        imagesPathList.add("");
         recyclerView=findViewById(R.id.recycle);
         imageView=findViewById(R.id.image_view);
         tv_name=findViewById(R.id.name);
@@ -102,17 +105,32 @@ public class Details_For_Seller extends AppCompatActivity {
         tv_color=findViewById(R.id.color);
         tv_born=findViewById(R.id.born);
         tv_teeth=findViewById(R.id.teeth);
-
+        videoView=findViewById(R.id.video_view);
         price_et=findViewById(R.id.price_input);
         id_tv=findViewById(R.id.id);
         price_history_recycle=findViewById(R.id.price_history_recycle);
         price_history_layout=findViewById(R.id.price_history_layout);
         recycleAdapterPriceHistory=new RecycleAdapterPriceHistory(priceHistoryItems);
         price_history_recycle.setAdapter(recycleAdapterPriceHistory);
-        id_tv.setText(animal_id);
         highest_price_tv=findViewById(R.id.highest_price);
         recycleAdapter=new RecycleAdapter(imagesPathList);
+        mediaController=new MediaController(this);
         recyclerView.setAdapter(recycleAdapter);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(videoView.isPlaying()){
+                    videoView.pause();
+                }
+                else{
+                    videoView.resume();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -147,7 +165,7 @@ public class Details_For_Seller extends AppCompatActivity {
         return formatter.format(date);
     }
     public void get_price_history(){
-        Query documentReference=db.collection("BidHistory");
+        Query documentReference=db.collection("BidHistory").whereEqualTo("animal_id",animal_id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -212,8 +230,17 @@ public class Details_For_Seller extends AppCompatActivity {
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
                     animal=new Animal(animal_id,animal_alt_id,user_id,"",name,price,age,color,weight,height,teeth,born,image_path,compress_image_path,video_path,highest_bid,total_bid);
-                    imagesPathList.addAll(Arrays.asList(image_paths));
+                    for(int i=0;i<image_paths.length;i++){
+                        String[] str={image_paths[i],"image"};
+                        imagesPathList.add(str);
+                    }
+                    if(video_path.length()>5){
+                        String[] str={video_path,"video"};
+                        imagesPathList.add(str);
+                    }
+
                     recycleAdapter.notifyDataSetChanged();
+                    id_tv.setText("A-"+animal_alt_id);
                     tv_name.setText(name);
                     tv_price.setText(price+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
@@ -264,8 +291,8 @@ public class Details_For_Seller extends AppCompatActivity {
     }
     public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewAdapter>{
 
-        ArrayList<String> animals;
-        public RecycleAdapter(ArrayList<String> animals){
+        ArrayList<String[]> animals;
+        public RecycleAdapter(ArrayList<String[]> animals){
             this.animals=animals;
         }
         public  class ViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -275,6 +302,7 @@ public class Details_For_Seller extends AppCompatActivity {
             TextView image_name;
             RelativeLayout item;
             ImageView animal_image;
+            LinearLayout play_btn;
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
@@ -283,14 +311,16 @@ public class Details_For_Seller extends AppCompatActivity {
                 image_name=mView.findViewById(R.id.image_name);
                 item=mView.findViewById(R.id.item_layout);
                 option_menu=mView.findViewById(R.id.option_btn);
+                play_btn=mView.findViewById(R.id.play_btn);
             }
 
             @Override
             public void onClick(View v) {
                 int position =getLayoutPosition();
-                String image_path=animals.get(position);
-                if(image_path.length()>0){
-                    Picasso.get().load(image_path).into( imageView);
+                String[] image_path=animals.get(position);
+                if(image_path[0].length()>0){
+                    videoView.setVisibility(View.GONE);
+                    Picasso.get().load(image_path[0]).into( imageView);
                 }
             }
         }
@@ -305,17 +335,45 @@ public class Details_For_Seller extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewAdapter holder, final int position) {
 
 
-            String image_path=animals.get(position);
+            String[] image_path=animals.get(position);
             holder.image_name.setVisibility(View.GONE);
             holder.option_menu.setVisibility(View.GONE);
-            if(image_path.length()>0){
+            if(image_path[0].length()>0&&image_path[1].equalsIgnoreCase("image")){
+                holder.play_btn.setVisibility(View.GONE);
                 holder.item.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_scale));
                 holder.animal_image.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_transition_animation));
-                Picasso.get().load(image_path).into( holder.animal_image);
+                Picasso.get().load(image_path[0]).into( holder.animal_image);
             }
-            if(position==0&&image_path.length()>0){
-                Picasso.get().load(image_path).into(imageView);
+            else if(image_path[0].length()>0&&image_path[1].equalsIgnoreCase("video")){
+                holder.play_btn.setVisibility(View.VISIBLE);
+
             }
+            if(position==0&&image_path[0].length()>0){
+                Picasso.get().load(image_path[0]).into(imageView);
+            }
+            holder.play_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    videoView.setVideoPath(image_path[0]);
+                    videoView.setVisibility(View.VISIBLE);
+                    progressDialog.show();
+                    videoView.start();
+                    videoView.requestFocus();
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            progressDialog.dismiss();
+                        }
+                    });
+                    videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mp, int what, int extra) {
+                            progressDialog.dismiss();
+                            return false;
+                        }
+                    });
+                }
+            });
         }
 
         @Override
@@ -333,6 +391,7 @@ public class Details_For_Seller extends AppCompatActivity {
 
             View mView;
             Button option_menu;
+            CircleImageView circleImageView;
             TextView name,price,time;
             public ViewAdapter(View itemView) {
                 super(itemView);
@@ -340,6 +399,7 @@ public class Details_For_Seller extends AppCompatActivity {
                 name=mView.findViewById(R.id.name);
                 price=mView.findViewById(R.id.price);
                 time=mView.findViewById(R.id.time);
+                circleImageView=mView.findViewById(R.id.image);
             }
 
             @Override
@@ -363,12 +423,31 @@ public class Details_For_Seller extends AppCompatActivity {
             holder.name.setSelected(true);
             holder.price.setText(EngToBanConverter.getInstance().convert(image_path.price)+" "+getString(R.string.taka));
             holder.time.setText(image_path.time);
+            load_image(holder.circleImageView,image_path.buyer_id);
         }
 
         @Override
         public int getItemCount() {
             return priceHistoryItems.size();
         }
+    }
+    public void load_image(CircleImageView circleImageView,String user_id){
+        DocumentReference  documentReference= db.collection("Users").document(user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    Map<String,Object> map=documentSnapshot.getData();
+                    if(map.containsKey("image_path")){
+                        String image_path=map.get("image_path").toString();
+                        if(image_path.length()>5){
+                            Picasso.get().load(image_path).into(circleImageView);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void edit(View view){
@@ -389,9 +468,10 @@ public class Details_For_Seller extends AppCompatActivity {
         DocumentReference  documentReference= db.collection("AllAnimals").document(animal_id);
         documentReference.delete();
         StorageReference storageReference=null;
+        imagesPathList.remove(imagesPathList.size()-1);
         for(int i=0;i<imagesPathList.size();i++){
-            if(imagesPathList.get(i).length()>5){
-                storageReference= FirebaseStorage.getInstance().getReferenceFromUrl(imagesPathList.get(i));
+            if(imagesPathList.get(i)[0].length()>5){
+                storageReference= FirebaseStorage.getInstance().getReferenceFromUrl(imagesPathList.get(i)[0]);
                 storageReference.delete();
             }
 

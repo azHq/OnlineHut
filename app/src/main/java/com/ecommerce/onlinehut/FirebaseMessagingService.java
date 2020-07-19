@@ -27,7 +27,7 @@ import java.util.Map;
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
 
-    String body,title,sender_id,receiver_id,sender_device_id,receiver_device_id,document_id,activity_type;
+    String body,sender_type="",title,sender_id,receiver_id,sender_device_id,receiver_device_id,document_id,activity_type,notification_id="";
     public JSONObject jsonObject=null,dataObject,notification;
     public FirebaseMessagingService(){
 
@@ -48,6 +48,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             receiver_device_id=dataObject.getString("receiver_device_id");
             document_id=dataObject.getString("document_id");
             activity_type=dataObject.getString("activity_type");
+            sender_type=dataObject.getString("sender_type");
+            notification_id=dataObject.getString("notification_id");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -60,6 +63,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         tnt.putExtra("receiver_device_id",receiver_device_id);
         tnt.putExtra("document_id",document_id);
         tnt.putExtra("activity_type",activity_type);
+        tnt.putExtra("notification_id",notification_id);
+        tnt.putExtra("sender_type",sender_type);
         startService(tnt);
 
     }

@@ -170,7 +170,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:textColor="@color/white"
-                        android:text="@string/total_item"
+                        android:text="@string/total_item2"
                         android:layout_height="match_parent">
                     </TextView>
                     <TextView
@@ -198,11 +198,11 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:textColor="@color/white"
-                        android:text="@string/total_sold_item"
+                        android:text="@string/total_buy"
                         android:layout_height="match_parent">
                     </TextView>
                     <TextView
-                        android:id="@+id/total_sold_item"
+                        android:id="@+id/total_buy"
                         android:background="@drawable/table_border2"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -212,164 +212,7 @@
                         android:layout_height="match_parent">
                     </TextView>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="@dimen/table_cell_height">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/total_unsold_item"
-                        android:layout_height="match_parent">
-                    </TextView>
-                    <TextView
-                        android:id="@+id/total_unsold_item"
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="00"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:layout_height="match_parent">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="@dimen/table_cell_height">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/total_sell"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:id="@+id/total_sell"
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="0.00 TK"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_height="40dp">
-                    <TextView
-                        android:background="@drawable/table_border"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                    <TextView
-                        android:background="@drawable/table_border2"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp">
-                    </TextView>
-                </LinearLayout>
+
 
             </LinearLayout>
 

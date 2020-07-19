@@ -40,6 +40,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PriceHistoryForSeller extends AppCompatActivity {
 
     ArrayList<String> imagesPathList=new ArrayList<>();
@@ -162,11 +164,13 @@ public class PriceHistoryForSeller extends AppCompatActivity {
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
-                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_type=map.get("type").toString();
+                    animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     if(image_paths[0].length()>0){
 
                         Picasso.get().load(image_paths[0]).into(imageView);
                     }
+                    id_tv.setText("A-"+animal_alt_id);
                     name_tv.setText(name);
                     price_tv.setText(price+" "+getString(R.string.taka));
                     id_tv.setText(animal.animal_id);
@@ -193,6 +197,7 @@ public class PriceHistoryForSeller extends AppCompatActivity {
             View mView;
             Button option_menu;
             TextView name,price,time,location;
+            CircleImageView circleImageView;
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
@@ -200,6 +205,7 @@ public class PriceHistoryForSeller extends AppCompatActivity {
                 price=mView.findViewById(R.id.price);
                 time=mView.findViewById(R.id.time);
                 location=mView.findViewById(R.id.location);
+                circleImageView=mView.findViewById(R.id.image);
             }
 
             @Override
@@ -224,6 +230,7 @@ public class PriceHistoryForSeller extends AppCompatActivity {
             holder.price.setText(EngToBanConverter.getInstance().convert(image_path.price)+" "+getString(R.string.taka));
             holder.time.setText(image_path.time);
             holder.location.setText(image_path.buyer_location);
+            load_image(holder.circleImageView,image_path.buyer_id);
         }
 
         @Override
@@ -231,4 +238,23 @@ public class PriceHistoryForSeller extends AppCompatActivity {
             return priceHistoryItems.size();
         }
     }
+    public void load_image(CircleImageView circleImageView, String user_id){
+        DocumentReference  documentReference= db.collection("Users").document(user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    Map<String,Object> map=documentSnapshot.getData();
+                    if(map.containsKey("image_path")){
+                        String image_path=map.get("image_path").toString();
+                        if(image_path.length()>5){
+                            Picasso.get().load(image_path).into(circleImageView);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
 }

@@ -116,7 +116,8 @@ public class UserDetails extends AppCompatActivity {
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             String animal_alt_id=map.get("alternative_id").toString();
-                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            String animal_type=map.get("type").toString();
+                            Animal animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                             animal.setSold_status(map.get("sold_status").toString());
                             animal.setBuyer_id(map.containsKey("buyer_id")?map.get("buyer_id").toString():null);
                             animals.add(animal);

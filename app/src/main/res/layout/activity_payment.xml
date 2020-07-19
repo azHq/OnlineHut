@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/rinho_transparent"
     android:layout_height="match_parent"
     tools:context=".Buyer.Payment">
     <androidx.cardview.widget.CardView
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_10"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="3dp"
         app:cardBackgroundColor="#400062"
-        android:layout_height="270dp">
+        android:layout_height="305dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -31,7 +34,7 @@
                     android:textColor="#FBFBFB"
                     android:textStyle="bold"
                     android:fontFamily="serif"
-                    android:textSize="@dimen/sp_22"
+                    android:textSize="19sp"
                     android:text="নিচের যেকোনো নাম্বারে পেমেন্ট করুন।"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -53,23 +56,30 @@
                     android:textColor="#FBFBFB"
                     android:textStyle="bold"
                     android:fontFamily="serif"
-                    android:textSize="@dimen/sp_20"
+                    android:textSize="@dimen/sp_18"
                     android:text="বিকাশ"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
             </LinearLayout>
             <TextView
+                android:id="@+id/bkash_acc_number"
                 android:layout_marginTop="2dp"
                 android:gravity="center"
                 android:textColor="#FBFBFB"
                 android:textStyle="bold"
                 android:fontFamily="serif"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_18"
                 android:text="017########"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TextView>
+            <View
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/divider_color1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp">
+            </View>
             <LinearLayout
                 android:gravity="center"
                 android:layout_width="match_parent"
@@ -86,23 +96,30 @@
                     android:textColor="#FBFBFB"
                     android:textStyle="bold"
                     android:fontFamily="serif"
-                    android:textSize="@dimen/sp_20"
+                    android:textSize="@dimen/sp_18"
                     android:text="রকেট"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
             </LinearLayout>
             <TextView
+                android:id="@+id/rocket_acc_number"
                 android:layout_marginTop="2dp"
                 android:gravity="center"
                 android:textColor="#FBFBFB"
                 android:textStyle="bold"
                 android:fontFamily="serif"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_18"
                 android:text="017########"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TextView>
+            <View
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/divider_color1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp">
+            </View>
             <LinearLayout
                 android:gravity="center"
                 android:layout_width="match_parent"
@@ -119,19 +136,20 @@
                     android:textColor="#FBFBFB"
                     android:textStyle="bold"
                     android:fontFamily="serif"
-                    android:textSize="@dimen/sp_22"
+                    android:textSize="@dimen/sp_18"
                     android:text="নগদ"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
             </LinearLayout>
             <TextView
+                android:id="@+id/nagad_acc_number"
                 android:layout_marginTop="2dp"
                 android:gravity="center"
                 android:textColor="#FBFBFB"
                 android:textStyle="bold"
                 android:fontFamily="serif"
-                android:textSize="@dimen/sp_22"
+                android:textSize="@dimen/sp_18"
                 android:text="017########"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -140,9 +158,10 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
         android:layout_width="match_parent"
         app:cardCornerRadius="5dp"
         app:cardBackgroundColor="#400062"
@@ -180,6 +199,7 @@
                     android:layout_height="40dp">
                 </ImageView>
                 <TextView
+                    android:id="@+id/phone_number"
                     android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:textColor="#FBFBFB"
@@ -191,12 +211,14 @@
                     android:layout_height="wrap_content">
                 </TextView>
                 <Button
+                    android:id="@+id/call_btn"
                     android:text="কল করুন"
                     android:textSize="@dimen/sp_14"
-                    android:textColor="#121212"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/round_btn_with_border"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp">
+                    android:layout_height="32dp">
                 </Button>
             </LinearLayout>
             <LinearLayout
@@ -208,6 +230,7 @@
                     android:layout_height="40dp">
                 </ImageView>
                 <TextView
+                    android:id="@+id/mail"
                     android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:textColor="#FBFBFB"
@@ -219,12 +242,14 @@
                     android:layout_height="wrap_content">
                 </TextView>
                 <Button
+                    android:id="@+id/mail_btn"
                     android:text="মেইল করুন"
                     android:textSize="@dimen/sp_14"
-                    android:textColor="#121212"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/round_btn_with_border"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp">
+                    android:layout_height="32dp">
                 </Button>
             </LinearLayout>
 
@@ -235,11 +260,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <Button
+                    android:id="@+id/message_btn"
                     android:text="মেসেজ করুন"
                     android:textSize="@dimen/sp_14"
                     android:textColor="#FFFFFF"
-                    android:backgroundTint="#8B105AED"
-                    android:background="@drawable/round_back_white"
+                    android:background="@drawable/round_btn_with_border"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_width="120dp"
                     android:layout_height="38dp">

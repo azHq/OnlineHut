@@ -28,6 +28,7 @@
             <TextView
                 android:id="@+id/title_bar"
                 android:text="Home"
+                android:visibility="visible"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
                 android:textColor="#D7F2A8"
@@ -37,20 +38,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
             </TextView>
+            <EditText
+                android:id="@+id/search_et"
+                android:paddingStart="@dimen/dp_10"
+                android:paddingEnd="@dimen/dp_10"
+                android:visibility="gone"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColorHint="@color/white"
+                android:hint="@string/search_hint_for_animal"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="8dp"
+                android:drawableRight="@drawable/back_btn_yellow_rotate"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/search_et_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </EditText>
 
             <LinearLayout
                 android:gravity="end|center_vertical"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:src="@drawable/search"
+                <Button
+                    android:id="@+id/search_btn"
+                    android:background="@drawable/search"
                     android:layout_width="25dp"
                     android:layout_margin="10dp"
                     android:layout_height="25dp">
 
-                </ImageView>
+                </Button>
                 <RelativeLayout
+                    android:id="@+id/notification_layout"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content">
                     <ImageView
@@ -63,6 +84,7 @@
                     <TextView
                         android:id="@+id/message_unseen"
                         android:text="99"
+                        android:visibility="gone"
                         android:gravity="center"
                         android:textSize="10sp"
                         android:textColor="@color/white"

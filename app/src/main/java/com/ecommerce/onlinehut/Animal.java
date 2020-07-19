@@ -1,6 +1,6 @@
 package com.ecommerce.onlinehut;
 
-public class Animal {
+public class Animal implements Comparable<Animal> {
     public String animal_id;
     public String animal_alt_id;
     public String user_id;
@@ -24,11 +24,35 @@ public class Animal {
     public int highest_bid;
     public int total_bid;
     public String compress_image_path;
+    public String seller_name;
+    public String seller_location;
+    public String seller_device_id;
 
-    public Animal(String animal_id,String animal_alt_id,String user_id, String name, int price, float age, String color, float weight, float height, int teeth, String born, String image_path, String video_path, int highest_bid, int total_bid) {
+    public Animal(String animal_id,String animal_type,String animal_alt_id,String user_id, String name, int price, float age, String color, float weight, float height, int teeth, String born, String image_path, String video_path, int highest_bid, int total_bid) {
         this.animal_id = animal_id;
+        this.animal_type=animal_type;
         this.animal_alt_id=animal_alt_id;
         this.user_id=user_id;
+        this.name = name;
+        this.price = price;
+        this.age = age;
+        this.color = color;
+        this.weight = weight;
+        this.height = height;
+        this.teeth = teeth;
+        this.born = born;
+        this.image_path = image_path;
+        this.video_path = video_path;
+        this.highest_bid = highest_bid;
+        this.total_bid = total_bid;
+    }
+    public Animal(String animal_id,String animal_type,String animal_alt_id,String user_id,String sold_status,int sold_price,String name, int price, float age, String color, float weight, float height, int teeth, String born, String image_path, String video_path, int highest_bid, int total_bid) {
+        this.animal_id = animal_id;
+        this.animal_type=animal_type;
+        this.animal_alt_id=animal_alt_id;
+        this.user_id=user_id;
+        this.sold_status = sold_status;
+        this.sold_price=sold_price;
         this.name = name;
         this.price = price;
         this.age = age;
@@ -215,5 +239,40 @@ public class Animal {
 
     public void setSold_status(String sold_status) {
         this.sold_status = sold_status;
+    }
+
+    public String getSeller_name() {
+        return seller_name;
+    }
+
+    public String getSeller_location() {
+        return seller_location;
+    }
+
+    public String getSeller_device_id() {
+        return seller_device_id;
+    }
+
+    public void setSeller_name(String seller_name) {
+        this.seller_name = seller_name;
+    }
+
+    public void setSeller_location(String seller_location) {
+        this.seller_location = seller_location;
+    }
+
+    public void setSeller_device_id(String seller_device_id) {
+        this.seller_device_id = seller_device_id;
+    }
+
+    @Override
+    public int compareTo(Animal o) {
+        int id1=Integer.parseInt(animal_alt_id);
+        int id2=Integer.parseInt(o.animal_alt_id);
+        if(id1>id2){
+
+            return 1;
+        }
+        else return -1;
     }
 }

@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.onlinehut.Animal;
 import com.ecommerce.onlinehut.EngToBanConverter;
 import com.ecommerce.onlinehut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +33,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,6 +45,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class BuyerProfile extends Fragment {
     TextView name_tv, email_tv, phone_number_tv, address_tv;
-    TextView total_item_tv, total_sold_item_tv, total_unsold_item_tv, total_sell_tv;
+    TextView total_item_tv, total_sold_item_tv, total_unsold_item_tv, total_buy_tv;
     Button edit_name, edit_address, edit_phone_number, edit_email;
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
@@ -65,13 +70,14 @@ public class BuyerProfile extends Fragment {
     public final int WRITE_PERMISSION = 101;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
-
+    int total_buy=0,total_buy_animal=0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_buyer_profile, container, false);
         engToBanConverter = EngToBanConverter.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        user_id=firebaseAuth.getCurrentUser().getUid();
         progressDialog = new ProgressDialog(getContext());
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -85,9 +91,7 @@ public class BuyerProfile extends Fragment {
         profile_picture = view.findViewById(R.id.profile_picture);
         address_tv = view.findViewById(R.id.address);
         total_item_tv = view.findViewById(R.id.total_item);
-        total_sold_item_tv = view.findViewById(R.id.total_sold_item);
-        total_unsold_item_tv = view.findViewById(R.id.total_unsold_item);
-        total_sell_tv = view.findViewById(R.id.total_sell);
+        total_buy_tv = view.findViewById(R.id.total_buy);
         edit_name = view.findViewById(R.id.edit_name);
         edit_email = view.findViewById(R.id.edit_email);
         edit_phone_number = view.findViewById(R.id.edit_phone_number);
@@ -124,6 +128,7 @@ public class BuyerProfile extends Fragment {
         });
 
         get_user_data();
+        get_animal_data();
         return view;
     }
 
@@ -156,7 +161,6 @@ public class BuyerProfile extends Fragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.edit_panel, null);
         alert.setView(view);
         alertDialog = alert.show();
-        ;
         Button submit = view.findViewById(R.id.submit);
         Button cancel = view.findViewById(R.id.cancel);
         TextView title_tv = view.findViewById(R.id.title);
@@ -359,40 +363,6 @@ public class BuyerProfile extends Fragment {
                             }
                         }
 
-                        if (map.containsKey("total_item") && map.get("total_item") != null) {
-
-                            String total_item = map.get("total_item").toString();
-                            total_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-                            String total_item = 0 + "";
-                            total_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_sold_item") && map.get("total_sold_item") != null) {
-
-                            String total_item = map.get("total_sold_item").toString();
-                            total_sold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-                            String total_item = 0 + "";
-                            total_sold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_unsold_item") && map.get("total_unsold_item") != null) {
-
-                            String total_item = map.get("total_unsold_item").toString();
-                            total_unsold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-
-                            String total_item = 0 + "";
-                            total_unsold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_sell")) {
-
-                            String total_item = map.get("total_sell").toString();
-                            total_sell_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-
-                            String total_item = 0 + "";
-                            total_sell_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
 
 
                     }
@@ -402,5 +372,56 @@ public class BuyerProfile extends Fragment {
             }
         });
 
+    }
+    public void get_animal_data(){
+        total_buy=0;
+        total_buy_animal=0;
+        Query documentReference=db.collection("AllAnimals");
+        documentReference.whereEqualTo("buyer_id",user_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isComplete()){
+
+                    QuerySnapshot querySnapshot=task.getResult();
+                    if(querySnapshot!=null&&querySnapshot.size()>0){
+
+                        ArrayList<Animal> animals2=new ArrayList<>();
+                        for(QueryDocumentSnapshot queryDocumentSnapshot:querySnapshot){
+                            Map<String,Object> map=queryDocumentSnapshot.getData();
+                            String animal_id=map.get("animal_id").toString();
+                            String user_id=map.get("user_id").toString();
+                            String name=map.get("name").toString();
+                            int price=Integer.parseInt(map.get("price").toString());
+                            float age=Integer.parseInt(map.get("age").toString());
+                            String color=map.get("color").toString();
+                            float weight=Float.parseFloat(map.get("weight").toString());
+                            float height=Float.parseFloat(map.get("height").toString());
+                            int teeth=Integer.parseInt(map.get("teeth").toString());
+                            int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
+                            int total_bid=Integer.parseInt(map.get("total_bid").toString());
+                            String animal_alt_id=map.get("alternative_id").toString();
+                            int sold_price=0;
+                            String sold_status=map.get("sold_status").toString();
+                            if(map.containsKey("sold_price")){
+                                sold_price=Integer.parseInt(map.get("sold_price").toString());
+                                total_buy+=sold_price;
+                                total_buy_animal+=1;
+                            }
+
+
+                        }
+                        total_item_tv.setText(total_buy_animal+" "+getString(R.string.ti));
+                        total_buy_tv.setText(total_buy+" "+getString(R.string.taka));
+
+                    }
+
+
+                }
+
+
+            }
+
+
+        });
     }
 }

@@ -14,11 +14,12 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/oponent_profile_pic"
             android:src="@drawable/profile10"
+            android:layout_marginLeft="7dp"
             android:layout_width="30dp"
             android:layout_height="30dp" />
         <TextView
             android:id="@+id/user_name"
-            android:text=""
+            android:text="admin"
             android:gravity="center|top"
             android:textSize="12sp"
             android:layout_below="@id/oponent_profile_pic"
@@ -50,6 +51,18 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/oponent_profile_pic"
             />
+        <TextView
+            android:id="@+id/oponent_time"
+            android:text="12:00"
+            android:gravity="center|top"
+            android:textSize="12sp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@id/oponent_reat"
+            android:layout_alignStart="@id/oponent_reat"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_height="20dp">
+        </TextView>
 
 
 
@@ -92,6 +105,18 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/my_profile_pic"
             />
+        <TextView
+            android:id="@+id/my_time"
+            android:text="12:00"
+            android:gravity="center|top"
+            android:textSize="12sp"
+            android:layout_marginEnd="10dp"
+            android:layout_below="@id/my_react"
+            android:layout_alignEnd="@id/my_react"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_height="20dp">
+        </TextView>
 
     </RelativeLayout>
 

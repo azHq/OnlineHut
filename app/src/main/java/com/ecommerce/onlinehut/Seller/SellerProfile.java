@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.onlinehut.Animal;
 import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
 import com.ecommerce.onlinehut.EngToBanConverter;
 import com.ecommerce.onlinehut.R;
@@ -38,6 +40,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -47,6 +52,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +78,7 @@ public class SellerProfile extends Fragment {
     public final int WRITE_PERMISSION = 101;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+    public int total_sell=0,total_animal=0,total_sold_animal=0,total_unsold_animal=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,6 +138,7 @@ public class SellerProfile extends Fragment {
         });
 
         get_user_data();
+        get_animal_data();
         return view;
     }
 
@@ -163,7 +171,6 @@ public class SellerProfile extends Fragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.edit_panel, null);
         alert.setView(view);
         alertDialog = alert.show();
-        ;
         Button submit = view.findViewById(R.id.submit);
         Button cancel = view.findViewById(R.id.cancel);
         TextView title_tv = view.findViewById(R.id.title);
@@ -366,40 +373,7 @@ public class SellerProfile extends Fragment {
                             }
                         }
 
-                        if (map.containsKey("total_item") && map.get("total_item") != null) {
 
-                            String total_item = map.get("total_item").toString();
-                            total_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-                            String total_item = 0 + "";
-                            total_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_sold_item") && map.get("total_sold_item") != null) {
-
-                            String total_item = map.get("total_sold_item").toString();
-                            total_sold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-                            String total_item = 0 + "";
-                            total_sold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_unsold_item") && map.get("total_unsold_item") != null) {
-
-                            String total_item = map.get("total_unsold_item").toString();
-                            total_unsold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-
-                            String total_item = 0 + "";
-                            total_unsold_item_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
-                        if (map.containsKey("total_sell")) {
-
-                            String total_item = map.get("total_sell").toString();
-                            total_sell_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        } else {
-
-                            String total_item = 0 + "";
-                            total_sell_tv.setText(engToBanConverter.convert(total_item) + " টি");
-                        }
 
 
                     }
@@ -409,6 +383,63 @@ public class SellerProfile extends Fragment {
             }
         });
 
+    }
+
+    public void get_animal_data(){
+        total_sell=0;
+        total_animal=0;
+        total_sold_animal=0;
+        total_unsold_animal=0;
+        Query documentReference=db.collection("AllAnimals");
+        documentReference.whereEqualTo("user_id",user_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isComplete()){
+
+                    QuerySnapshot querySnapshot=task.getResult();
+                    if(querySnapshot!=null&&querySnapshot.size()>0){
+
+                        ArrayList<Animal> animals2=new ArrayList<>();
+                        for(QueryDocumentSnapshot queryDocumentSnapshot:querySnapshot){
+                            Map<String,Object> map=queryDocumentSnapshot.getData();
+                            String animal_id=map.get("animal_id").toString();
+                            String user_id=map.get("user_id").toString();
+                            String name=map.get("name").toString();
+                            int price=Integer.parseInt(map.get("price").toString());
+                            float age=Integer.parseInt(map.get("age").toString());
+                            String color=map.get("color").toString();
+                            float weight=Float.parseFloat(map.get("weight").toString());
+                            float height=Float.parseFloat(map.get("height").toString());
+                            int teeth=Integer.parseInt(map.get("teeth").toString());
+                            int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
+                            int total_bid=Integer.parseInt(map.get("total_bid").toString());
+                            String animal_alt_id=map.get("alternative_id").toString();
+                            int sold_price=0;
+                            String sold_status=map.get("sold_status").toString();
+                            if(map.containsKey("sold_price")){
+                                sold_price=Integer.parseInt(map.get("sold_price").toString());
+                                total_sell+=sold_price;
+                                total_sold_animal+=1;
+                            }
+                            total_animal+=1;
+
+                        }
+                        total_unsold_animal=total_animal-total_sold_animal;
+                        total_item_tv.setText(total_animal+" "+getString(R.string.ti));
+                        total_sold_item_tv.setText(total_sold_animal+" "+getString(R.string.ti));
+                        total_sell_tv.setText(total_sell+" "+getString(R.string.taka));
+                        total_unsold_item_tv.setText(total_unsold_animal+" "+getString(R.string.ti));
+
+                    }
+
+
+                }
+
+
+            }
+
+
+        });
     }
 
 }

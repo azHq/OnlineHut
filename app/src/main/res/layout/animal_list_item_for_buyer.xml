@@ -8,7 +8,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="305dp">
+        android:layout_height="315dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/card1"
             android:layout_width="0dp"
@@ -18,7 +18,7 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginBottom="5dp"
-            android:layout_height="290dp">
+            android:layout_height="310dp">
             <LinearLayout
                 android:weightSum="3"
                 android:orientation="vertical"
@@ -28,18 +28,42 @@
                     android:layout_width="fill_parent"
                     android:layout_weight="2"
                     android:layout_margin="3dp"
-                    android:layout_height="170dp">
+                    android:layout_height="200dp">
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                        <ImageView
-                            android:id="@+id/animal_image1"
-                            android:padding="4dp"
-                            android:src="@drawable/cow5"
-                            android:scaleType="fitXY"
+                        <RelativeLayout
                             android:layout_width="match_parent"
+                            android:padding="4dp"
                             android:layout_height="match_parent">
-                        </ImageView>
+                            <ImageView
+                                android:id="@+id/animal_image1"
+                                android:src="@drawable/cow_image1"
+                                android:scaleType="fitXY"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                            </ImageView>
+                            <LinearLayout
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@color/rinho_transparent"
+                                android:layout_width="wrap_content"
+                                android:gravity="center"
+                                android:layout_height="30dp">
+                                <TextView
+                                    android:id="@+id/id"
+                                    android:layout_margin="5dp"
+                                    android:text="A-1"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"
+                                    android:minWidth="45dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent">
+                                </TextView>
+                            </LinearLayout>
+                        </RelativeLayout>
                         <ImageView
                             android:src="@drawable/frame"
                             android:scaleType="fitXY"
@@ -94,6 +118,22 @@
                             android:layout_height="0dp">
                         </TextView>
                         <TextView
+                            android:id="@+id/weight"
+                            android:gravity="left"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/light_megenda"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/sp_16"
+                            android:fontFamily="serif"
+                            android:singleLine="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:ellipsize="marquee"
+                            android:typeface="serif"
+                            android:text="@string/weight"
+                            android:layout_height="0dp">
+                        </TextView>
+                        <TextView
                             android:id="@+id/highest_bid1"
                             android:gravity="left"
                             android:layout_margin="2dp"
@@ -107,22 +147,6 @@
                             android:ellipsize="marquee"
                             android:typeface="serif"
                             android:text="সর্বচ্চো বিড : ৫০০০০ টাকা"
-                            android:layout_height="0dp">
-                        </TextView>
-                        <TextView
-                            android:id="@+id/total_bid1"
-                            android:gravity="left"
-                            android:layout_margin="2dp"
-                            android:textColor="@color/light_megenda"
-                            android:layout_width="match_parent"
-                            android:layout_weight="1"
-                            android:textSize="@dimen/sp_16"
-                            android:fontFamily="serif"
-                            android:singleLine="true"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:ellipsize="marquee"
-                            android:typeface="serif"
-                            android:text="মোট বিড : ৫ টি "
                             android:layout_height="0dp">
                         </TextView>
                     </LinearLayout>

@@ -1,11 +1,14 @@
 package com.ecommerce.onlinehut.Buyer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -31,12 +35,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecommerce.onlinehut.Animal;
+import com.ecommerce.onlinehut.CustomAlertDialog;
 import com.ecommerce.onlinehut.EngToBanConverter;
+import com.ecommerce.onlinehut.NotificationSender;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.Seller.Add_New_Animal;
+import com.ecommerce.onlinehut.SharedPrefManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -44,12 +54,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class All_Animals_For_Buyer extends Fragment {
 
     AlertDialog alertDialog;
+    String admin_device_id="",mail,phone_number="",admin_id="";
     ArrayList<Animal> animals=new ArrayList<Animal>();
+    ArrayList<Animal> animals_temp=new ArrayList<Animal>();
     ArrayList<String> animal_types=new ArrayList<>();
     ArrayList<String> price_range=new ArrayList<>();
     ArrayList<String> age_range=new ArrayList<>();
@@ -63,7 +77,7 @@ public class All_Animals_For_Buyer extends Fragment {
     TextView empty;
     ProgressDialog progressDialog;
     Button add_new_animal;
-    ArrayList<String> imagesPathList=new ArrayList<>();
+    ArrayList<Animal> sold_animals=new ArrayList<>();
     RecycleAdapter2 horizontal_recycleAdapter;
     RecyclerView horizontal_recycleview;
     Button filter_panel_btn;
@@ -71,6 +85,8 @@ public class All_Animals_For_Buyer extends Fragment {
     Spinner animal_type_sp,animal_price_sp,age_range_sp,color_sp,weight_range_sp,born_sp;
     String animal_type="",color="",born="";
     int price_start=0,price_end=0,age_start=0,age_end=0,weight_start=0,weight_end=0;
+    int minimum_price;
+    RecycleAdapter recycleAdapter;
     Button btn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,21 +97,35 @@ public class All_Animals_For_Buyer extends Fragment {
         user_id=firebaseAuth.getCurrentUser().getUid();
         db=FirebaseFirestore.getInstance();
         recyclerView=view.findViewById(R.id.recycle);
+        recycleAdapter=new RecycleAdapter(animals);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recycleAdapter);
         empty=view.findViewById(R.id.empty);
         drawer = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                getActivity(), drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
         filter_panel_btn=view.findViewById(R.id.filter_panel_btn);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Please Wait");
-        imagesPathList.add("");
-        imagesPathList.add("");
-        imagesPathList.add("");
-        imagesPathList.add("");
         horizontal_recycleview=view.findViewById(R.id.horizontal_recycle);
-        horizontal_recycleAdapter=new RecycleAdapter2(imagesPathList);
+        horizontal_recycleAdapter=new RecycleAdapter2(sold_animals);
         horizontal_recycleview.setAdapter(horizontal_recycleAdapter);
+
+        BuyerDashboard.search_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search_string=s.toString();
+                search(search_string);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         filter_panel_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +139,7 @@ public class All_Animals_For_Buyer extends Fragment {
 
             }
         });
+        animal_types.add("সব");
         animal_types.add(getString(R.string.cow));
         animal_types.add(getString(R.string.buffalo));
         animal_types.add(getString(R.string.camel));
@@ -122,12 +153,13 @@ public class All_Animals_For_Buyer extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 if(position>0){
-
                     animal_type=animal_types.get(position);
                 }
                 else{
                     animal_type="";
                 }
+                filter();
+
 
             }
 
@@ -240,10 +272,12 @@ public class All_Animals_For_Buyer extends Fragment {
                         price_start=1500000;
                         price_end=2000000;
                     }
+                    filter();
                 }
                 else{
-                    price_start=0;
-                    price_end=0;
+                    price_start=200;
+                    price_end=6000000;
+                    filter();
                 }
 
             }
@@ -267,7 +301,14 @@ public class All_Animals_For_Buyer extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                color=colors.get(position);
+               if(position>0){
+                   color=colors.get(position);
+                   filter();
+               }
+               else{
+                   color="";
+                   filter();
+               }
 
             }
 
@@ -293,30 +334,32 @@ public class All_Animals_For_Buyer extends Fragment {
                 if(position>0){
 
                     if(position==1){
-                        age_start=2;
-                        age_start=3;
+                        age_start=2*12;
+                        age_end=3*12;
                     }
                     else if(position==2){
-                        age_start=3;
-                        age_start=4;
+                        age_start=3*12;
+                        age_end=4*12;
                     }
                     else if(position==3){
-                        age_start=4;
-                        age_start=5;
+                        age_start=4*12;
+                        age_end=5*12;
                     }
                     else if(position==4){
-                        age_start=5;
-                        age_start=6;
+                        age_start=5*12;
+                        age_end=6*12;
                     }
                     else if(position==5){
-                        age_start=6;
-                        age_start=7;
+                        age_start=6*12;
+                        age_end=7*12;
                     }
-
+                    filter();
                 }
                 else{
-                  age_end=0;
-                  age_start=0;
+
+                    age_start=0;
+                    age_end=10*12;
+                    filter();
                 }
 
             }
@@ -328,8 +371,6 @@ public class All_Animals_For_Buyer extends Fragment {
         });
 
         weight_range.add(getString(R.string.all));
-        weight_range.add("৬০-৮০ কেজি");
-        weight_range.add("৮০-১০০ কেজি");
         weight_range.add("১০০-১২০ কেজি");
         weight_range.add("১২০-১৫০ কেজি");
         weight_range.add("১৫০-১৮০ কেজি");
@@ -340,6 +381,8 @@ public class All_Animals_For_Buyer extends Fragment {
         weight_range.add("৩০০-৩৫০ কেজি");
         weight_range.add("৩৫০-৪০০ কেজি");
         weight_range.add("৪০০-৫০০ কেজি");
+        weight_range.add("৫০০-১০০০ কেজি");
+        weight_range.add("১০০০-২০০০ কেজি");
         weight_range_sp=view.findViewById(R.id.weight);
         weight_range_sp.setAdapter(new CustomAdapter(getContext(),0,weight_range));
         weight_range_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -349,54 +392,56 @@ public class All_Animals_For_Buyer extends Fragment {
                 if(position>0){
 
                     if(position==1){
-
-                        weight_start=60;
-                        weight_end=80;
-                    }
-                    else if(position==2){
-                        weight_start=80;
-                        weight_end=100;
-                    }
-                    else if(position==3){
                         weight_start=100;
                         weight_end=120;
                     }
-                    else if(position==4){
+                    else if(position==2){
                         weight_start=120;
                         weight_end=150;
                     }
-                    else if(position==5){
+                    else if(position==3){
                         weight_start=150;
                         weight_end=180;
                     }
-                    else if(position==6){
+                    else if(position==4){
                         weight_start=180;
                         weight_end=200;
                     }
-                    else if(position==7){
+                    else if(position==5){
                         weight_start=200;
                         weight_end=250;
                     }
-                    else if(position==8){
+                    else if(position==6){
                         weight_start=250;
                         weight_end=300;
                     }
-                    else if(position==9){
+                    else if(position==7){
                         weight_start=300;
                         weight_end=350;
                     }
-                    else if(position==10){
+                    else if(position==8){
                         weight_start=350;
                         weight_end=400;
                     }
-                    else if(position==11){
+                    else if(position==9){
                         weight_start=400;
                         weight_end=500;
                     }
+                    else if(position==10){
+                        weight_start=500;
+                        weight_end=1000;
+                    }
+                    else if(position==11){
+                        weight_start=1000;
+                        weight_end=2000;
+                    }
+                    filter();
                 }
                 else{
-                    weight_end=0;
                     weight_start=0;
+                    weight_end=10000;
+                    filter();
+
                 }
 
             }
@@ -410,7 +455,16 @@ public class All_Animals_For_Buyer extends Fragment {
         born_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                born=borns.get(position);
+
+               if(position>0){
+                   born=borns.get(position);
+                   filter();
+               }
+               else{
+                   born="";
+                   filter();
+               }
+
             }
 
             @Override
@@ -420,22 +474,97 @@ public class All_Animals_For_Buyer extends Fragment {
         });
 
 
-
         return view;
+    }
+
+    public void filter(){
+        animals.clear();
+        if(drawer.isDrawerOpen(GravityCompat.END)){
+            drawer.closeDrawer(GravityCompat.END);
+        }
+        for(int i=0;i<animals_temp.size();i++){
+            Animal animal=animals_temp.get(i);
+
+            //type filter
+            if(animal_type.length()==0||animal_type.equalsIgnoreCase(animal.animal_type)){
+                animals.add(animal);
+            }
+            else if(!animal_type.equalsIgnoreCase(animal.animal_type)){
+                animals.remove(animal);
+            }
+            //price filter
+            if(((animal.price>=price_start&&animal.price<=price_end))&&!animals.contains(animal)){
+               // animals.add(animal);
+
+            }
+            else if((animal.price<price_start||animal.price>price_end)){
+                animals.remove(animal);
+            }
+            //color filter
+            if(color.equalsIgnoreCase(animal.color)&&!animals.contains(animal))
+            {
+               // animals.add(animal);
+            }
+            else if(color.length()>0&&!color.equalsIgnoreCase(animal.color)){
+                animals.remove(animal);
+            }
+            //age filter
+            if((animal.age>=age_start&&animal.age<=age_end)&&!animals.contains(animal))
+            {
+                //animals.add(animal);
+            }
+            else if((animal.age<age_start||animal.age>age_end)){
+                animals.remove(animal);
+            }
+            //weight filter
+            if(((animal.weight>=weight_start&&animal.weight<=weight_end))&&!animals.contains(animal))
+            {
+                //animals.add(animal);
+            }
+            else if((animal.weight<weight_start||animal.weight>weight_end)){
+                animals.remove(animal);
+            }
+            //born filter
+            if((born.equalsIgnoreCase(animal.born))&&!animals.contains(animal))
+            {
+               // animals.add(animal);
+            }
+            else if(born.length()>0&&!born.equalsIgnoreCase(animal.born)){
+                animals.remove(animal);
+            }
+        }
+        recycleAdapter.notifyDataSetChanged();
+    }
+    public void search(String search_string){
+
+        animals.clear();
+        search_string=search_string.toLowerCase().trim();
+        for(int i=0;i<animals_temp.size();i++){
+            Animal animal=animals_temp.get(i);
+            String animal_id="A-"+animal.animal_alt_id;
+            animal_id=animal_id.toLowerCase();
+            String animal_name=animal.name.toLowerCase();
+            if(animal_id.startsWith(search_string)||animal_name.startsWith(search_string)){
+                animals.add(animal);
+            }
+        }
+        filter();
+        //recycleAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         get_all_animals_data();
+        get_AppConfigurationData();
     }
     public class RecycleAdapter2 extends RecyclerView.Adapter<RecycleAdapter2.ViewAdapter>{
 
-        ArrayList<String> animals;
-        public RecycleAdapter2(ArrayList<String> animals){
+        ArrayList<Animal> animals;
+        public RecycleAdapter2(ArrayList<Animal> animals){
             this.animals=animals;
         }
-        public  class ViewAdapter extends RecyclerView.ViewHolder{
+        public  class ViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             View mView;
             Button option_menu;
@@ -445,6 +574,7 @@ public class All_Animals_For_Buyer extends Fragment {
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
+                mView.setOnClickListener(this);
                 animal_image=mView.findViewById(R.id.animal_image);
                 image_name=mView.findViewById(R.id.image_name);
                 item=mView.findViewById(R.id.item_layout);
@@ -452,6 +582,16 @@ public class All_Animals_For_Buyer extends Fragment {
             }
 
 
+            @Override
+            public void onClick(View v) {
+
+                int position=getLayoutPosition();
+                Animal animal=animals.get(position);
+                Intent tnt=new Intent(getContext(),Sold_Item_Details.class);
+                tnt.putExtra("animal_id",animal.animal_id);
+                startActivity(tnt);
+
+            }
         }
         @NonNull
         @Override
@@ -464,26 +604,19 @@ public class All_Animals_For_Buyer extends Fragment {
         public void onBindViewHolder(@NonNull ViewAdapter holder, final int position) {
 
 
-            String image_path=animals.get(position);
-            if(image_path.length()>0){
+            Animal animal=animals.get(position);
+            if(animal.image_path.length()>0){
                 holder.item.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
                 holder.animal_image.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
-                Picasso.get().load(image_path).into(holder.animal_image);
+                Picasso.get().load(animal.image_path).into(holder.animal_image);
                 //holder.image_name.setVisibility(View.GONE);
-                holder.image_name.setText(getString(R.string.sold)+"\n"+ EngToBanConverter.getInstance().convert((position+1)*20000+"") +" "+getString(R.string.taka));
-            }else{
-                holder.image_name.setVisibility(View.VISIBLE);
-                holder.image_name.setText("Image-"+(position+1));
+                holder.image_name.setText(getString(R.string.sold)+"\n"+ EngToBanConverter.getInstance().convert(animal.sold_price+"") +" "+getString(R.string.taka));
             }
-
             holder.option_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-//                    if(image_path.length()>0)  showPopup(v,position);
-//                    else{
-//                        Toast.makeText(getContext(),getString(R.string.image_upload),Toast.LENGTH_LONG).show();
-//                    }
+
                 }
             });
 
@@ -508,9 +641,10 @@ public class All_Animals_For_Buyer extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 animals.clear();
+                animals_temp.clear();
                 borns.clear();
                 borns.add(getString(R.string.all));
-                imagesPathList.clear();
+                sold_animals.clear();
                 if(task.isComplete()){
 
                     QuerySnapshot querySnapshot=task.getResult();
@@ -521,6 +655,7 @@ public class All_Animals_For_Buyer extends Fragment {
                             String animal_id=map.get("animal_id").toString();
                             String user_id=map.get("user_id").toString();
                             String name=map.get("name").toString();
+                            String animal_type=map.get("type").toString();
                             int price=Integer.parseInt(map.get("price").toString());
                             float age=Integer.parseInt(map.get("age").toString());
                             String color=map.get("color").toString();
@@ -528,27 +663,35 @@ public class All_Animals_For_Buyer extends Fragment {
                             float height=Float.parseFloat(map.get("height").toString());
                             int teeth=Integer.parseInt(map.get("teeth").toString());
                             String born=map.get("born").toString();
-                            String compress_image_path=""; //map.get("compress_image_path").toString();
+                            String compress_image_path=map.get("compress_image_path").toString();
                             String[] image_paths=map.get("original_image_path").toString().split(",");
                             String image_path=image_paths[0];
                             System.out.println("image path:"+image_path+" length:"+image_paths.length);
                             String video_path=map.get("video_path").toString();
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
-                            borns.add(born);
+                            if(!borns.contains(born)) borns.add(born);
                             String animal_alt_id=map.get("alternative_id").toString();
-                            Animal animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
-                            animals.add(animal);
-                            imagesPathList.add(compress_image_path);
+                            String sold_status=map.get("sold_status").toString();
+                            Animal animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                            int sold_price=0;
+                            if(!sold_status.equalsIgnoreCase("unsold")&&map.containsKey("sold_price")){
+                                sold_price=Integer.parseInt(map.get("sold_price").toString());
+                                Animal animal2=new Animal(animal_id,animal_type,animal_alt_id,user_id,sold_status,sold_price,name,price,age,color,weight,height,teeth,born,compress_image_path,video_path,highest_bid,total_bid);
+                                sold_animals.add(animal2);
+                            }
+                            else{
+                                animals.add(animal);
+                                get_user_data(animal.user_id,animal);
+                            }
                         }
-
+                        animals_temp.addAll(animals);
+                        Collections.sort(animals);
+                        Collections.sort(animals_temp);
                         horizontal_recycleAdapter.notifyDataSetChanged();
+                        recycleAdapter.notifyDataSetChanged();
                         recyclerView.setVisibility(View.VISIBLE);
                         empty.setVisibility(View.INVISIBLE);
-                        RecycleAdapter recycleAdapter=new RecycleAdapter(animals);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(recycleAdapter);
-
                         born_sp.setAdapter(new CustomAdapter(getContext(),0,borns));
                     }
                     else{
@@ -576,21 +719,23 @@ public class All_Animals_For_Buyer extends Fragment {
         public RecycleAdapter(ArrayList<Animal> animals){
             this.animals=animals;
         }
-        public  class ViewAdapter extends RecyclerView.ViewHolder{
+        public  class ViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             View mView;
             Button compare,details,pricing;
             CardView card1,card2;
             ImageView animal_image1,animal_image2;
-            TextView name_tv1,name_tv2,price_tv1,price_tv2,highest_bid_tv1,highest_bid_tv2,total_bid_tv1,total_bid_tv2;
+            TextView id_tv,name_tv1,name_tv2,price_tv1,price_tv2,highest_bid_tv1,highest_bid_tv2,weight_tv1,total_bid_tv2;
             public ViewAdapter(View itemView) {
                 super(itemView);
                 mView=itemView;
+                mView.setOnClickListener(this);
                 animal_image1=mView.findViewById(R.id.animal_image1);
+                id_tv=mView.findViewById(R.id.id);
                 name_tv1=mView.findViewById(R.id.name1);
                 price_tv1=mView.findViewById(R.id.price1);
                 highest_bid_tv1=mView.findViewById(R.id.highest_bid1);
-                total_bid_tv1=mView.findViewById(R.id.total_bid1);
+                weight_tv1=mView.findViewById(R.id.weight);
                 compare=mView.findViewById(R.id.compare);
                 details=mView.findViewById(R.id.details);
                 pricing=mView.findViewById(R.id.pricing);
@@ -598,6 +743,14 @@ public class All_Animals_For_Buyer extends Fragment {
             }
 
 
+            @Override
+            public void onClick(View v) {
+
+                Animal animal=animals.get(getLayoutPosition());
+                Intent tnt=new Intent(getContext(),Details.class);
+                tnt.putExtra("animal_id",animal.animal_id);
+                startActivity(tnt);
+            }
         }
         @NonNull
         @Override
@@ -613,16 +766,17 @@ public class All_Animals_For_Buyer extends Fragment {
             holder.card1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale));
             holder.animal_image1.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_transition_animation));
             holder.name_tv1.setText(getString(R.string.name2) +" : "+animal.name);
-            holder.price_tv1.setText(getString(R.string.price)+" : "+animal.price+" "+getString(R.string.taka));
-            holder.highest_bid_tv1.setText(getString(R.string.highest_bid)+" : "+animal.highest_bid+" "+getString(R.string.taka));
-            holder.total_bid_tv1.setText(getString(R.string.total_bid)+" : "+animal.total_bid+" "+getString(R.string.jon));
+            holder.price_tv1.setText(getString(R.string.price)+" : "+EngToBanConverter.getInstance().convert(animal.price+"") +" "+getString(R.string.taka));
+            holder.highest_bid_tv1.setText(getString(R.string.highest_bid)+" : "+EngToBanConverter.getInstance().convert(animal.highest_bid+"") +getString(R.string.taka));
+            holder.weight_tv1.setText(getString(R.string.weight2)+" : "+EngToBanConverter.getInstance().convert((int)animal.weight+"")+" "+getString(R.string.kg));
+            holder.id_tv.setText("A-"+animal.animal_alt_id);
             if(animal.image_path!=null&&animal.image_path.length()>5){
                 Picasso.get().load(animal.image_path).into(holder.animal_image1);
             }
             holder.name_tv1.setSelected(true);
             holder.price_tv1.setSelected(true);
             holder.highest_bid_tv1.setSelected(true);
-            holder.total_bid_tv1.setSelected(true);
+            holder.weight_tv1.setSelected(true);
             holder.compare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -641,7 +795,7 @@ public class All_Animals_For_Buyer extends Fragment {
             holder.pricing.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    show_price_writing_dialog(animal);
                 }
             });
         }
@@ -780,6 +934,160 @@ public class All_Animals_For_Buyer extends Fragment {
             return animals.size();
         }
 
+    }
+
+    public void show_price_writing_dialog(Animal animal){
+
+        AlertDialog.Builder alert=new AlertDialog.Builder(getContext());
+        View view= LayoutInflater.from(getContext()).inflate(R.layout.price_writing_layout,null);
+        alert.setView(view);
+        alertDialog=alert.show();
+        Button submit=view.findViewById(R.id.submit);
+        Button cancel=view.findViewById(R.id.cancel);
+        EditText price_et=view.findViewById(R.id.price);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String price_str=price_et.getText().toString();
+                if(price_str.length()>0){
+                    int price=Integer.parseInt(price_str);
+                    if(price>=minimum_price&&minimum_price<=animal.price||minimum_price>animal.price){
+                        alertDialog.dismiss();
+                        upload_new_price(price,animal);
+                    }
+                    else {
+                        CustomAlertDialog.getInstance().show_error_dialog(getContext(),getString(R.string.app_name),"পশুটির সর্বনিম্ন দাম "+minimum_price+" "+getString(R.string.taka));
+                    }
+
+                }
+                else{
+                    Toast.makeText(getContext(),getString(R.string.animal_price_write)+"",Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
+
+    public void upload_new_price(int price,Animal animal){
+        progressDialog.show();
+        if(price>animal.price){
+            update_animal_info(price,animal.total_bid+1,animal);
+        }
+        DocumentReference documentReference=db.collection("BidHistory").document();
+        Map<String,Object> map=new HashMap<>();
+        map.put("seller_id",animal.user_id);
+        map.put("seller_name",animal.seller_name);
+        map.put("seller_location",animal.seller_location);
+        map.put("buyer_id", SharedPrefManager.getInstance(getContext()).getUser().user_id);
+        map.put("buyer_name",SharedPrefManager.getInstance(getContext()).getUser().user_name);
+        map.put("buyer_location",SharedPrefManager.getInstance(getContext()).getUser().location);
+        map.put("animal_id",animal.animal_id);
+        map.put("price",price);
+        map.put("document_id",documentReference.getId());
+        map.put("time", FieldValue.serverTimestamp());
+        String document_id=documentReference.getId();
+        documentReference.set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                NotificationSender.getInstance().createNotification(getString(R.string.new_price_request),SharedPrefManager.getInstance(getContext()).getUser().user_name+" আপনার পশুটি "+ EngToBanConverter.getInstance().convert(price+"")+" টাকায় কিনতে চায়।",user_id,SharedPrefManager.getInstance(getContext()).getUser().user_name,SharedPrefManager.getInstance(getContext()).getUser().image_path,"buyer",animal.user_id,document_id,SharedPrefManager.getInstance(getContext()).getUser().device_id,animal.seller_device_id,"new price");
+                NotificationSender.getInstance().createNotification(getString(R.string.new_price_request),SharedPrefManager.getInstance(getContext()).getUser().user_name+" পশুটি "+ EngToBanConverter.getInstance().convert(price+"")+" টাকায় কিনতে চায়।",user_id,SharedPrefManager.getInstance(getContext()).getUser().user_name,SharedPrefManager.getInstance(getContext()).getUser().image_path,"buyer",admin_id,document_id,SharedPrefManager.getInstance(getContext()).getUser().device_id,admin_device_id,"new price");
+                progressDialog.dismiss();
+            }
+        });
+
+
+    }
+
+    public void update_animal_info(int price,int total_bid,Animal animal){
+
+        DocumentReference documentReference=db.collection("AllAnimals").document(animal.animal_id);
+        Map<String,Object> map=new HashMap<>();
+        map.put("highest_bid",price);
+        map.put("total_bid",total_bid);
+        documentReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                get_all_animals_data();
+            }
+        });
+    }
+    public void get_AppConfigurationData(){
+        progressDialog.show();
+        DocumentReference documentReference=db.collection("AppConfiguration").document("AppConfiguration");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+                    progressDialog.dismiss();
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    if(documentSnapshot.exists())
+                    {
+                        Map<String,Object> data=documentSnapshot.getData();
+                        String minimum_payment=data.get("minimum_payment").toString();
+                        minimum_price =Integer.parseInt(data.get("minimum_price").toString());
+                        String expire_time=data.get("confirmation_expire_time").toString();
+                        String str=data.get("bkash_account_number").toString()+"("+data.get("bkash_account_number_status")+")";
+                        admin_id=data.get("admin_id").toString();
+                        get_device_id(admin_id);
+                    }
+
+                }
+            }
+        });
+    }
+    public void get_device_id(String user_id){
+        DocumentReference documentReference = db.collection("Users").document(user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    progressDialog.dismiss();
+                    if (document.exists()) {
+
+                        Map<String, Object> map = document.getData();
+                        if (map.containsKey("device_id")) {
+
+                            admin_device_id=map.get("device_id").toString();
+                        }
+                    }
+                }
+            }
+        });
+    }
+    public void get_user_data(String user_id,Animal animal){
+        DocumentReference documentReference = db.collection("Users").document(user_id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    progressDialog.dismiss();
+                    if (document.exists()) {
+
+                        Map<String, Object> map = document.getData();
+                        String seller_name=map.get("user_name").toString();
+                        String address="";
+                        if(map.containsKey("address")){
+                            address=map.get("address").toString();
+                        }
+                        String seller_device_id=map.get("device_id").toString();
+                        animal.setSeller_device_id(seller_device_id);
+                        animal.setSeller_location(address);
+                        animal.setSeller_name(seller_name);
+                    }
+                }
+            }
+        });
     }
 
 }

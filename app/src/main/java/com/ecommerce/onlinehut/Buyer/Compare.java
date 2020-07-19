@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ecommerce.onlinehut.Animal;
+import com.ecommerce.onlinehut.EngToBanConverter;
 import com.ecommerce.onlinehut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,13 +35,14 @@ public class Compare extends AppCompatActivity {
     ProgressDialog progressDialog;
     Animal animal;
     ImageView imageView1;
-    TextView tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv;
+    TextView tv_id1,tv_price,tv_name,tv_color,tv_weight,tv_age,tv_height,tv_born,tv_teeth,highest_price_tv;
     ImageView imageView2;
-    TextView tv_price2,tv_name2,tv_color2,tv_weight2,tv_age2,tv_height2,tv_born2,tv_teeth2,highest_price_tv2;
+    TextView tv_id2,tv_price2,tv_name2,tv_color2,tv_weight2,tv_age2,tv_height2,tv_born2,tv_teeth2,highest_price_tv2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare);
+        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         animal_id1=getIntent().getStringExtra("animal_id1");
         animal_id2=getIntent().getStringExtra("animal_id2");
         firebaseAuth=FirebaseAuth.getInstance();
@@ -50,6 +53,7 @@ public class Compare extends AppCompatActivity {
         recyclerView=findViewById(R.id.recycle);
         imageView1=findViewById(R.id.image1);
         imageView2=findViewById(R.id.image2);
+        tv_id1=findViewById(R.id.id1);
         tv_name=findViewById(R.id.name);
         tv_price=findViewById(R.id.price);
         tv_age=findViewById(R.id.age);
@@ -59,6 +63,7 @@ public class Compare extends AppCompatActivity {
         tv_born=findViewById(R.id.born);
         tv_teeth=findViewById(R.id.teeth);
         highest_price_tv=findViewById(R.id.highest_price);
+        tv_id2=findViewById(R.id.id2);
         tv_name2=findViewById(R.id.name2);
         tv_price2=findViewById(R.id.price2);
         tv_age2=findViewById(R.id.age2);
@@ -70,6 +75,13 @@ public class Compare extends AppCompatActivity {
         highest_price_tv2=findViewById(R.id.highest_price2);
         get_animal_data1();
         get_animal_data2();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
     public void get_animal_data1(){
         progressDialog.show();
@@ -99,18 +111,20 @@ public class Compare extends AppCompatActivity {
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
-                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_type=map.get("type").toString();
+                    animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     tv_name.setText(name);
-                    tv_price.setText(price+" "+getString(R.string.taka));
+                    tv_price.setText(EngToBanConverter.getInstance().convert(price+"")+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
                     String month=(int)(age%12)+"";
-                    tv_age.setText(year+" "+getString(R.string.year)+" "+month+" "+getString(R.string.month));
+                    tv_age.setText(EngToBanConverter.getInstance().convert(year+"")+" "+getString(R.string.year)+" "+EngToBanConverter.getInstance().convert(month+"")+" "+getString(R.string.month));
                     tv_color.setText(color);
-                    tv_weight.setText(weight+" "+getString(R.string.kg));
-                    tv_height.setText(height+" "+getString(R.string.feet));
-                    tv_teeth.setText(teeth+" "+getString(R.string.ti));
+                    tv_weight.setText(EngToBanConverter.getInstance().convert(weight+"")+" "+getString(R.string.kg));
+                    tv_height.setText(EngToBanConverter.getInstance().convert(height+"")+" "+getString(R.string.feet));
+                    tv_teeth.setText(EngToBanConverter.getInstance().convert(teeth+"")+" "+getString(R.string.ti));
                     tv_born.setText(born+"");
-                    highest_price_tv.setText(highest_bid+" "+getString(R.string.taka));
+                    tv_id1.setText("A-"+animal.animal_alt_id);
+                    highest_price_tv.setText(EngToBanConverter.getInstance().convert(highest_bid+"")+" "+getString(R.string.taka));
                     if(image_paths[0].length()>0){
                         Picasso.get().load(image_paths[0]).into(imageView1);
                     }
@@ -154,18 +168,20 @@ public class Compare extends AppCompatActivity {
                     int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                     int total_bid=Integer.parseInt(map.get("total_bid").toString());
                     String animal_alt_id=map.get("alternative_id").toString();
-                    animal=new Animal(animal_id,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
+                    String animal_type=map.get("type").toString();
+                    animal=new Animal(animal_id,animal_type,animal_alt_id,user_id,name,price,age,color,weight,height,teeth,born,image_path,video_path,highest_bid,total_bid);
                     tv_name2.setText(name);
-                    tv_price2.setText(price+" "+getString(R.string.taka));
+                    tv_price2.setText(EngToBanConverter.getInstance().convert(price+"")+" "+getString(R.string.taka));
                     String year=(int)(age/12)+"";
                     String month=(int)(age%12)+"";
-                    tv_age2.setText(year+" "+getString(R.string.year)+" "+month+" "+getString(R.string.month));
+                    tv_age2.setText(EngToBanConverter.getInstance().convert(year+"")+" "+getString(R.string.year)+" "+EngToBanConverter.getInstance().convert(month+"")+" "+getString(R.string.month));
                     tv_color2.setText(color);
-                    tv_weight2.setText(weight+" "+getString(R.string.kg));
-                    tv_height2.setText(height+" "+getString(R.string.feet));
-                    tv_teeth2.setText(teeth+" "+getString(R.string.ti));
+                    tv_weight2.setText(EngToBanConverter.getInstance().convert(weight+"")+" "+getString(R.string.kg));
+                    tv_height2.setText(EngToBanConverter.getInstance().convert(height+"")+" "+getString(R.string.feet));
+                    tv_teeth2.setText(EngToBanConverter.getInstance().convert(teeth+"")+" "+getString(R.string.ti));
                     tv_born2.setText(born+"");
-                    highest_price_tv2.setText(highest_bid+" "+getString(R.string.taka));
+                    tv_id2.setText("A-"+animal.animal_alt_id);
+                    highest_price_tv2.setText(EngToBanConverter.getInstance().convert(highest_bid+"")+" "+getString(R.string.taka));
                     if(image_paths[0].length()>0){
                         Picasso.get().load(image_paths[0]).into(imageView2);
                     }

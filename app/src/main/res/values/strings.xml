@@ -22,8 +22,6 @@
     <string name="account_error_body">অনুগ্রহ করে প্রথমে সাইন-আপ করুন।</string>
     <string name="seller">বিক্রেতা ?</string>
     <string name="buyer">ক্রেতা ?</string>
-    <string name="seller2">বিক্রেতা</string>
-    <string name="buyer2">ক্রেতা</string>
     <string name="user_type">ইউজার টাইপ ?</string>
     <string name="input_error">ইনপুট এরর</string>
     <string name="name_error">আপনার নাম লিখুন</string>
@@ -32,8 +30,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="total_item">মোট পশুর সংখ্যা</string>
     <string name="total_sold_item">বিক্রিত পশুর সংখ্যা</string>
-    <string name="total_item2">মোট ক্রয়কৃত পশুর সংখ্যা</string>
-    <string name="total_buy">মোট ক্রয়</string>
     <string name="total_unsold_item">অবিক্রিত পশুর সংখ্যা</string>
     <string name="total_sell">মোট বিক্রি</string>
     <string name="name2">নাম</string>
@@ -48,7 +44,7 @@
     <string name="price">দাম</string>
     <string name="empty">লিস্ট খালি</string>
     <string name="admin">অ্যাডমিন</string>
-    <string name="highest_bid">সর্বচ্চো দাম হয়েছে</string>
+    <string name="highest_bid">সর্বচ্চো দাম</string>
     <string name="total_bid">মোট দাম করেছেন</string>
     <string name="profile">প্রোফাইল</string>
     <string name="taka">টাকা</string>
@@ -64,7 +60,6 @@
     <string name="age">পশুর বয়স</string>
     <string name="color">পশুর রং</string>
     <string name="weight">ওজন (কেজি)</string>
-    <string name="weight2">ওজন</string>
     <string name="height">উচ্চতা (ফুট)</string>
     <string name="teeth">দাঁত সংখ্যা</string>
     <string name="born">জাত</string>
@@ -139,14 +134,4 @@
     <string name="contact">যোগাযোগ</string>
     <string name="disable_confirmation">ডিজেবল করতে চান?</string>
     <string name="enable_confirmation">এন্যাবল করতে চান?</string>
-    <string name="notification">নোটিফিকেশন</string>
-    <string name="search_hint_for_animal">পশুর নাম অথবা আইডি লিখুন......</string>
-    <string name="payment">পেমেন্ট</string>
-    <string name="about">এবাউট</string>
-    <string name="buy_item_list">ক্রয়কৃত পশুর লিস্ট</string>
-    <string name="write_date">তারিখ লিখুন</string>
-    <string name="animal_price_write">পশুর দাম লিখুন</string>
-    <string name="write_message">মেসেজ করুন</string>
-    <string name="slogan">আমাদের স্লোগান</string>
-    <string name="mission">আমাদের মিশন</string>
 </resources>

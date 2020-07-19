@@ -2,21 +2,28 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/item"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/card"
         android:layout_width="match_parent"
         android:layout_height="195dp">
+        android:orientation="vertical">
+
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="6dp"
             android:layout_width="match_parent"
             android:layout_height="40dp">
+            android:layout_marginEnd="10dp">
+
             <ImageView
                 android:id="@+id/image"
                 android:layout_margin="5dp"
@@ -24,45 +31,55 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp">
             </ImageView>
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/profile_icon"></ImageView>
+
             <TextView
-                android:textColor="@color/white"
-                android:text="user_name"
-                android:paddingStart="10dp"
-                android:textSize="@dimen/sp_16"
-                android:gravity="center_vertical"
                 android:id="@+id/name"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="50dp">
-            </TextView>
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:text="user_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"></TextView>
+
             <ImageView
                 android:id="@+id/logo"
-                android:scaleType="fitXY"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/bkash_icon"
                 android:layout_width="50dp"
                 android:layout_height="25dp">
             </ImageView>
+                android:layout_height="35dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/bkash_icon"></ImageView>
         </LinearLayout>
+
         <LinearLayout
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="20dp"
-            android:orientation="vertical"
-            android:layout_marginEnd="15dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/id"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="User Id"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content">
-            </TextView>
+                android:textSize="@dimen/sp_16"></TextView>
+
             <TextView
                 android:id="@+id/phone_number"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Phone Number"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
@@ -74,19 +91,21 @@
                 android:text="Amount"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content">
-            </TextView>
+                android:textSize="@dimen/sp_16"></TextView>
+
             <TextView
                 android:id="@+id/payment_method"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Method"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content">
-            </TextView>
+                android:textSize="@dimen/sp_16"></TextView>
+
             <TextView
                 android:id="@+id/transaction_id"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="trxId"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
@@ -98,16 +117,25 @@
                 android:text="trxId"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content">
-            </TextView>
+                android:textSize="@dimen/sp_16"></TextView>
+
             <TextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Time"
                 android:textSize="@dimen/sp_14"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content">
-            </TextView>
+                android:textSize="@dimen/sp_16"></TextView>
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Amount"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"></TextView>
         </LinearLayout>
 
     </LinearLayout>

@@ -20,6 +20,7 @@ public class SharedPrefManager {
     private static final String GEOPOINT="GEOPOINT";
     private static final String IS_DISABLED = "DISABLED";
     private static final String LOCATION="LOCATION";
+    private static final String NOTIFICATION="NOTIFICATION";
     private static final String NUMBER_OF_UNSEEN_NOTIFICATION="NUMBER_OF_UNSEEN_NOTIFICATION";
 
     private static SharedPrefManager mInstance;
@@ -49,6 +50,7 @@ public class SharedPrefManager {
         editor.putBoolean(IS_ADMIN, user.isAdmin());
         editor.putBoolean(IS_DISABLED, user.isDisabled());
         editor.putString(LOCATION, user.getLocation());
+        editor.putBoolean(NOTIFICATION, user.isNotificationOn());
         editor.apply();
     }
     public void increase_unseen_notification() {
@@ -78,6 +80,10 @@ public class SharedPrefManager {
         if(map.containsKey("location")){
             location=map.get("location").toString();
         }
+
+        if(map.containsKey("notification")){
+            user.isNotificationOn=(boolean)map.get("notification");
+        }
         user.setLocation(location);
         userLogin(user);
     }
@@ -94,7 +100,8 @@ public class SharedPrefManager {
                 sharedPreferences.getString(DEVICE_ID,null),
                 sharedPreferences.getBoolean(IS_ADMIN, false),
                 sharedPreferences.getBoolean(IS_DISABLED, false),
-                sharedPreferences.getString(LOCATION,"")
+                sharedPreferences.getString(LOCATION,""),
+                sharedPreferences.getBoolean(NOTIFICATION,true)
         );
     }
 

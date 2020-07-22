@@ -4,18 +4,18 @@
 
 
 
-               <item
-                   app:showAsAction="always"
-                   android:id="@+id/settings"
-                   android:icon="@drawable/settings2"
-                   app:itemIconSize="3mm"
-                   android:title="Settings" />
-               <item
-                   app:showAsAction="always"
-                   android:id="@+id/log_out"
-                   android:title="Logout"
-                   android:icon="@drawable/logout"
-                   app:itemIconSize="2dp" />
+    <item
+        app:showAsAction="always"
+        android:id="@+id/settings"
+        android:icon="@drawable/settings2"
+        app:itemIconSize="3mm"
+        android:title="Settings" />
+    <item
+        app:showAsAction="always"
+        android:id="@+id/log_out"
+        android:title="Logout"
+        android:icon="@drawable/logout"
+        app:itemIconSize="2dp" />
 
 
 

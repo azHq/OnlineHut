@@ -28,7 +28,7 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:id="@+id/image"
-                            android:src="@drawable/cow5"
+                            android:src="@drawable/cow_image1"
                             android:scaleType="fitXY"
                             android:padding="5dp"
                             android:layout_width="match_parent"

@@ -97,10 +97,11 @@ public class SignIn extends AppCompatActivity {
         clean_country_code();
         Intent tnt=new Intent(getApplicationContext(),PinViewLayout.class);
         tnt.putExtra("user_name","");
-        tnt.putExtra("user_type","");
+        tnt.putExtra("user_type",user_type);
         tnt.putExtra("phone_number",phone_number);
         tnt.putExtra("activity_type","sign_in");
         startActivity(tnt);
+        finish();
 
 
     }

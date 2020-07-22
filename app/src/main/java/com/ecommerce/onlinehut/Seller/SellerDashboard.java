@@ -4,22 +4,39 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.RadioButton;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -36,13 +53,16 @@ import com.ecommerce.onlinehut.About;
 import com.ecommerce.onlinehut.Admin.AdminPanel;
 import com.ecommerce.onlinehut.AllNotifications;
 import com.ecommerce.onlinehut.AnimationFactory;
+import com.ecommerce.onlinehut.Buyer.BuyerDashboard;
 import com.ecommerce.onlinehut.DisabledActivity;
 import com.ecommerce.onlinehut.CustomAlertDialog;
+import com.ecommerce.onlinehut.MainActivity;
 import com.ecommerce.onlinehut.Notification;
 import com.ecommerce.onlinehut.R;
 import com.ecommerce.onlinehut.SelectUserType;
 import com.ecommerce.onlinehut.SharedPrefManager;
 import com.ecommerce.onlinehut.Transaction;
+import com.ecommerce.onlinehut.User;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +72,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -95,7 +116,9 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
     public static Button search_btn;
     public static TextView message_unseen;
     ImageView notification_btn;
-
+    AlertDialog alertDialog;
+    public boolean isNotificationOn=true;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +127,8 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
+        progressDialog=new ProgressDialog(SellerDashboard.this);
+        progressDialog.setMessage("Please Wait...");
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         user_name_tv = findViewById(R.id.user_name);
         notification_btn = findViewById(R.id.notification_btn);
@@ -473,10 +498,8 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
                 .addToBackStack(null).commit();
         drawer.closeDrawer(GravityCompat.START);
     }
-
     public void showPopup(View view) {
         PopupMenu popup = new PopupMenu(SellerDashboard.this, view);
-
         try {
             // Reflection apis to enforce show icon
             Field[] fields = popup.getClass().getDeclaredFields();
@@ -498,13 +521,10 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             public boolean onMenuItemClick(MenuItem item) {
 
                 if (item.getItemId() == R.id.log_out) {
-                    FirebaseAuth.getInstance().signOut();
-                    LoginManager.getInstance().logOut();
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), SelectUserType.class));
-                } else if (item.getItemId() == R.id.settings) {
-
-                    Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_LONG).show();
+                    show_exit_dialog();
+                }
+                if (item.getItemId() == R.id.settings) {
+                    show_setting_panel();
                 }
 
                 return true;
@@ -512,7 +532,6 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
         });
         popup.show();
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -556,4 +575,93 @@ public class SellerDashboard extends AppCompatActivity implements NavigationView
             super.onBackPressed();
         }
     }
+
+    public void show_setting_panel(){
+        AlertDialog.Builder alert=new AlertDialog.Builder(SellerDashboard.this);
+        View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.setting_layout,null);
+        alert.setView(view);
+        alertDialog=alert.show();
+        Button submit=view.findViewById(R.id.submit);
+        Button cancel=view.findViewById(R.id.cancel);
+        RadioButton on=view.findViewById(R.id.on);
+        RadioButton off=view.findViewById(R.id.off);
+        if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isNotificationOn){
+            on.setChecked(true);
+        }
+        else{
+            off.setChecked(true);
+        }
+        on.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) isNotificationOn =true;
+            }
+        });
+        off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) isNotificationOn =false;
+            }
+        });
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                update_login_status( isNotificationOn);
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+    public void  update_login_status(boolean isNotificationOn){
+        progressDialog.show();
+        User user=SharedPrefManager.getInstance(getApplicationContext()).getUser();
+        user.setNotificationOn(isNotificationOn);
+        SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+        DocumentReference documentReference= db.collection("Users").document(user_id);
+        Map<String, Object> data = new HashMap<>();
+        data.put("notification",isNotificationOn);
+
+        documentReference.update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                progressDialog.dismiss();
+            }
+        });
+    }
+    public void show_exit_dialog(){
+        AlertDialog.Builder alert=new AlertDialog.Builder(SellerDashboard.this);
+        View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.exit_panel,null);
+        alert.setView(view);
+        alertDialog=alert.show();;
+        Button yes=view.findViewById(R.id.yes);
+        Button no=view.findViewById(R.id.no);
+        TextView title_tv=view.findViewById(R.id.title);
+        title_tv.setText(R.string.app_name);
+        TextView body_tv=view.findViewById(R.id.body);
+        body_tv.setText(R.string.logout);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                finish();
+                startActivity(new Intent(getApplicationContext(), SelectUserType.class));
+
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
 }

@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class PinViewLayout extends AppCompatActivity {
     PhoneAuthProvider.ForceResendingToken mResendToken;
     Pinview pinview;
     String verification_code;
+    public final String TAG="PinViewLayout";
     FirebaseUser firebaseUser=null;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String user_name="",phone_number="",user_type="",device_id="",image_path="",user_id="",activity_type="";
@@ -68,11 +70,9 @@ public class PinViewLayout extends AppCompatActivity {
         pinview = (Pinview) findViewById(R.id.pinview);
         progressDialog=new ProgressDialog(PinViewLayout.this);
         progressDialog.setMessage("Please Wait...");
-
         pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
-
 
                 verification_code=pinview.getValue();
 
@@ -134,6 +134,13 @@ public class PinViewLayout extends AppCompatActivity {
                 mCallbacks,         // OnVerificationStateChangedCallbacks
                 token);             // ForceResendingToken from callbacks
     }
+    public void submit_code(View view){
+        verification_code=pinview.getValue();
+        Log.d(TAG,verification_code);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verification_code);
+        progressDialog.show();
+        signInWithPhoneAuthCredential(credential);
+    }
     public void send_code(PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks,String phone_number){
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -154,6 +161,7 @@ public class PinViewLayout extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             if(user!=null){
                                 user_id=user.getUid();
+                                Log.d("PinViewLayout",activity_type);
                                if(activity_type.equalsIgnoreCase("sign_in")) get_user_data(user_id);
                                else getDeviceId(null);
                             }
@@ -282,7 +290,10 @@ public class PinViewLayout extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                startActivity(new Intent(getApplicationContext(),SignUp.class));
+                Intent tnt=new Intent(getApplicationContext(),SignUp.class);
+                tnt.putExtra("user_type",user_type);
+                startActivity(tnt);
+                finish();
             }
         });
 

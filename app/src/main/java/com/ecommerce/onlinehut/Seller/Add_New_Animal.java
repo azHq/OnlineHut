@@ -767,6 +767,7 @@ public class Add_New_Animal extends AppCompatActivity {
         user.put("weight", weight);
         user.put("height", height);
         user.put("born", born);
+        user.put("video_path", "");
         user.put("original_image_path", "");
         user.put("compress_image_path", "");
         user.put("highest_bid", 0);
@@ -809,7 +810,6 @@ public class Add_New_Animal extends AppCompatActivity {
         else{
             progressDialog.dismiss();
             completed[2]=true;
-            update("video_path","");
         }
     }
 

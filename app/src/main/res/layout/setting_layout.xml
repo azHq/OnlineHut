@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:weightSum="3.8"
     android:background="@color/white"
@@ -13,7 +14,7 @@
             android:gravity="center"
             android:textSize="@dimen/sp_18"
             android:textColor="@color/white"
-            android:text="@string/connection_problem"
+            android:text="@string/app_name"
             android:background="@color/dark_yellow"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -34,23 +35,45 @@
                 android:background="@drawable/round_back_transparent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="40dp"
                 android:orientation="vertical"
                 android:padding="25dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:inputType="none"
-                    android:imeOptions="actionDone"
-                    android:singleLine="true"
-                    android:id="@+id/input"
-                    android:background="@drawable/round_back_white"
+                android:layout_height="match_parent">
+               <TextView
+                   android:gravity="center"
+                   android:textStyle="bold"
+                   android:textSize="@dimen/sp_16"
+                   android:textColor="@color/dark_yellow"
+                   android:text="@string/notification"
+                   android:layout_width="match_parent"
+                   android:layout_height="30dp">
+               </TextView>
+                <RadioGroup
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:hint="@string/name"
-                    android:textSize="@dimen/sp_16"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:textColorHint="@color/light_megenda"
-                    android:layout_height="46dp"/>
+                    android:layout_height="match_parent">
+                    <RadioButton
+                        android:id="@+id/on"
+                        android:text="@string/on"
+                        android:checked="true"
+                        android:textColor="@color/black"
+                        android:paddingStart="5dp"
+                        android:button="@drawable/radio_button_selector"
+                        android:theme="@style/Spinner_Theme"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+                    </RadioButton>
+                    <RadioButton
+                        android:id="@+id/off"
+                        android:text="@string/off"
+                        android:textColor="@color/black"
+                        android:paddingStart="5dp"
+                        android:button="@drawable/radio_button_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+                    </RadioButton>
+                </RadioGroup>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

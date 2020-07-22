@@ -2,6 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/alphabravo/OnlineHut/keystorefile')
+            storePassword 'onlinehaat'
+            keyAlias = 'onlinehaat'
+            keyPassword 'onlinehaat'
+        }
+        release {
+            storeFile file('/Users/alphabravo/OnlineHut/keystorefile')
+            storePassword 'onlinehaat'
+            keyAlias = 'onlinehaat'
+            keyPassword 'onlinehaat'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -9,16 +23,18 @@ android {
         applicationId "com.ecommerce.onlinehut"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable = true
+            signingConfig signingConfigs.release
         }
     }
     android {

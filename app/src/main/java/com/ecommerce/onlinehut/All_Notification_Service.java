@@ -119,7 +119,7 @@ public class All_Notification_Service extends Service {
             if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin()){
                 resultIntent= new Intent(this, ViewPriceRequest.class);
             }
-            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("seller")){
+            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type!=null&&SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("seller")){
                 resultIntent= new Intent(this, NewPriceRequest.class);
             }
             resultIntent.putExtra("sender_id",sender_id);
@@ -139,7 +139,7 @@ public class All_Notification_Service extends Service {
             if(SharedPrefManager.getInstance(getApplicationContext()).getUser().isAdmin()){
                 resultIntent= new Intent(this, ViewConfirmationRequestForBuy.class);
             }
-            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("buyer")){
+            else if(SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type!=null&&SharedPrefManager.getInstance(getApplicationContext()).getUser().user_type.equalsIgnoreCase("buyer")){
                 resultIntent= new Intent(this, RequestConfirmation.class);
             }
             resultIntent.putExtra("sender_id",sender_id);

@@ -62,7 +62,7 @@ public class UserDetails extends AppCompatActivity {
         is_admin = i.getBooleanExtra("is_admin", false);
         disabled = i.getBooleanExtra("disabled", false);
         location = i.getStringExtra("location");
-        user = new User(user_id, user_name, user_type, phone_number, image_path, device_id, is_admin, disabled, location);
+        user = new User(user_id, user_name, user_type, phone_number, image_path, device_id, is_admin, disabled, location,true);
         Log.d("==========", user.getUser_type());
         empty = findViewById(R.id.empty);
         name = findViewById(R.id.nameTV);

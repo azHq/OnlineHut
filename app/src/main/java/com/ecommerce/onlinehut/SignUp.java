@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,40 +36,20 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         user_type=getIntent().getStringExtra("user_type");
+        Log.d("SignUp",user_type);
         user_types.add(R.string.user_type);
         user_types.add(R.string.seller);
         user_types.add(R.string.seller);
         open_sign_in_panel=findViewById(R.id.open_sign_in_panel);
         et_user_name=findViewById(R.id.name);
         et_phone_number=findViewById(R.id.phone_number);
-//        sp_user_type=findViewById(R.id.user_type);
-//        sp_user_type.setAdapter(new CustomAdapter(getApplicationContext(),0,user_types));
-//        sp_user_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//
-//                if(position==1){
-//                    user_type="seller";
-//                }
-//                else if(position==2){
-//                    user_type="buyer";
-//                }
-//                else{
-//                    user_type="";
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
         open_sign_in_panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent tnt=new Intent(getApplicationContext(),SignIn.class);
                 tnt.putExtra("user_type",user_type);
                 startActivity(tnt);
+                finish();
             }
         });
     }
@@ -95,6 +77,7 @@ public class SignUp extends AppCompatActivity {
         tnt.putExtra("phone_number",phone_number);
         tnt.putExtra("activity_type","sign_up");
         startActivity(tnt);
+        finish();
     }
     public void clean_country_code(){
 

@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:inputType="phone"
+                android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:id="@+id/phone_number"

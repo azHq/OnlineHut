@@ -166,8 +166,18 @@ public class All_Animals_For_Seller extends Fragment {
                             float height=Float.parseFloat(map.get("height").toString());
                             int teeth=Integer.parseInt(map.get("teeth").toString());
                             String born=map.get("born").toString();
-                            String image_path=map.get("compress_image_path").toString();
-                            String video_path=map.get("video_path").toString();
+                            String image_path="";
+                            if(map.containsKey("compress_image_path")){
+                                image_path=map.get("compress_image_path").toString();
+                            }
+                            if(image_path.equalsIgnoreCase("")){
+                                String[] image_paths=map.get("original_image_path").toString().split(",");
+                                image_path=image_paths[0];
+                            }
+                            String video_path="";
+                            if(map.containsKey("video_path")){
+                                video_path=map.get("video_path").toString();
+                            }
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             String animal_alt_id=map.get("alternative_id").toString();

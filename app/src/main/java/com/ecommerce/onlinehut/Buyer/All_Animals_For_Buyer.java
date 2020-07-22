@@ -663,11 +663,16 @@ public class All_Animals_For_Buyer extends Fragment {
                             float height=Float.parseFloat(map.get("height").toString());
                             int teeth=Integer.parseInt(map.get("teeth").toString());
                             String born=map.get("born").toString();
-                            String compress_image_path=map.get("compress_image_path").toString();
+                            String compress_image_path="";
+                            if(map.containsKey("compress_image_path")){
+                               compress_image_path=map.get("compress_image_path").toString();
+                            }
                             String[] image_paths=map.get("original_image_path").toString().split(",");
                             String image_path=image_paths[0];
-                            System.out.println("image path:"+image_path+" length:"+image_paths.length);
-                            String video_path=map.get("video_path").toString();
+                            String video_path="";
+                            if(map.containsKey("video_path")){
+                                video_path=map.get("video_path").toString();
+                            }
                             int highest_bid=Integer.parseInt(map.get("highest_bid").toString());
                             int total_bid=Integer.parseInt(map.get("total_bid").toString());
                             if(!borns.contains(born)) borns.add(born);

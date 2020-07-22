@@ -150,6 +150,9 @@
     <string name="write_message">মেসেজ করুন</string>
     <string name="slogan">আমাদের স্লোগান</string>
     <string name="mission">আমাদের মিশন</string>
+    <string name="off">অফ</string>
+    <string name="on">অন</string>
+    <string name="logout">আপনি কি লগ-আউট করতে চান?</string>
     <string-array name="tx_methods">
         <item>
             বিকাশ

@@ -54,18 +54,22 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Intent tnt=new Intent(FirebaseMessagingService.this, All_Notification_Service.class);
-        tnt.putExtra("title",title);
-        tnt.putExtra("body",body);
-        tnt.putExtra("sender_id",sender_id);
-        tnt.putExtra("receiver_id",receiver_id);
-        tnt.putExtra("sender_device_id",sender_device_id);
-        tnt.putExtra("receiver_device_id",receiver_device_id);
-        tnt.putExtra("document_id",document_id);
-        tnt.putExtra("activity_type",activity_type);
-        tnt.putExtra("notification_id",notification_id);
-        tnt.putExtra("sender_type",sender_type);
-        startService(tnt);
+
+        if(SharedPrefManager.getInstance(getApplicationContext()).getUser()!=null&&SharedPrefManager.getInstance(getApplicationContext()).getUser().isNotificationOn){
+            Intent tnt=new Intent(FirebaseMessagingService.this, All_Notification_Service.class);
+            tnt.putExtra("title",title);
+            tnt.putExtra("body",body);
+            tnt.putExtra("sender_id",sender_id);
+            tnt.putExtra("receiver_id",receiver_id);
+            tnt.putExtra("sender_device_id",sender_device_id);
+            tnt.putExtra("receiver_device_id",receiver_device_id);
+            tnt.putExtra("document_id",document_id);
+            tnt.putExtra("activity_type",activity_type);
+            tnt.putExtra("notification_id",notification_id);
+            tnt.putExtra("sender_type",sender_type);
+            startService(tnt);
+        }
+
 
     }
 

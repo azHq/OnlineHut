@@ -17,9 +17,16 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Admin.ViewConfirmationRequestForBuy"></activity>
-        <activity android:name=".Admin.ViewPriceRequest" />
-        <activity android:name=".Buyer.Sold_Item_Details" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.ViewConfirmationRequestForBuy">
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.ViewPriceRequest" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Buyer.Sold_Item_Details" />
         <activity
             android:name=".AllNotifications"
             android:theme="@style/NoActionBarThemeDark" />
@@ -27,32 +34,58 @@
             android:name=".Buyer.ConfirmationMessageAndPaymentInfo"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Seller.UnSoldAnimalList" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Seller.UnSoldAnimalList" />
         <activity
             android:name=".Seller.EditAnimalInfo"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Buyer.Payment" />
-        <activity android:name=".Admin.settings.SettingsActivity" />
-        <activity android:name=".DisabledActivity" />
-        <activity android:name=".Admin.deposite.DepositeActivity" />
-        <activity android:name=".Admin.all_users.AllUsers" />
-        <activity android:name=".Admin.all_users.UserDetails"/>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Buyer.Payment" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.settings.SettingsActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".DisabledActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.deposite.DepositeActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.all_users.AllUsers" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Admin.all_users.UserDetails"/>
         <activity
             android:name=".Admin.AdminPanel"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
-        <activity android:name=".Seller.Details_For_Seller" />
-        <activity android:name=".Buyer.PriceHistoryForBuyer" />
-        <activity android:name=".Seller.SoldAnimalListForSeller" />
-        <activity android:name=".Buyer.RequestConfirmation" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Seller.Details_For_Seller" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Buyer.PriceHistoryForBuyer" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Seller.SoldAnimalListForSeller" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Buyer.RequestConfirmation" />
         <activity
             android:name=".Seller.NewPriceRequest"
             android:theme="@style/NoActionBarTheme" />
-        <activity android:name=".Seller.PriceHistoryForSeller" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Seller.PriceHistoryForSeller" />
         <activity
             android:name=".Messenger"
             android:theme="@style/NoActionBarTheme" />
-        <activity android:name=".Buyer.Compare" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Buyer.Compare" />
         <activity
             android:name=".Buyer.Details"
             android:theme="@style/fullscreen" />
@@ -82,6 +115,7 @@
             android:theme="@style/fullscreen" />
         <activity
             android:name=".PinViewLayout"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait"
             android:theme="@style/fullscreen" />
         <activity

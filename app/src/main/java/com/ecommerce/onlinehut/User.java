@@ -10,6 +10,7 @@ public class User {
     private boolean admin = false;
     private boolean disabled = false;
     public String location;
+    public boolean isNotificationOn;
     public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id) {
         this.user_id = user_id;
         this.user_name = user_name;
@@ -27,7 +28,7 @@ public class User {
         this.device_id = device_id;
         this.location=location;
     }
-    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id, boolean is_admin,boolean disabled,String location) {
+    public User(String user_id, String user_name,String user_type, String phone_number, String image_path,String device_id, boolean is_admin,boolean disabled,String location,boolean isNotificationOn) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_type=user_type;
@@ -37,6 +38,7 @@ public class User {
         this.admin = is_admin;
         this.disabled=disabled;
         this.location=location;
+        this.isNotificationOn=isNotificationOn;
     }
     public boolean isAdmin() {
         return admin;
@@ -107,5 +109,13 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean isNotificationOn() {
+        return isNotificationOn;
+    }
+
+    public void setNotificationOn(boolean notificationOn) {
+        isNotificationOn = notificationOn;
     }
 }

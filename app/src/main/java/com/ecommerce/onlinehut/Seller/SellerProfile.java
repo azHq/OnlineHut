@@ -360,7 +360,7 @@ public class SellerProfile extends Fragment {
                         if (map.containsKey("email") && map.get("email") != null && map.get("email").toString().length() > 0) {
                             email_tv.setText(map.get("email").toString());
                         }
-                        if (map.containsKey("phone_number") && map.get("email") != null && map.get("phone_number").toString().length() > 10) {
+                        if (map.containsKey("phone_number") && map.get("phone_number") != null && map.get("phone_number").toString().length() > 10) {
                             phone_number_tv.setText(map.get("phone_number").toString());
                         }
                         if (map.containsKey("address") && map.get("address") != null && map.get("address").toString().length() > 0) {
